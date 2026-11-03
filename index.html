@@ -22,7 +22,6 @@
     body { background-color: var(--bg); color: var(--text); padding: 16px; display: flex; justify-content: center; }
     .container { width: 100%; max-width: 650px; display: flex; flex-direction: column; gap: 16px; }
 
-    /* Шапка баланса */
     .header-card {
       background: linear-gradient(135deg, #133340 0%, #0d2734 100%);
       border: 1px solid var(--card-border);
@@ -36,7 +35,6 @@
     .score-val { font-size: 34px; font-weight: 700; color: var(--accent-mango); }
     .score-val.minus { color: var(--coral-danger); }
 
-    /* Панели */
     .panel {
       background: var(--card-bg);
       border: 1px solid var(--card-border);
@@ -46,9 +44,7 @@
       flex-direction: column;
       gap: 16px;
     }
-    h2 { font-size: 18px; color: #fff; }
 
-    /* Задание */
     .task-box {
       background: #0b1e28;
       border: 1px solid var(--card-border);
@@ -57,14 +53,13 @@
       text-align: center;
       font-size: 20px;
       font-weight: 600;
-      min-height: 70px;
+      min-height: 80px;
       display: flex;
       align-items: center;
       justify-content: center;
       line-height: 1.4;
     }
 
-    /* Поля ввода и кнопки */
     .input-row { display: flex; gap: 10px; align-items: center; }
     input {
       flex: 1;
@@ -82,7 +77,7 @@
       color: #fff;
       font-weight: 600;
       border: none;
-      padding: 14px 20px;
+      padding: 14px 22px;
       border-radius: 8px;
       cursor: pointer;
       font-size: 16px;
@@ -111,21 +106,6 @@
       100% { transform: scale(1); }
     }
 
-    .audio-btns { display: flex; gap: 10px; justify-content: center; margin-bottom: 8px; }
-    .btn-teal {
-      background: #10424b;
-      color: var(--success-teal);
-      border: 1px solid var(--teal-sound);
-      padding: 10px 18px;
-      border-radius: 30px;
-      cursor: pointer;
-      font-size: 15px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    /* Обратная связь */
     .feedback {
       padding: 14px;
       border-radius: 8px;
@@ -155,34 +135,34 @@
       border: 1px solid var(--card-border);
       color: var(--text-muted);
     }
+
+    .sub-badge {
+      font-size: 11px;
+      color: var(--teal-sound);
+      margin-top: 4px;
+    }
   </style>
 </head>
 <body>
 
 <div class="container">
-  <!-- Шапка со счетом -->
   <div class="header-card">
     <div>
       <div class="score-title">Баланс урока</div>
       <div class="score-val" id="scoreDisplay">0 ₽</div>
     </div>
     <div style="text-align: right;">
-      <span class="status-tag" id="blockBadge">Загрузка...</span>
-      <div style="font-size: 13px; color: var(--text-muted); margin-top: 6px;" id="stepCounter">...</div>
+      <span class="status-tag" id="blockBadge">Блок 1: RU ➔ EN</span>
+      <div class="sub-badge" id="subBadge">Подблок 1</div>
+      <div style="font-size: 13px; color: var(--text-muted); margin-top: 4px;" id="stepCounter">...</div>
     </div>
   </div>
 
-  <!-- Экран тренажера -->
-  <div class="panel" id="trainerScreen">
-    <div class="audio-btns" id="soundGroup" style="display: none;">
-      <button class="btn-teal" type="button" onclick="speakText(currentPhrase.en, 1)">🔊 Слушать</button>
-      <button class="btn-teal" type="button" onclick="speakText(currentPhrase.en, 0.5)">🐢 Медленно</button>
-    </div>
-
-    <div class="task-box" id="taskQuestion">Загрузка урока 1...</div>
+  <div class="panel">
+    <div class="task-box" id="taskQuestion">Загрузка данных...</div>
 
     <div class="input-row">
-      <input type="text" id="answerInput" placeholder="Введите перевод..." autocomplete="off">
+      <input type="text" id="answerInput" placeholder="Введите перевод на английском..." autocomplete="off">
       <button class="btn-mic" id="micBtn" type="button" onclick="toggleSpeechRecognition()" title="Голосовой ввод">🎙️</button>
       <button class="btn-mango" type="button" onclick="checkUserAnswer()">OK</button>
     </div>
@@ -192,7 +172,7 @@
 </div>
 
 <script>
-  let lessonData = { block1: [] };
+  let lessonTasks = [];
   let currentIndex = 0;
   let currentPhrase = null;
   let balance = 0;
@@ -211,49 +191,84 @@
     return (text || '').toLowerCase().replace(/[.,/#!$%^&*;:{}=\-_`~()?'"]/g, '').replace(/\s+/g, ' ').trim();
   }
 
-  // Загрузка файла урока из папки lessons/
+  // Загрузчик с перебором относительных и прямых путей
   async function loadLessonFile() {
-    try {
-      const res = await fetch('./lessons/lesson_1.txt');
-      if (!res.ok) throw new Error('Файл не найден');
-      const text = await res.text();
-      parseLessonText(text);
-    } catch (e) {
-      document.getElementById('taskQuestion').innerText = 'Ошибка загрузки lessons/lesson_1.txt. Проверьте файл в репозитории.';
+    const paths = [
+      'lessons/lesson_1.txt',
+      './lessons/lesson_1.txt',
+      '/english-trainer/lessons/lesson_1.txt'
+    ];
+
+    let textData = null;
+    for (const p of paths) {
+      try {
+        const res = await fetch(p);
+        if (res.ok) {
+          textData = await res.text();
+          break;
+        }
+      } catch (err) {}
+    }
+
+    if (textData) {
+      parseLessonText(textData);
+    } else {
+      document.getElementById('taskQuestion').innerText = 'Не удалось загрузить lessons/lesson_1.txt. Проверьте наличие файла в репозитории.';
     }
   }
 
   function parseLessonText(rawText) {
     const lines = rawText.split('\n').map(l => l.trim());
-    let currentBlock = '';
-    lessonData.block1 = [];
+    let inBlock1 = false;
+    let currentSub = 'Подблок 1';
+    lessonTasks = [];
 
-    lines.forEach(line => {
-      if (line.startsWith('# БЛОК 1')) currentBlock = 'B1';
-      else if (line.startsWith('# БЛОК 2')) currentBlock = 'B2';
-      else if (currentBlock === 'B1' && line.includes('|') && !line.startsWith('#')) {
-        const parts = line.split('|').map(p => p.trim());
-        if (parts.length >= 2) lessonData.block1.push({ ru: parts[0], en: parts[1] });
+    for (const line of lines) {
+      if (line.startsWith('# БЛОК 1')) {
+        inBlock1 = true;
+        continue;
       }
-    });
+      if (line.startsWith('# БЛОК 2')) {
+        break;
+      }
+      if (inBlock1) {
+        if (line.startsWith('## ПОДБЛОК')) {
+          currentSub = line.replace('##', '').trim();
+          continue;
+        }
+        if (line.includes('|') && !line.startsWith('#')) {
+          const parts = line.split('|').map(p => p.trim());
+          if (parts.length >= 2) {
+            lessonTasks.push({
+              ru: parts[0],
+              en: parts[1],
+              sub: currentSub
+            });
+          }
+        }
+      }
+    }
 
-    if (lessonData.block1.length > 0) {
-      document.getElementById('blockBadge').innerText = 'Блок 1: RU ➔ EN';
+    if (lessonTasks.length > 0) {
       currentIndex = 0;
       showNextTask();
+    } else {
+      document.getElementById('taskQuestion').innerText = 'В Блоке 1 не найдены предложения. Проверьте разделитель | в файле.';
     }
   }
 
   function showNextTask() {
-    if (currentIndex >= lessonData.block1.length) {
-      document.getElementById('taskQuestion').innerText = '🎉 Блок 1 пройден!';
-      confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+    if (currentIndex >= lessonTasks.length) {
+      document.getElementById('taskQuestion').innerText = '🎉 Блок 1 полностью пройден!';
+      document.getElementById('stepCounter').innerText = `${lessonTasks.length} из ${lessonTasks.length}`;
+      confetti({ particleCount: 120, spread: 70, origin: { y: 0.6 } });
       return;
     }
 
-    currentPhrase = lessonData.block1[currentIndex];
+    currentPhrase = lessonTasks[currentIndex];
     document.getElementById('taskQuestion').innerText = currentPhrase.ru;
-    document.getElementById('stepCounter').innerText = `Вопрос ${currentIndex + 1} из ${lessonData.block1.length}`;
+    document.getElementById('subBadge').innerText = currentPhrase.sub;
+    document.getElementById('stepCounter').innerText = `${currentIndex + 1} из ${lessonTasks.length}`;
 
     const input = document.getElementById('answerInput');
     input.value = '';
@@ -292,7 +307,6 @@
     if (e.key === 'Enter') checkUserAnswer();
   });
 
-  // Озвучка речи
   function speakText(text, rate = 1) {
     if (!('speechSynthesis' in window)) return;
     window.speechSynthesis.cancel();
@@ -304,7 +318,6 @@
     }, 40);
   }
 
-  // Голосовой ввод через микрофон
   function toggleSpeechRecognition() {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) {
@@ -325,4 +338,24 @@
 
     recognition.onstart = () => {
       isListening = true;
-      micBtn.classList.add
+      micBtn.classList.add('listening');
+    };
+
+    recognition.onresult = (event) => {
+      const spokenText = event.results[0][0].transcript;
+      document.getElementById('answerInput').value = spokenText;
+      checkUserAnswer();
+    };
+
+    recognition.onend = () => {
+      isListening = false;
+      micBtn.classList.remove('listening');
+    };
+
+    recognition.start();
+  }
+
+  loadLessonFile();
+</script>
+</body>
+</html>
