@@ -191,7 +191,7 @@
   let isListening = false;
   let isLocked = false;
   let manualStop = false;
-  let isWaitingNext = false; // Флаг: ждем ли ручного клика для перехода после ошибки
+  let isWaitingNext = false; // Ожидание клика «Дальше» (и при ошибке, и при верном ответе)
 
   function updateBalance(points) {
     balance += points;
@@ -204,6 +204,24 @@
   function cleanStr(text) {
     return (text || '').toLowerCase().replace(/[.,/#!$%^&*;:{}=\-_`~()?'"]/g, '').replace(/\s+/g, ' ').trim();
   }
+
+  // Функция авто-капитализации первой буквы
+  function capitalizeFirst(text) {
+    if (!text) return '';
+    return text.charAt(0).toUpperCase() + text.slice(1);
+  }
+
+  // При ручном наборе первая буква сразу становится заглавной
+  const answerInputEl = document.getElementById('answerInput');
+  answerInputEl.addEventListener('input', (e) => {
+    const val = e.target.value;
+    if (val.length > 0 && val.charAt(0) !== val.charAt(0).toUpperCase()) {
+      const start = e.target.selectionStart;
+      const end = e.target.selectionEnd;
+      e.target.value = capitalizeFirst(val);
+      e.target.setSelectionRange(start, end);
+    }
+  });
 
   async function loadLessonFile() {
     const paths = [
@@ -299,7 +317,7 @@
   }
 
   function handleButtonClick() {
-    // Если мы стоим на экране ошибки и ждем клика — по клику переходим дальше
+    // Если висит статус (верно или ошибка), клик переводит дальше
     if (isWaitingNext) {
       currentIndex++;
       showNextTask();
@@ -325,21 +343,17 @@
 
     if (userVal === targetVal) {
       // 1. ВЕРНО (+5 ₽)
-      isLocked = true;
-      input.disabled = true;
-      submitBtn.disabled = true;
-
       updateBalance(+5);
       statusLine.className = 'status-line correct show';
       statusLine.innerHTML = `✓ ВЕРНО! (+5 ₽)`;
 
       speakText(currentPhrase.en, 1.0);
 
-      // При верном ответе переключаем сами через 2 сек
-      setTimeout(() => {
-        currentIndex++;
-        showNextTask();
-      }, 2000);
+      // Блокируем ввод и выводим кнопку «Дальше ➔»
+      isWaitingNext = true;
+      input.disabled = true;
+      submitBtn.innerText = 'Дальше ➔';
+      submitBtn.focus();
 
     } else {
       // 2. ОШИБКА (-5 ₽)
@@ -349,7 +363,7 @@
 
       speakText(currentPhrase.en, 0.9);
 
-      // Включаем ожидание повторного клика от вас
+      // Блокируем ввод и выводим кнопку «Дальше ➔»
       isWaitingNext = true;
       input.disabled = true;
       submitBtn.innerText = 'Дальше ➔';
@@ -419,8 +433,9 @@
           interim += event.results[i][0].transcript;
         }
       }
+      const rawRes = finalTranscript + (interim ? ' ' + interim : '');
       const input = document.getElementById('answerInput');
-      input.value = finalTranscript + (interim ? ' ' + interim : '');
+      input.value = capitalizeFirst(rawRes);
     };
 
     recognition.onerror = (e) => {
