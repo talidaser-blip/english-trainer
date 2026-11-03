@@ -166,7 +166,6 @@
       to { opacity: 1; }
     }
 
-    /* Строка статуса: исправлена видимость */
     .status-line {
       font-size: 15px;
       padding: 12px 16px;
@@ -250,7 +249,7 @@
   const LESSON_URL = './lessons/lesson_1.txt';
   const STORAGE_KEY = 'english_trainer_progress_v2';
 
-  let currentBlock = 2; // По умолчанию Блок 2
+  let currentBlock = 2;
   let tasks = [];
   let currentIndex = 0;
   let balance = 0;
@@ -410,14 +409,12 @@
     isWaitingNext = false;
   }
 
-  // Первая заглавная буква
   document.getElementById('userInput').addEventListener('input', function() {
     if (this.value.length === 1) {
       this.value = this.value.toUpperCase();
     }
   });
 
-  // Enter
   document.getElementById('userInput').addEventListener('keydown', function(e) {
     if (e.key === 'Enter') {
       e.preventDefault();
@@ -435,7 +432,7 @@
     }
   }
 
-  // Очистка текста для гибкого сравнения (убирает дефисы, ё->е, знаки препинания)
+  // Очистка строки
   function cleanText(str) {
     return str
       .toLowerCase()
@@ -444,6 +441,20 @@
       .replace(/[.,!?;:'"()]/g, '')
       .replace(/\s+/g, ' ')
       .trim();
+  }
+
+  // Проверка эквивалентности русских фраз с учётом порядка слов
+  function checkRussianMatch(userText, targetText) {
+    const cleanUser = cleanText(userText);
+    const cleanTarget = cleanText(targetText);
+
+    if (cleanUser === cleanTarget) return true;
+
+    // Сравнение по набору слов (Bag of Words)
+    const userWords = cleanUser.split(' ').filter(Boolean).sort().join(' ');
+    const targetWords = cleanTarget.split(' ').filter(Boolean).sort().join(' ');
+
+    return userWords === targetWords;
   }
 
   function checkAnswer() {
@@ -464,9 +475,11 @@
 
     let isCorrect = false;
     if (currentBlock === 1) {
+      // Для английского важен строгий порядок слов
       isCorrect = cleanText(userAns) === cleanText(t.en);
     } else {
-      isCorrect = cleanText(userAns) === cleanText(t.ru);
+      // Для русского языка порядок слов свободный
+      isCorrect = checkRussianMatch(userAns, t.ru);
     }
 
     if (isCorrect) {
@@ -485,7 +498,6 @@
     document.getElementById('balanceDisplay').innerText = `${balance} ₽`;
     saveProgress();
 
-    // Озвучиваем английскую фразу
     speakEnglish(t.en);
 
     if (t.trans) {
