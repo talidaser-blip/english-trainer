@@ -2,145 +2,194 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>English Master Trainer</title>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <style>
     :root {
       --bg: #0b1e28;
       --card-bg: #133340;
-      --accent: #f97316;
-      --accent-hover: #ea580c;
-      --text: #f8fafc;
+      --card-border: #1d4657;
+      --accent-mango: #f97316;
+      --accent-mango-hover: #ea580c;
+      --teal-sound: #14b8a6;
+      --success-teal: #2dd4bf;
+      --coral-danger: #f87171;
+      --text: #f1f5f9;
       --text-muted: #94a3b8;
-      --border: #1e4b5f;
-      --success: #2dd4bf;
-      --danger: #f87171;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
-    body { background-color: var(--bg); color: var(--text); padding: 20px; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
-    .container { width: 100%; max-width: 720px; display: flex; flex-direction: column; gap: 20px; }
     
+    body { 
+      background-color: var(--bg); 
+      color: var(--text); 
+      padding: 20px; 
+      min-height: 100vh;
+      display: flex; 
+      justify-content: center; 
+      align-items: center; 
+    }
+    
+    .container { 
+      width: 100%; 
+      max-width: 760px; 
+      display: flex; 
+      flex-direction: column; 
+      gap: 20px; 
+    }
+
     .header-card {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      padding: 16px 20px;
-      border-radius: 12px;
+      background: linear-gradient(135deg, #133340 0%, #0d2734 100%);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 22px 26px;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
-    .balance-title { font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
-    .balance-value { font-size: 32px; font-weight: 700; color: var(--accent); margin-top: 2px; }
-    .status-badge { text-align: right; font-size: 11px; color: var(--text-muted); line-height: 1.5; }
-    .badge-subblock { font-weight: 600; color: var(--success); text-transform: uppercase; }
+    .score-title { font-size: 13px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+    .score-val { font-size: 38px; font-weight: 700; color: var(--accent-mango); line-height: 1.2; }
+    .score-val.minus { color: var(--coral-danger); }
 
     .btn-reset {
       background: transparent;
-      border: 1px solid var(--border);
+      border: 1px solid var(--card-border);
       color: var(--text-muted);
-      padding: 4px 8px;
+      padding: 4px 10px;
       border-radius: 6px;
-      font-size: 11px;
+      font-size: 12px;
       cursor: pointer;
-      margin-top: 4px;
+      margin-top: 6px;
       transition: all 0.2s;
     }
-    .btn-reset:hover { color: var(--danger); border-color: var(--danger); }
-
-    .trainer-card {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 32px 24px;
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
+    .btn-reset:hover { 
+      color: var(--coral-danger); 
+      border-color: var(--coral-danger); 
     }
 
-    .phrase-display {
+    .panel {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 18px;
+      padding: 34px 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+    }
+
+    .task-box {
       background: #0b1e28;
-      border: 1px solid var(--border);
-      padding: 24px 16px;
-      border-radius: 10px;
+      border: 1px solid var(--card-border);
+      padding: 30px 20px;
+      border-radius: 12px;
       text-align: center;
-      font-size: 22px;
+      font-size: 24px;
       font-weight: 600;
-      min-height: 80px;
+      min-height: 100px;
       display: flex;
       align-items: center;
       justify-content: center;
       line-height: 1.4;
     }
 
-    .input-group { display: flex; gap: 8px; align-items: center; }
-    input[type="text"] {
+    .input-row { display: flex; gap: 12px; align-items: center; }
+    input {
       flex: 1;
-      background: #0b1e28;
-      border: 1px solid var(--accent);
+      background: #08161f;
+      border: 1px solid var(--card-border);
       color: #fff;
-      padding: 14px 16px;
+      padding: 16px 18px;
       border-radius: 10px;
-      font-size: 16px;
+      font-size: 18px;
       outline: none;
     }
-    input[type="text"]:focus {
-      border-color: var(--success);
-      box-shadow: 0 0 0 1px var(--success);
+    input:focus { 
+      border-color: var(--accent-mango); 
+      outline: 1px solid var(--accent-mango); 
     }
 
-    button {
-      background: var(--accent);
+    .btn-mango {
+      background: var(--accent-mango);
       color: #fff;
-      border: none;
-      padding: 14px 22px;
-      border-radius: 10px;
-      font-size: 16px;
       font-weight: 600;
-      cursor: pointer;
-      transition: opacity 0.2s;
-      white-space: nowrap;
-    }
-    button:hover { opacity: 0.9; }
-
-    .btn-mic {
-      background: #0b1e28;
-      border: 1px solid var(--border);
-      color: #fff;
-      padding: 14px 18px;
+      border: none;
+      padding: 16px 26px;
       border-radius: 10px;
       cursor: pointer;
       font-size: 18px;
+      transition: background 0.2s;
+      white-space: nowrap;
     }
-    .btn-mic.recording {
-      background: var(--danger);
-      border-color: var(--danger);
-      animation: pulse 1s infinite alternate;
+    .btn-mango:hover { background: var(--accent-mango-hover); }
+
+    .btn-mic {
+      background: #08161f;
+      border: 1px solid var(--card-border);
+      color: var(--teal-sound);
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      flex-shrink: 0;
+    }
+    .btn-mic.listening {
+      background: var(--coral-danger);
+      color: #fff;
+      animation: pulse 1s infinite;
+      border-color: #fca5a5;
     }
 
     @keyframes pulse {
-      from { opacity: 0.7; }
-      to { opacity: 1; }
+      0% { transform: scale(1); }
+      50% { transform: scale(1.08); }
+      100% { transform: scale(1); }
     }
 
     .status-line {
-      font-size: 15px;
-      padding: 10px 14px;
-      border-radius: 8px;
-      display: none;
-      font-weight: 500;
+      min-height: 48px;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 10px 16px;
+      visibility: hidden;
       line-height: 1.4;
     }
+    .status-line.show { visibility: visible; }
     .status-line.correct {
       background: rgba(45, 212, 191, 0.15);
-      border: 1px solid var(--success);
-      color: var(--success);
-      display: block;
+      color: var(--success-teal);
+      border: 1px solid var(--success-teal);
     }
     .status-line.wrong {
       background: rgba(248, 113, 113, 0.15);
-      border: 1px solid var(--danger);
-      color: var(--danger);
-      display: block;
+      color: var(--coral-danger);
+      border: 1px solid var(--coral-danger);
+    }
+
+    .status-tag {
+      font-size: 12px;
+      padding: 5px 12px;
+      border-radius: 20px;
+      background: #0b1e28;
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+    }
+
+    .sub-badge {
+      font-size: 13px;
+      color: var(--teal-sound);
+      margin-top: 6px;
+      font-weight: 600;
+      text-transform: uppercase;
     }
   </style>
 </head>
@@ -149,24 +198,24 @@
 <div class="container">
   <div class="header-card">
     <div>
-      <div class="balance-title">Баланс урока</div>
-      <div class="balance-value" id="balanceDisplay">0 ₽</div>
-      <button class="btn-reset" onclick="resetProgress()" title="Сбросить сохранённый шаг и начать сначала">Начать заново ↺</button>
+      <div class="score-title">Баланс урока</div>
+      <div class="score-val" id="scoreDisplay">0 ₽</div>
+      <button class="btn-reset" type="button" onclick="resetProgress()" title="Сбросить прогресс и начать урок с 1-й фразы">Начать заново ↺</button>
     </div>
-    <div class="status-badge">
-      <div id="blockLabel">Блок 1: RU ➔ EN</div>
-      <div class="badge-subblock" id="subblockLabel">Загрузка...</div>
-      <div id="progressCount" style="margin-top: 4px;">0 из 50</div>
+    <div style="text-align: right;">
+      <span class="status-tag" id="blockBadge">Блок 1: RU ➔ EN</span>
+      <div class="sub-badge" id="subBadge">Подблок 1</div>
+      <div style="font-size: 13px; color: var(--text-muted); margin-top: 6px;" id="stepCounter">...</div>
     </div>
   </div>
 
-  <div class="trainer-card">
-    <div class="phrase-display" id="sourcePhrase">Загрузка урока 1...</div>
+  <div class="panel">
+    <div class="task-box" id="taskQuestion">Загрузка данных...</div>
 
-    <div class="input-group">
-      <input type="text" id="userInput" placeholder="Введите перевод или продиктуйте 🎙️..." autofocus>
-      <button class="btn-mic" id="micBtn" onclick="toggleMic()" title="Включить микрофон">🎙️</button>
-      <button id="actionBtn" onclick="handleAction()">OK</button>
+    <div class="input-row">
+      <input type="text" id="answerInput" placeholder="Введите перевод или продиктуйте 🎙️..." autocomplete="off">
+      <button class="btn-mic" id="micBtn" type="button" onclick="toggleSpeechRecognition()" title="Голосовой ввод">🎙️</button>
+      <button class="btn-mango" id="submitBtn" type="button" onclick="handleButtonClick()">OK</button>
     </div>
 
     <div class="status-line" id="statusLine"></div>
@@ -174,18 +223,19 @@
 </div>
 
 <script>
-  const LESSON_URL = './lessons/lesson_1.txt';
   const STORAGE_KEY = 'english_trainer_progress_v1';
 
-  let tasks = [];
+  let lessonTasks = [];
   let currentIndex = 0;
+  let currentPhrase = null;
   let balance = 0;
+  let recognition = null;
+  let isListening = false;
+  let isLocked = false;
+  let manualStop = false;
   let isWaitingNext = false;
 
-  let recognition = null;
-  let isRecording = false;
-
-  // Автосохранение прогресса
+  // Автосохранение в память браузера
   function saveProgress() {
     const data = {
       index: currentIndex,
@@ -194,7 +244,7 @@
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
   }
 
-  // Загрузка сохранённого прогресса
+  // Загрузка сохраненного состояния
   function loadProgress() {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (raw) {
@@ -215,218 +265,276 @@
       currentIndex = 0;
       balance = 0;
       isWaitingNext = false;
-      renderCurrentTask();
+      updateBalance(0);
+      showNextTask();
     }
   }
 
-  async function loadLesson() {
-    try {
-      const res = await fetch(LESSON_URL);
-      if (!res.ok) throw new Error('Не удалось открыть файл урока');
-      const text = await res.text();
-      parseLesson(text);
-      loadProgress();
-      if (currentIndex >= tasks.length) currentIndex = 0;
-      renderCurrentTask();
-    } catch (err) {
-      document.getElementById('sourcePhrase').innerText = 'Ошибка загрузки файла урока lessons/lesson_1.txt';
-      console.error(err);
+  function updateBalance(points) {
+    balance += points;
+    const el = document.getElementById('scoreDisplay');
+    el.innerText = `${balance} ₽`;
+    if (balance < 0) el.classList.add('minus');
+    else el.classList.remove('minus');
+  }
+
+  function cleanStr(text) {
+    return (text || '').toLowerCase().replace(/[.,/#!$%^&*;:{}=\-_`~()?'"]/g, '').replace(/\s+/g, ' ').trim();
+  }
+
+  // Авто-капитализация первой буквы
+  function capitalizeFirst(text) {
+    if (!text) return '';
+    return text.charAt(0).toUpperCase() + text.slice(1);
+  }
+
+  const answerInputEl = document.getElementById('answerInput');
+  answerInputEl.addEventListener('input', (e) => {
+    const val = e.target.value;
+    if (val.length > 0 && val.charAt(0) !== val.charAt(0).toUpperCase()) {
+      const start = e.target.selectionStart;
+      const end = e.target.selectionEnd;
+      e.target.value = capitalizeFirst(val);
+      e.target.setSelectionRange(start, end);
+    }
+  });
+
+  async function loadLessonFile() {
+    const paths = [
+      'lessons/lesson_1.txt',
+      './lessons/lesson_1.txt',
+      '/english-trainer/lessons/lesson_1.txt'
+    ];
+
+    let textData = null;
+    for (const p of paths) {
+      try {
+        const res = await fetch(p);
+        if (res.ok) {
+          textData = await res.text();
+          break;
+        }
+      } catch (err) {}
+    }
+
+    if (textData) {
+      parseLessonText(textData);
+    } else {
+      document.getElementById('taskQuestion').innerText = 'Не удалось загрузить lessons/lesson_1.txt.';
     }
   }
 
-  function parseLesson(content) {
-    const lines = content.split('\n');
-    let currentSubblock = 'ПОДБЛОК 1';
-    tasks = [];
+  function parseLessonText(rawText) {
+    const lines = rawText.split('\n').map(l => l.trim());
+    let inBlock1 = false;
+    let currentSub = 'Подблок 1';
+    lessonTasks = [];
 
-    for (let rawLine of lines) {
-      let line = rawLine.trim();
-      if (!line) continue;
-
-      if (line.startsWith('## ПОДБЛОК')) {
-        currentSubblock = line.replace('##', '').trim();
+    for (const line of lines) {
+      if (line.startsWith('# БЛОК 1')) {
+        inBlock1 = true;
         continue;
       }
+      if (line.startsWith('# БЛОК 2')) break;
 
-      if (line.startsWith('#')) continue;
-
-      if (line.includes('|')) {
-        const parts = line.split('|');
-        if (parts.length >= 2) {
-          tasks.push({
-            ru: parts[0].trim(),
-            en: parts[1].trim(),
-            subblock: currentSubblock
-          });
+      if (inBlock1) {
+        if (line.startsWith('## ПОДБЛОК')) {
+          currentSub = line.replace('##', '').trim();
+          continue;
+        }
+        if (line.includes('|') && !line.startsWith('#')) {
+          const parts = line.split('|').map(p => p.trim());
+          if (parts.length >= 2) {
+            lessonTasks.push({
+              ru: parts[0],
+              en: parts[1],
+              sub: currentSub
+            });
+          }
         }
       }
     }
+
+    if (lessonTasks.length > 0) {
+      loadProgress();
+      if (currentIndex >= lessonTasks.length) currentIndex = 0;
+      updateBalance(0);
+      showNextTask();
+    }
   }
 
-  function renderCurrentTask() {
-    if (tasks.length === 0) return;
+  function showNextTask() {
+    isLocked = false;
+    isWaitingNext = false;
 
-    if (currentIndex >= tasks.length) {
-      document.getElementById('sourcePhrase').innerText = '🎉 Урок 1 полностью завершён!';
-      document.getElementById('userInput').style.display = 'none';
-      document.getElementById('micBtn').style.display = 'none';
-      document.getElementById('actionBtn').style.display = 'none';
-      document.getElementById('statusLine').className = 'status-line correct';
-      document.getElementById('statusLine').innerText = `Отличная работа! Итоговый результат: ${balance} ₽`;
+    const input = document.getElementById('answerInput');
+    const submitBtn = document.getElementById('submitBtn');
+    const statusLine = document.getElementById('statusLine');
+
+    input.disabled = false;
+    submitBtn.disabled = false;
+    submitBtn.innerText = 'OK';
+
+    statusLine.className = 'status-line';
+    statusLine.innerHTML = '';
+
+    if (currentIndex >= lessonTasks.length) {
+      document.getElementById('taskQuestion').innerText = '🎉 Блок 1 успешно пройден!';
+      document.getElementById('stepCounter').innerText = `${lessonTasks.length} из ${lessonTasks.length}`;
+      confetti({ particleCount: 120, spread: 70, origin: { y: 0.6 } });
       return;
     }
 
-    const t = tasks[currentIndex];
-    document.getElementById('sourcePhrase').innerText = t.ru;
-    document.getElementById('subblockLabel').innerText = t.subblock;
-    document.getElementById('progressCount').innerText = `${currentIndex + 1} из ${tasks.length}`;
-    document.getElementById('balanceDisplay').innerText = `${balance} ₽`;
+    currentPhrase = lessonTasks[currentIndex];
+    document.getElementById('taskQuestion').innerText = currentPhrase.ru;
+    document.getElementById('subBadge').innerText = currentPhrase.sub;
+    document.getElementById('stepCounter').innerText = `${currentIndex + 1} из ${lessonTasks.length}`;
 
-    const input = document.getElementById('userInput');
     input.value = '';
-    input.disabled = false;
     input.focus();
-
-    const statusLine = document.getElementById('statusLine');
-    statusLine.style.display = 'none';
-    statusLine.className = 'status-line';
-    statusLine.innerText = '';
-
-    const btn = document.getElementById('actionBtn');
-    btn.innerText = 'OK';
-    isWaitingNext = false;
   }
 
-  // Автоматическая первая заглавная буква
-  document.getElementById('userInput').addEventListener('input', function(e) {
-    if (this.value.length === 1) {
-      this.value = this.value.toUpperCase();
-    }
-  });
-
-  // Обработка Enter
-  document.getElementById('userInput').addEventListener('keydown', function(e) {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      handleAction();
-    }
-  });
-
-  function handleAction() {
+  function handleButtonClick() {
     if (isWaitingNext) {
       currentIndex++;
       saveProgress();
-      renderCurrentTask();
-    } else {
-      checkAnswer();
+      showNextTask();
+      return;
     }
-  }
 
-  function cleanText(str) {
-    return str.toLowerCase().replace(/[.,!?;:'"()]/g, '').replace(/\s+/g, ' ').trim();
+    checkAnswer();
   }
 
   function checkAnswer() {
-    if (tasks.length === 0 || currentIndex >= tasks.length) return;
+    if (isLocked) return;
 
-    if (isRecording) toggleMic();
+    stopMicrophone();
 
-    const input = document.getElementById('userInput');
-    const userAns = input.value.trim();
-    if (!userAns) return;
-
-    const currentTask = tasks[currentIndex];
-    const isCorrect = cleanText(userAns) === cleanText(currentTask.en);
+    const input = document.getElementById('answerInput');
+    const submitBtn = document.getElementById('submitBtn');
     const statusLine = document.getElementById('statusLine');
-    const btn = document.getElementById('actionBtn');
 
-    input.disabled = true;
+    const userVal = cleanStr(input.value);
+    const targetVal = cleanStr(currentPhrase.en);
 
-    if (isCorrect) {
-      balance += 5;
-      statusLine.className = 'status-line correct';
-      statusLine.innerText = '✓ ВЕРНО! (+5 ₽)';
+    if (!userVal) return;
+
+    if (userVal === targetVal) {
+      updateBalance(+5);
+      statusLine.className = 'status-line correct show';
+      statusLine.innerHTML = `✓ ВЕРНО! (+5 ₽)`;
+
+      speakText(currentPhrase.en, 1.0);
+
+      isWaitingNext = true;
+      input.disabled = true;
+      submitBtn.innerText = 'Дальше ➔';
+      submitBtn.focus();
     } else {
-      balance -= 5;
-      statusLine.className = 'status-line wrong';
-      statusLine.innerText = `✕ ОШИБКА (-5 ₽) | Правильно: ${currentTask.en}`;
+      updateBalance(-5);
+      statusLine.className = 'status-line wrong show';
+      statusLine.innerHTML = `✕ ОШИБКА (-5 ₽)  |  Правильно: ${currentPhrase.en}`;
+
+      speakText(currentPhrase.en, 0.9);
+
+      isWaitingNext = true;
+      input.disabled = true;
+      submitBtn.innerText = 'Дальше ➔';
+      submitBtn.focus();
     }
 
-    document.getElementById('balanceDisplay').innerText = `${balance} ₽`;
     saveProgress();
-    speakEnglish(currentTask.en);
-
-    isWaitingNext = true;
-    btn.innerText = 'Дальше ➔';
   }
 
-  function speakEnglish(phrase) {
+  document.getElementById('answerInput').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') handleButtonClick();
+  });
+
+  function speakText(text, rate = 1) {
     if (!('speechSynthesis' in window)) return;
     window.speechSynthesis.cancel();
-    const ut = new SpeechSynthesisUtterance(phrase);
-    ut.lang = 'en-US';
-    ut.rate = 0.9;
-    window.speechSynthesis.speak(ut);
+    setTimeout(() => {
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = 'en-US';
+      u.rate = rate;
+      window.speechSynthesis.speak(u);
+    }, 40);
   }
 
-  function initSpeech() {
-    const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SpeechRec) return;
+  function stopMicrophone() {
+    manualStop = true;
+    if (recognition && isListening) {
+      recognition.stop();
+    }
+    isListening = false;
+    document.getElementById('micBtn').classList.remove('listening');
+  }
 
-    recognition = new SpeechRec();
+  function toggleSpeechRecognition() {
+    if (isWaitingNext) return;
+
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      alert('Голосовой ввод не поддерживается данным браузером.');
+      return;
+    }
+
+    const micBtn = document.getElementById('micBtn');
+
+    if (isListening) {
+      stopMicrophone();
+      return;
+    }
+
+    manualStop = false;
+    recognition = new SpeechRecognition();
     recognition.lang = 'en-US';
     recognition.continuous = true;
     recognition.interimResults = true;
 
-    recognition.onresult = (event) => {
-      let finalTranscript = '';
-      for (let i = 0; i < event.results.length; ++i) {
-        finalTranscript += event.results[i][0].transcript;
-      }
-      finalTranscript = finalTranscript.trim();
-      if (finalTranscript.length > 0) {
-        const capitalized = finalTranscript.charAt(0).toUpperCase() + finalTranscript.slice(1);
-        document.getElementById('userInput').value = capitalized;
-      }
+    let finalTranscript = document.getElementById('answerInput').value;
+
+    recognition.onstart = () => {
+      isListening = true;
+      micBtn.classList.add('listening');
     };
 
-    recognition.onerror = () => {
-      isRecording = false;
-      document.getElementById('micBtn').classList.remove('recording');
+    recognition.onresult = (event) => {
+      let interim = '';
+      for (let i = event.resultIndex; i < event.results.length; ++i) {
+        if (event.results[i].isFinal) {
+          finalTranscript += (finalTranscript ? ' ' : '') + event.results[i][0].transcript.trim();
+        } else {
+          interim += event.results[i][0].transcript;
+        }
+      }
+      const rawRes = finalTranscript + (interim ? ' ' + interim : '');
+      const input = document.getElementById('answerInput');
+      input.value = capitalizeFirst(rawRes);
+    };
+
+    recognition.onerror = (e) => {
+      if (e.error !== 'no-speech') {
+        stopMicrophone();
+      }
     };
 
     recognition.onend = () => {
-      if (isRecording) {
-        try { recognition.start(); } catch(e) {}
+      if (isListening && !manualStop) {
+        try {
+          recognition.start();
+        } catch(err) {
+          stopMicrophone();
+        }
       } else {
-        document.getElementById('micBtn').classList.remove('recording');
+        stopMicrophone();
       }
     };
+
+    recognition.start();
   }
 
-  function toggleMic() {
-    if (!recognition) initSpeech();
-    if (!recognition) {
-      alert('Голосовой ввод не поддерживается в данном браузере.');
-      return;
-    }
-
-    const btn = document.getElementById('micBtn');
-    if (!isRecording) {
-      isRecording = true;
-      btn.classList.add('recording');
-      try { recognition.start(); } catch(e) {}
-    } else {
-      isRecording = false;
-      btn.classList.remove('recording');
-      try { recognition.stop(); } catch(e) {}
-    }
-  }
-
-  window.onload = () => {
-    initSpeech();
-    loadLesson();
-  };
+  loadLessonFile();
 </script>
 </body>
 </html>
