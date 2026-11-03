@@ -98,8 +98,14 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      transition: all 0.2s;
     }
-    .btn-mic.listening { background: var(--coral-danger); color: #fff; animation: pulse 1s infinite; }
+    .btn-mic.listening {
+      background: var(--coral-danger);
+      color: #fff;
+      animation: pulse 1s infinite;
+      border-color: #fca5a5;
+    }
 
     @keyframes pulse {
       0% { transform: scale(1); }
@@ -107,7 +113,6 @@
       100% { transform: scale(1); }
     }
 
-    /* Отдельная строка статуса (Верно / Ошибка) */
     .status-line {
       min-height: 44px;
       border-radius: 8px;
@@ -173,7 +178,6 @@
       <button class="btn-mango" id="submitBtn" type="button" onclick="checkAnswer()">OK</button>
     </div>
 
-    <!-- Та самая строка под фразой: Верно / Ошибка -->
     <div class="status-line" id="statusLine"></div>
   </div>
 </div>
@@ -186,6 +190,7 @@
   let recognition = null;
   let isListening = false;
   let isLocked = false;
+  let manualStop = false;
 
   function updateBalance(points) {
     balance += points;
@@ -291,6 +296,9 @@
   function checkAnswer() {
     if (isLocked) return;
 
+    // При отправке ответа принудительно останавливаем микрофон
+    stopMicrophone();
+
     const input = document.getElementById('answerInput');
     const submitBtn = document.getElementById('submitBtn');
     const statusLine = document.getElementById('statusLine');
@@ -300,36 +308,29 @@
 
     if (!userVal) return;
 
-    // Блокируем ввод на время озвучки и показа строки
     isLocked = true;
     input.disabled = true;
     submitBtn.disabled = true;
 
     if (userVal === targetVal) {
-      // 1. ВЕРНО (+5 ₽)
       updateBalance(+5);
       statusLine.className = 'status-line correct show';
       statusLine.innerHTML = `✓ ВЕРНО! (+5 ₽)`;
 
-      // Озвучиваем правильную фразу
       speakText(currentPhrase.en, 1.0);
 
-      // Переход к следующей фразе через 2.2 сек
       setTimeout(() => {
         currentIndex++;
         showNextTask();
       }, 2200);
 
     } else {
-      // 2. ОШИБКА (-5 ₽)
       updateBalance(-5);
       statusLine.className = 'status-line wrong show';
       statusLine.innerHTML = `✕ ОШИБКА (-5 ₽)  |  Правильно: ${currentPhrase.en}`;
 
-      // Озвучиваем эталонную фразу
       speakText(currentPhrase.en, 0.9);
 
-      // После озвучки автоматически перескакиваем дальше через 3 секунды
       setTimeout(() => {
         currentIndex++;
         showNextTask();
@@ -352,6 +353,16 @@
     }, 40);
   }
 
+  function stopMicrophone() {
+    manualStop = true;
+    if (recognition && isListening) {
+      recognition.stop();
+    }
+    isListening = false;
+    document.getElementById('micBtn').classList.remove('listening');
+  }
+
+  // Голосовой ввод с поддержкой пауз и непрерывного распознавания
   function toggleSpeechRecognition() {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) {
@@ -361,14 +372,20 @@
 
     const micBtn = document.getElementById('micBtn');
 
-    if (isListening && recognition) {
-      recognition.stop();
+    if (isListening) {
+      stopMicrophone();
       return;
     }
 
+    manualStop = false;
     recognition = new SpeechRecognition();
     recognition.lang = 'en-US';
-    recognition.interimResults = false;
+    // Непрерывный режим: не выключаться при паузах
+    recognition.continuous = true;
+    // Показывать промежуточные фразы на лету
+    recognition.interimResults = true;
+
+    let finalTranscript = document.getElementById('answerInput').value;
 
     recognition.onstart = () => {
       isListening = true;
@@ -376,21 +393,35 @@
     };
 
     recognition.onresult = (event) => {
-      const spokenText = event.results[0][0].transcript;
+      let interim = '';
+      for (let i = event.resultIndex; i < event.results.length; ++i) {
+        if (event.results[i].isFinal) {
+          finalTranscript += (finalTranscript ? ' ' : '') + event.results[i][0].transcript.trim();
+        } else {
+          interim += event.results[i][0].transcript;
+        }
+      }
       const input = document.getElementById('answerInput');
-      // Только вставляем распознанный текст, НЕ отправляя
-      input.value = spokenText;
-      input.focus();
+      input.value = finalTranscript + (interim ? ' ' + interim : '');
     };
 
-    recognition.onerror = () => {
-      isListening = false;
-      micBtn.classList.remove('listening');
+    recognition.onerror = (e) => {
+      if (e.error !== 'no-speech') {
+        stopMicrophone();
+      }
     };
 
     recognition.onend = () => {
-      isListening = false;
-      micBtn.classList.remove('listening');
+      // Если браузер пытается сам разорвать связь из-за тишины, а пользователь не нажимал стоп — перезапускаем
+      if (isListening && !manualStop) {
+        try {
+          recognition.start();
+        } catch(err) {
+          stopMicrophone();
+        }
+      } else {
+        stopMicrophone();
+      }
     };
 
     recognition.start();
