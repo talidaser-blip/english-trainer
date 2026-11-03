@@ -74,7 +74,7 @@
       padding: 34px 28px;
       display: flex;
       flex-direction: column;
-      gap: 22px;
+      gap: 18px;
     }
 
     .task-box {
@@ -155,15 +155,14 @@
       border-radius: 10px;
       font-size: 16px;
       font-weight: 600;
-      display: flex;
+      display: none;
       align-items: center;
       justify-content: center;
       text-align: center;
       padding: 10px 16px;
-      visibility: hidden;
       line-height: 1.4;
     }
-    .status-line.show { visibility: visible; }
+    .status-line.show { display: flex; }
     .status-line.correct {
       background: rgba(45, 212, 191, 0.15);
       color: var(--success-teal);
@@ -174,6 +173,41 @@
       color: var(--coral-danger);
       border: 1px solid var(--coral-danger);
     }
+
+    /* Блок русской транскрипции / произношения */
+    .phonetic-box {
+      display: none;
+      background: #0b1e28;
+      border: 1px dashed var(--teal-sound);
+      border-radius: 10px;
+      padding: 12px 18px;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      font-size: 16px;
+      color: #cbd5e1;
+    }
+    .phonetic-box.show { display: flex; }
+    .phonetic-text {
+      color: #38bdf8;
+      font-weight: 500;
+      letter-spacing: 0.3px;
+    }
+    .btn-listen {
+      background: #10424b;
+      border: 1px solid var(--teal-sound);
+      color: var(--success-teal);
+      padding: 6px 14px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+    .btn-listen:hover { opacity: 0.9; }
 
     .status-tag {
       font-size: 12px;
@@ -218,7 +252,17 @@
       <button class="btn-mango" id="submitBtn" type="button" onclick="handleButtonClick()">OK</button>
     </div>
 
+    <!-- 1. Плашка статуса (ВЕРНО / ОШИБКА) -->
     <div class="status-line" id="statusLine"></div>
+
+    <!-- 2. Плашка русской транскрипции под статусом -->
+    <div class="phonetic-box" id="phoneticBox">
+      <div>
+        <span style="color: var(--text-muted); font-size: 14px;">Произношение: </span>
+        <span class="phonetic-text" id="phoneticText">[...]</span>
+      </div>
+      <button class="btn-listen" type="button" onclick="replayAudio()">🔊 Повторить</button>
+    </div>
   </div>
 </div>
 
@@ -235,7 +279,6 @@
   let manualStop = false;
   let isWaitingNext = false;
 
-  // Автосохранение в память браузера
   function saveProgress() {
     const data = {
       index: currentIndex,
@@ -244,7 +287,6 @@
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
   }
 
-  // Загрузка сохраненного состояния
   function loadProgress() {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (raw) {
@@ -258,7 +300,6 @@
     }
   }
 
-  // Ручной сброс прогресса
   function resetProgress() {
     if (confirm('Сбросить текущий прогресс и начать урок с 1-й фразы?')) {
       localStorage.removeItem(STORAGE_KEY);
@@ -282,7 +323,6 @@
     return (text || '').toLowerCase().replace(/[.,/#!$%^&*;:{}=\-_`~()?'"]/g, '').replace(/\s+/g, ' ').trim();
   }
 
-  // Авто-капитализация первой буквы
   function capitalizeFirst(text) {
     if (!text) return '';
     return text.charAt(0).toUpperCase() + text.slice(1);
@@ -348,6 +388,7 @@
             lessonTasks.push({
               ru: parts[0],
               en: parts[1],
+              phonetic: parts[2] || '', // 3-я колонка: русская транскрипция (если есть)
               sub: currentSub
             });
           }
@@ -370,6 +411,7 @@
     const input = document.getElementById('answerInput');
     const submitBtn = document.getElementById('submitBtn');
     const statusLine = document.getElementById('statusLine');
+    const phoneticBox = document.getElementById('phoneticBox');
 
     input.disabled = false;
     submitBtn.disabled = false;
@@ -377,6 +419,8 @@
 
     statusLine.className = 'status-line';
     statusLine.innerHTML = '';
+
+    phoneticBox.classList.remove('show');
 
     if (currentIndex >= lessonTasks.length) {
       document.getElementById('taskQuestion').innerText = '🎉 Блок 1 успешно пройден!';
@@ -401,7 +445,6 @@
       showNextTask();
       return;
     }
-
     checkAnswer();
   }
 
@@ -413,6 +456,8 @@
     const input = document.getElementById('answerInput');
     const submitBtn = document.getElementById('submitBtn');
     const statusLine = document.getElementById('statusLine');
+    const phoneticBox = document.getElementById('phoneticBox');
+    const phoneticText = document.getElementById('phoneticText');
 
     const userVal = cleanStr(input.value);
     const targetVal = cleanStr(currentPhrase.en);
@@ -423,27 +468,34 @@
       updateBalance(+5);
       statusLine.className = 'status-line correct show';
       statusLine.innerHTML = `✓ ВЕРНО! (+5 ₽)`;
-
       speakText(currentPhrase.en, 1.0);
-
-      isWaitingNext = true;
-      input.disabled = true;
-      submitBtn.innerText = 'Дальше ➔';
-      submitBtn.focus();
     } else {
       updateBalance(-5);
       statusLine.className = 'status-line wrong show';
       statusLine.innerHTML = `✕ ОШИБКА (-5 ₽)  |  Правильно: ${currentPhrase.en}`;
-
       speakText(currentPhrase.en, 0.9);
-
-      isWaitingNext = true;
-      input.disabled = true;
-      submitBtn.innerText = 'Дальше ➔';
-      submitBtn.focus();
     }
 
+    // Если в файле урока есть транскрипция, отображаем её
+    if (currentPhrase.phonetic) {
+      phoneticText.innerText = `[${currentPhrase.phonetic.replace(/[\[\]]/g, '')}]`;
+      phoneticBox.classList.add('show');
+    } else {
+      phoneticBox.classList.remove('show');
+    }
+
+    isWaitingNext = true;
+    input.disabled = true;
+    submitBtn.innerText = 'Дальше ➔';
+    submitBtn.focus();
+
     saveProgress();
+  }
+
+  function replayAudio() {
+    if (currentPhrase && currentPhrase.en) {
+      speakText(currentPhrase.en, 0.9);
+    }
   }
 
   document.getElementById('answerInput').addEventListener('keydown', (e) => {
