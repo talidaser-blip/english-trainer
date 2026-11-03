@@ -219,7 +219,7 @@
       </select>
       <div class="status-badge">
         <div class="badge-subblock" id="subblockLabel">Загрузка...</div>
-        <div id="progressCount" style="margin-top: 3px;">0 из 0</div>
+        <div id="progressCount" style="margin-top: 3px;">0 из 50</div>
       </div>
     </div>
   </div>
@@ -249,7 +249,8 @@
   const LESSON_URL = './lessons/lesson_1.txt';
   const STORAGE_KEY = 'english_trainer_progress_v2';
 
-  let currentBlock = 2;
+  let rawLessonText = '';
+  let currentBlock = 2; // Текущий блок
   let tasks = [];
   let currentIndex = 0;
   let balance = 0;
@@ -295,6 +296,7 @@
     currentBlock = parseInt(select.value, 10);
     currentIndex = 0;
     isWaitingNext = false;
+    parseCurrentBlock();
     saveProgress();
     renderCurrentTask();
   }
@@ -303,10 +305,10 @@
     try {
       const res = await fetch(LESSON_URL);
       if (!res.ok) throw new Error('Не удалось открыть файл урока');
-      const text = await res.text();
-      parseLesson(text);
+      rawLessonText = await res.text();
       loadProgress();
       document.getElementById('blockSelector').value = currentBlock;
+      parseCurrentBlock();
       if (currentIndex >= tasks.length) currentIndex = 0;
       renderCurrentTask();
     } catch (err) {
@@ -315,31 +317,46 @@
     }
   }
 
-  function parseLesson(content) {
-    const lines = content.split('\n');
+  // Считывает ровно 50 предложений выбранного блока
+  function parseCurrentBlock() {
+    if (!rawLessonText) return;
+    const lines = rawLessonText.split('\n');
+    let insideTargetBlock = false;
     let currentSubblock = 'ПОДБЛОК 1';
     tasks = [];
+
+    const startTag = currentBlock === 1 ? '# БЛОК 1' : '# БЛОК 2';
+    const stopTag = currentBlock === 1 ? '# БЛОК 2' : '# БЛОК 3';
 
     for (let rawLine of lines) {
       let line = rawLine.trim();
       if (!line) continue;
 
-      if (line.startsWith('## ПОДБЛОК')) {
-        currentSubblock = line.replace('##', '').trim();
+      if (line.startsWith(startTag)) {
+        insideTargetBlock = true;
         continue;
       }
+      if (insideTargetBlock && line.startsWith(stopTag)) {
+        break;
+      }
 
-      if (line.startsWith('#')) continue;
+      if (insideTargetBlock) {
+        if (line.startsWith('## ПОДБЛОК')) {
+          currentSubblock = line.replace('##', '').trim();
+          continue;
+        }
+        if (line.startsWith('#')) continue;
 
-      if (line.includes('|')) {
-        const parts = line.split('|');
-        if (parts.length >= 2) {
-          tasks.push({
-            ru: parts[0].trim(),
-            en: parts[1].trim(),
-            trans: parts[2] ? parts[2].trim() : '',
-            subblock: currentSubblock
-          });
+        if (line.includes('|')) {
+          const parts = line.split('|');
+          if (parts.length >= 2) {
+            tasks.push({
+              ru: parts[0].trim(),
+              en: parts[1].trim(),
+              trans: parts[2] ? parts[2].trim() : '',
+              subblock: currentSubblock
+            });
+          }
         }
       }
     }
@@ -353,12 +370,13 @@
         currentBlock = 2;
         currentIndex = 0;
         document.getElementById('blockSelector').value = 2;
+        parseCurrentBlock();
         saveProgress();
         alert('Поздравляем! Блок 1 завершён. Переходим ко Блоку 2 (EN ➔ RU)!');
         renderCurrentTask();
         return;
       } else {
-        document.getElementById('sourcePhrase').innerText = '🎉 Блоки успешно завершены!';
+        document.getElementById('sourcePhrase').innerText = '🎉 Блоки 1 и 2 полностью завершены!';
         document.getElementById('listenBtn').style.display = 'none';
         document.getElementById('userInput').style.display = 'none';
         document.getElementById('micBtn').style.display = 'none';
@@ -432,7 +450,6 @@
     }
   }
 
-  // Очистка строки
   function cleanText(str) {
     return str
       .toLowerCase()
@@ -443,17 +460,13 @@
       .trim();
   }
 
-  // Проверка эквивалентности русских фраз с учётом порядка слов
   function checkRussianMatch(userText, targetText) {
     const cleanUser = cleanText(userText);
     const cleanTarget = cleanText(targetText);
-
     if (cleanUser === cleanTarget) return true;
 
-    // Сравнение по набору слов (Bag of Words)
     const userWords = cleanUser.split(' ').filter(Boolean).sort().join(' ');
     const targetWords = cleanTarget.split(' ').filter(Boolean).sort().join(' ');
-
     return userWords === targetWords;
   }
 
@@ -475,10 +488,8 @@
 
     let isCorrect = false;
     if (currentBlock === 1) {
-      // Для английского важен строгий порядок слов
       isCorrect = cleanText(userAns) === cleanText(t.en);
     } else {
-      // Для русского языка порядок слов свободный
       isCorrect = checkRussianMatch(userAns, t.ru);
     }
 
