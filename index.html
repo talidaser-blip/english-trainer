@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
@@ -42,7 +42,7 @@
       padding: 20px;
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 14px;
     }
 
     .task-box {
@@ -82,9 +82,9 @@
       cursor: pointer;
       font-size: 16px;
       transition: background 0.2s;
+      white-space: nowrap;
     }
     .btn-mango:hover { background: var(--accent-mango-hover); }
-    .btn-mango:disabled { opacity: 0.5; cursor: not-allowed; }
 
     .btn-mic {
       background: #08161f;
@@ -107,19 +107,296 @@
       100% { transform: scale(1); }
     }
 
-    .feedback {
-      padding: 14px;
+    /* Отдельная строка статуса (Верно / Ошибка) */
+    .status-line {
+      min-height: 44px;
       border-radius: 8px;
       font-size: 15px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       text-align: center;
-      display: none;
+      padding: 8px 14px;
+      visibility: hidden;
       line-height: 1.4;
     }
-    .feedback.correct {
-      display: block;
+    .status-line.show { visibility: visible; }
+    .status-line.correct {
       background: rgba(45, 212, 191, 0.15);
       color: var(--success-teal);
       border: 1px solid var(--success-teal);
     }
-    .feedback.wrong {
-      display
+    .status-line.wrong {
+      background: rgba(248, 113, 113, 0.15);
+      color: var(--coral-danger);
+      border: 1px solid var(--coral-danger);
+    }
+
+    .status-tag {
+      font-size: 12px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      background: #0b1e28;
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+    }
+
+    .sub-badge {
+      font-size: 11px;
+      color: var(--teal-sound);
+      margin-top: 4px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header-card">
+    <div>
+      <div class="score-title">Баланс урока</div>
+      <div class="score-val" id="scoreDisplay">0 ₽</div>
+    </div>
+    <div style="text-align: right;">
+      <span class="status-tag" id="blockBadge">Блок 1: RU ➔ EN</span>
+      <div class="sub-badge" id="subBadge">Подблок 1</div>
+      <div style="font-size: 13px; color: var(--text-muted); margin-top: 4px;" id="stepCounter">...</div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="task-box" id="taskQuestion">Загрузка данных...</div>
+
+    <div class="input-row">
+      <input type="text" id="answerInput" placeholder="Введите перевод или продиктуйте 🎙️..." autocomplete="off">
+      <button class="btn-mic" id="micBtn" type="button" onclick="toggleSpeechRecognition()" title="Голосовой ввод">🎙️</button>
+      <button class="btn-mango" id="submitBtn" type="button" onclick="checkAnswer()">OK</button>
+    </div>
+
+    <!-- Та самая строка под фразой: Верно / Ошибка -->
+    <div class="status-line" id="statusLine"></div>
+  </div>
+</div>
+
+<script>
+  let lessonTasks = [];
+  let currentIndex = 0;
+  let currentPhrase = null;
+  let balance = 0;
+  let recognition = null;
+  let isListening = false;
+  let isLocked = false;
+
+  function updateBalance(points) {
+    balance += points;
+    const el = document.getElementById('scoreDisplay');
+    el.innerText = `${balance} ₽`;
+    if (balance < 0) el.classList.add('minus');
+    else el.classList.remove('minus');
+  }
+
+  function cleanStr(text) {
+    return (text || '').toLowerCase().replace(/[.,/#!$%^&*;:{}=\-_`~()?'"]/g, '').replace(/\s+/g, ' ').trim();
+  }
+
+  async function loadLessonFile() {
+    const paths = [
+      'lessons/lesson_1.txt',
+      './lessons/lesson_1.txt',
+      '/english-trainer/lessons/lesson_1.txt'
+    ];
+
+    let textData = null;
+    for (const p of paths) {
+      try {
+        const res = await fetch(p);
+        if (res.ok) {
+          textData = await res.text();
+          break;
+        }
+      } catch (err) {}
+    }
+
+    if (textData) {
+      parseLessonText(textData);
+    } else {
+      document.getElementById('taskQuestion').innerText = 'Не удалось загрузить lessons/lesson_1.txt.';
+    }
+  }
+
+  function parseLessonText(rawText) {
+    const lines = rawText.split('\n').map(l => l.trim());
+    let inBlock1 = false;
+    let currentSub = 'Подблок 1';
+    lessonTasks = [];
+
+    for (const line of lines) {
+      if (line.startsWith('# БЛОК 1')) {
+        inBlock1 = true;
+        continue;
+      }
+      if (line.startsWith('# БЛОК 2')) break;
+
+      if (inBlock1) {
+        if (line.startsWith('## ПОДБЛОК')) {
+          currentSub = line.replace('##', '').trim();
+          continue;
+        }
+        if (line.includes('|') && !line.startsWith('#')) {
+          const parts = line.split('|').map(p => p.trim());
+          if (parts.length >= 2) {
+            lessonTasks.push({
+              ru: parts[0],
+              en: parts[1],
+              sub: currentSub
+            });
+          }
+        }
+      }
+    }
+
+    if (lessonTasks.length > 0) {
+      currentIndex = 0;
+      showNextTask();
+    }
+  }
+
+  function showNextTask() {
+    isLocked = false;
+    const input = document.getElementById('answerInput');
+    const submitBtn = document.getElementById('submitBtn');
+    const statusLine = document.getElementById('statusLine');
+
+    input.disabled = false;
+    submitBtn.disabled = false;
+    statusLine.className = 'status-line';
+    statusLine.innerHTML = '';
+
+    if (currentIndex >= lessonTasks.length) {
+      document.getElementById('taskQuestion').innerText = '🎉 Блок 1 успешно пройден!';
+      document.getElementById('stepCounter').innerText = `${lessonTasks.length} из ${lessonTasks.length}`;
+      confetti({ particleCount: 120, spread: 70, origin: { y: 0.6 } });
+      return;
+    }
+
+    currentPhrase = lessonTasks[currentIndex];
+    document.getElementById('taskQuestion').innerText = currentPhrase.ru;
+    document.getElementById('subBadge').innerText = currentPhrase.sub;
+    document.getElementById('stepCounter').innerText = `${currentIndex + 1} из ${lessonTasks.length}`;
+
+    input.value = '';
+    input.focus();
+  }
+
+  function checkAnswer() {
+    if (isLocked) return;
+
+    const input = document.getElementById('answerInput');
+    const submitBtn = document.getElementById('submitBtn');
+    const statusLine = document.getElementById('statusLine');
+
+    const userVal = cleanStr(input.value);
+    const targetVal = cleanStr(currentPhrase.en);
+
+    if (!userVal) return;
+
+    // Блокируем ввод на время озвучки и показа строки
+    isLocked = true;
+    input.disabled = true;
+    submitBtn.disabled = true;
+
+    if (userVal === targetVal) {
+      // 1. ВЕРНО (+5 ₽)
+      updateBalance(+5);
+      statusLine.className = 'status-line correct show';
+      statusLine.innerHTML = `✓ ВЕРНО! (+5 ₽)`;
+
+      // Озвучиваем правильную фразу
+      speakText(currentPhrase.en, 1.0);
+
+      // Переход к следующей фразе через 2.2 сек
+      setTimeout(() => {
+        currentIndex++;
+        showNextTask();
+      }, 2200);
+
+    } else {
+      // 2. ОШИБКА (-5 ₽)
+      updateBalance(-5);
+      statusLine.className = 'status-line wrong show';
+      statusLine.innerHTML = `✕ ОШИБКА (-5 ₽)  |  Правильно: ${currentPhrase.en}`;
+
+      // Озвучиваем эталонную фразу
+      speakText(currentPhrase.en, 0.9);
+
+      // После озвучки автоматически перескакиваем дальше через 3 секунды
+      setTimeout(() => {
+        currentIndex++;
+        showNextTask();
+      }, 3000);
+    }
+  }
+
+  document.getElementById('answerInput').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') checkAnswer();
+  });
+
+  function speakText(text, rate = 1) {
+    if (!('speechSynthesis' in window)) return;
+    window.speechSynthesis.cancel();
+    setTimeout(() => {
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = 'en-US';
+      u.rate = rate;
+      window.speechSynthesis.speak(u);
+    }, 40);
+  }
+
+  function toggleSpeechRecognition() {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      alert('Голосовой ввод не поддерживается данным браузером.');
+      return;
+    }
+
+    const micBtn = document.getElementById('micBtn');
+
+    if (isListening && recognition) {
+      recognition.stop();
+      return;
+    }
+
+    recognition = new SpeechRecognition();
+    recognition.lang = 'en-US';
+    recognition.interimResults = false;
+
+    recognition.onstart = () => {
+      isListening = true;
+      micBtn.classList.add('listening');
+    };
+
+    recognition.onresult = (event) => {
+      const spokenText = event.results[0][0].transcript;
+      const input = document.getElementById('answerInput');
+      // Только вставляем распознанный текст, НЕ отправляя
+      input.value = spokenText;
+      input.focus();
+    };
+
+    recognition.onerror = () => {
+      isListening = false;
+      micBtn.classList.remove('listening');
+    };
+
+    recognition.onend = () => {
+      isListening = false;
+      micBtn.classList.remove('listening');
+    };
+
+    recognition.start();
+  }
+
+  loadLessonFile();
+</script>
+</body>
+</html>
