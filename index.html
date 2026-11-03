@@ -175,7 +175,7 @@
     <div class="input-row">
       <input type="text" id="answerInput" placeholder="Введите перевод или продиктуйте 🎙️..." autocomplete="off">
       <button class="btn-mic" id="micBtn" type="button" onclick="toggleSpeechRecognition()" title="Голосовой ввод">🎙️</button>
-      <button class="btn-mango" id="submitBtn" type="button" onclick="checkAnswer()">OK</button>
+      <button class="btn-mango" id="submitBtn" type="button" onclick="handleButtonClick()">OK</button>
     </div>
 
     <div class="status-line" id="statusLine"></div>
@@ -191,6 +191,7 @@
   let isListening = false;
   let isLocked = false;
   let manualStop = false;
+  let isWaitingNext = false; // Флаг: ждем ли ручного клика для перехода после ошибки
 
   function updateBalance(points) {
     balance += points;
@@ -268,12 +269,16 @@
 
   function showNextTask() {
     isLocked = false;
+    isWaitingNext = false;
+
     const input = document.getElementById('answerInput');
     const submitBtn = document.getElementById('submitBtn');
     const statusLine = document.getElementById('statusLine');
 
     input.disabled = false;
     submitBtn.disabled = false;
+    submitBtn.innerText = 'OK';
+
     statusLine.className = 'status-line';
     statusLine.innerHTML = '';
 
@@ -293,10 +298,20 @@
     input.focus();
   }
 
+  function handleButtonClick() {
+    // Если мы стоим на экране ошибки и ждем клика — по клику переходим дальше
+    if (isWaitingNext) {
+      currentIndex++;
+      showNextTask();
+      return;
+    }
+
+    checkAnswer();
+  }
+
   function checkAnswer() {
     if (isLocked) return;
 
-    // При отправке ответа принудительно останавливаем микрофон
     stopMicrophone();
 
     const input = document.getElementById('answerInput');
@@ -308,38 +323,42 @@
 
     if (!userVal) return;
 
-    isLocked = true;
-    input.disabled = true;
-    submitBtn.disabled = true;
-
     if (userVal === targetVal) {
+      // 1. ВЕРНО (+5 ₽)
+      isLocked = true;
+      input.disabled = true;
+      submitBtn.disabled = true;
+
       updateBalance(+5);
       statusLine.className = 'status-line correct show';
       statusLine.innerHTML = `✓ ВЕРНО! (+5 ₽)`;
 
       speakText(currentPhrase.en, 1.0);
 
+      // При верном ответе переключаем сами через 2 сек
       setTimeout(() => {
         currentIndex++;
         showNextTask();
-      }, 2200);
+      }, 2000);
 
     } else {
+      // 2. ОШИБКА (-5 ₽)
       updateBalance(-5);
       statusLine.className = 'status-line wrong show';
       statusLine.innerHTML = `✕ ОШИБКА (-5 ₽)  |  Правильно: ${currentPhrase.en}`;
 
       speakText(currentPhrase.en, 0.9);
 
-      setTimeout(() => {
-        currentIndex++;
-        showNextTask();
-      }, 3000);
+      // Включаем ожидание повторного клика от вас
+      isWaitingNext = true;
+      input.disabled = true;
+      submitBtn.innerText = 'Дальше ➔';
+      submitBtn.focus();
     }
   }
 
   document.getElementById('answerInput').addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') checkAnswer();
+    if (e.key === 'Enter') handleButtonClick();
   });
 
   function speakText(text, rate = 1) {
@@ -362,8 +381,9 @@
     document.getElementById('micBtn').classList.remove('listening');
   }
 
-  // Голосовой ввод с поддержкой пауз и непрерывного распознавания
   function toggleSpeechRecognition() {
+    if (isWaitingNext) return;
+
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) {
       alert('Голосовой ввод не поддерживается данным браузером.');
@@ -380,9 +400,7 @@
     manualStop = false;
     recognition = new SpeechRecognition();
     recognition.lang = 'en-US';
-    // Непрерывный режим: не выключаться при паузах
     recognition.continuous = true;
-    // Показывать промежуточные фразы на лету
     recognition.interimResults = true;
 
     let finalTranscript = document.getElementById('answerInput').value;
@@ -412,7 +430,6 @@
     };
 
     recognition.onend = () => {
-      // Если браузер пытается сам разорвать связь из-за тишины, а пользователь не нажимал стоп — перезапускаем
       if (isListening && !manualStop) {
         try {
           recognition.start();
