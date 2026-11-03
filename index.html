@@ -9,7 +9,6 @@
       --bg: #0b1e28;
       --card-bg: #133340;
       --accent: #f97316;
-      --accent-hover: #ea580c;
       --text: #f8fafc;
       --text-muted: #94a3b8;
       --border: #1e4b5f;
@@ -167,25 +166,26 @@
       to { opacity: 1; }
     }
 
+    /* Строка статуса: исправлена видимость */
     .status-line {
       font-size: 15px;
       padding: 12px 16px;
       border-radius: 8px;
       display: none;
-      font-weight: 500;
+      font-weight: 600;
       line-height: 1.4;
     }
     .status-line.correct {
-      background: rgba(45, 212, 191, 0.15);
-      border: 1px solid var(--success);
-      color: var(--success);
-      display: block;
+      background: rgba(45, 212, 191, 0.2) !important;
+      border: 1px solid var(--success) !important;
+      color: var(--success) !important;
+      display: block !important;
     }
     .status-line.wrong {
-      background: rgba(248, 113, 113, 0.15);
-      border: 1px solid var(--danger);
-      color: var(--danger);
-      display: block;
+      background: rgba(248, 113, 113, 0.2) !important;
+      border: 1px solid var(--danger) !important;
+      color: var(--danger) !important;
+      display: block !important;
     }
 
     .transcription-box {
@@ -220,7 +220,7 @@
       </select>
       <div class="status-badge">
         <div class="badge-subblock" id="subblockLabel">Загрузка...</div>
-        <div id="progressCount" style="margin-top: 3px;">0 из 50</div>
+        <div id="progressCount" style="margin-top: 3px;">0 из 0</div>
       </div>
     </div>
   </div>
@@ -250,7 +250,7 @@
   const LESSON_URL = './lessons/lesson_1.txt';
   const STORAGE_KEY = 'english_trainer_progress_v2';
 
-  let currentBlock = 1; // 1 = RU->EN, 2 = EN->RU
+  let currentBlock = 2; // По умолчанию Блок 2
   let tasks = [];
   let currentIndex = 0;
   let balance = 0;
@@ -277,7 +277,7 @@
         if (typeof data.index === 'number') currentIndex = data.index;
         if (typeof data.balance === 'number') balance = data.balance;
       } catch (e) {
-        console.error('Ошибка чтения памяти:', e);
+        console.error('Ошибка памяти:', e);
       }
     }
   }
@@ -359,14 +359,16 @@
         renderCurrentTask();
         return;
       } else {
-        document.getElementById('sourcePhrase').innerText = '🎉 Блоки 1 и 2 полностью завершены!';
+        document.getElementById('sourcePhrase').innerText = '🎉 Блоки успешно завершены!';
         document.getElementById('listenBtn').style.display = 'none';
         document.getElementById('userInput').style.display = 'none';
         document.getElementById('micBtn').style.display = 'none';
         document.getElementById('actionBtn').style.display = 'none';
         document.getElementById('transcriptionBox').classList.remove('visible');
-        document.getElementById('statusLine').className = 'status-line correct';
-        document.getElementById('statusLine').innerText = `Великолепно! Итоговый баланс: ${balance} ₽`;
+        const st = document.getElementById('statusLine');
+        st.className = 'status-line correct';
+        st.style.display = 'block';
+        st.innerText = `Великолепно! Итоговый баланс: ${balance} ₽`;
         return;
       }
     }
@@ -376,16 +378,14 @@
     const listenBtn = document.getElementById('listenBtn');
 
     if (currentBlock === 1) {
-      // Блок 1: RU -> EN
       sourceEl.innerText = t.ru;
       listenBtn.style.display = 'none';
       document.getElementById('userInput').placeholder = 'Введите английский перевод или продиктуйте 🎙️...';
     } else {
-      // Блок 2: EN -> RU
       sourceEl.innerText = t.en;
       listenBtn.style.display = 'inline-flex';
       document.getElementById('userInput').placeholder = 'Введите русский перевод или продиктуйте 🎙️...';
-      speakEnglish(t.en); // автоматическая озвучка при открытии вопроса
+      speakEnglish(t.en);
     }
 
     document.getElementById('subblockLabel').innerText = t.subblock;
@@ -410,13 +410,14 @@
     isWaitingNext = false;
   }
 
-  // Автоматическая первая заглавная буква
+  // Первая заглавная буква
   document.getElementById('userInput').addEventListener('input', function() {
     if (this.value.length === 1) {
       this.value = this.value.toUpperCase();
     }
   });
 
+  // Enter
   document.getElementById('userInput').addEventListener('keydown', function(e) {
     if (e.key === 'Enter') {
       e.preventDefault();
@@ -434,8 +435,15 @@
     }
   }
 
+  // Очистка текста для гибкого сравнения (убирает дефисы, ё->е, знаки препинания)
   function cleanText(str) {
-    return str.toLowerCase().replace(/[.,!?;:'"()]/g, '').replace(/\s+/g, ' ').trim();
+    return str
+      .toLowerCase()
+      .replace(/ё/g, 'е')
+      .replace(/[-–—]/g, ' ')
+      .replace(/[.,!?;:'"()]/g, '')
+      .replace(/\s+/g, ' ')
+      .trim();
   }
 
   function checkAnswer() {
@@ -464,10 +472,12 @@
     if (isCorrect) {
       balance += 5;
       statusLine.className = 'status-line correct';
+      statusLine.style.display = 'block';
       statusLine.innerText = '✓ ВЕРНО! (+5 ₽)';
     } else {
       balance -= 5;
       statusLine.className = 'status-line wrong';
+      statusLine.style.display = 'block';
       const expected = currentBlock === 1 ? t.en : t.ru;
       statusLine.innerText = `✕ ОШИБКА (-5 ₽) | Правильно: ${expected}`;
     }
@@ -475,10 +485,9 @@
     document.getElementById('balanceDisplay').innerText = `${balance} ₽`;
     saveProgress();
 
-    // Озвучиваем английский эталон при ответе
+    // Озвучиваем английскую фразу
     speakEnglish(t.en);
 
-    // Показываем транскрипцию, если она есть
     if (t.trans) {
       transText.innerText = t.trans;
       transBox.classList.add('visible');
@@ -544,7 +553,6 @@
       return;
     }
 
-    // Автоматически переключаем язык распознавания под текущий блок
     recognition.lang = currentBlock === 1 ? 'en-US' : 'ru-RU';
 
     const btn = document.getElementById('micBtn');
