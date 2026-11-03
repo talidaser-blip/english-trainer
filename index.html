@@ -250,7 +250,7 @@
   const STORAGE_KEY = 'english_trainer_progress_v2';
 
   let rawLessonText = '';
-  let currentBlock = 2; // Текущий блок
+  let currentBlock = 2; // По умолчанию Блок 2
   let tasks = [];
   let currentIndex = 0;
   let balance = 0;
@@ -317,7 +317,11 @@
     }
   }
 
-  // Считывает ровно 50 предложений выбранного блока
+  // Автоматическое определение языка в строке
+  function isRussianText(text) {
+    return /[а-яёА-ЯЁ]/.test(text);
+  }
+
   function parseCurrentBlock() {
     if (!rawLessonText) return;
     const lines = rawLessonText.split('\n');
@@ -350,10 +354,26 @@
         if (line.includes('|')) {
           const parts = line.split('|');
           if (parts.length >= 2) {
+            let partA = parts[0].trim();
+            let partB = parts[1].trim();
+            let trans = parts[2] ? parts[2].trim() : '';
+
+            let ruText = '';
+            let enText = '';
+
+            // Умная нормализация: выявляем, где русский, а где английский
+            if (isRussianText(partA)) {
+              ruText = partA;
+              enText = partB;
+            } else {
+              enText = partA;
+              ruText = partB;
+            }
+
             tasks.push({
-              ru: parts[0].trim(),
-              en: parts[1].trim(),
-              trans: parts[2] ? parts[2].trim() : '',
+              ru: ruText,
+              en: enText,
+              trans: trans,
               subblock: currentSubblock
             });
           }
@@ -395,14 +415,16 @@
     const listenBtn = document.getElementById('listenBtn');
 
     if (currentBlock === 1) {
+      // Блок 1 (RU -> EN): вопрос по-русски, вводим английский
       sourceEl.innerText = t.ru;
       listenBtn.style.display = 'none';
       document.getElementById('userInput').placeholder = 'Введите английский перевод или продиктуйте 🎙️...';
     } else {
+      // Блок 2 (EN -> RU): вопрос по-английски, вводим русский
       sourceEl.innerText = t.en;
       listenBtn.style.display = 'inline-flex';
       document.getElementById('userInput').placeholder = 'Введите русский перевод или продиктуйте 🎙️...';
-      speakEnglish(t.en);
+      speakEnglish(t.en); // автоматическая озвучка английского вопроса
     }
 
     document.getElementById('subblockLabel').innerText = t.subblock;
@@ -460,6 +482,7 @@
       .trim();
   }
 
+  // Сравнение русского текста с гибким порядком слов
   function checkRussianMatch(userText, targetText) {
     const cleanUser = cleanText(userText);
     const cleanTarget = cleanText(targetText);
@@ -509,6 +532,7 @@
     document.getElementById('balanceDisplay').innerText = `${balance} ₽`;
     saveProgress();
 
+    // Озвучиваем английскую фразу при проверке
     speakEnglish(t.en);
 
     if (t.trans) {
