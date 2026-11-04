@@ -227,7 +227,7 @@
     <div>
       <div class="balance-title">Баланс урока</div>
       <div class="balance-value" id="balanceDisplay">0 ₽</div>
-      <button class="btn-reset" onclick="resetProgress()" title="Сбросить шаг и начать сначала">Начать заново ↺</button>
+      <button class="btn-reset" onclick="resetProgress()" title="Сбросить шаг текущего блока">Начать заново ↺</button>
     </div>
 
     <div class="header-controls">
@@ -271,19 +271,27 @@
 
 <script>
   const LESSON_URL = './lessons/lesson_1.txt';
-  const STORAGE_KEY = 'english_trainer_progress_v2';
+  const STORAGE_KEY = 'english_trainer_progress_v3';
 
   let rawLessonText = '';
   let currentBlock = 1;
-  let tasks = [];
-  let currentIndex = 0;
   let balance = 0;
   let isWaitingNext = false;
 
+  // Раздельная память шагов для каждого блока
+  let blockIndices = {
+    1: 0,
+    2: 0,
+    3: 0
+  };
+
+  // Очереди Блока 1 и 2
+  let tasks = [];
+
+  // Очереди Блока 3
   let b3Round1 = [];
   let b3Round2 = [];
   let b3CurrentRound = 1;
-  let b3Index = 0;
 
   let recognition = null;
   let isRecording = false;
@@ -291,8 +299,9 @@
   function saveProgress() {
     const data = {
       block: currentBlock,
-      index: currentIndex,
-      balance: balance
+      blockIndices: blockIndices,
+      balance: balance,
+      b3CurrentRound: b3CurrentRound
     };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
   }
@@ -303,8 +312,11 @@
       try {
         const data = JSON.parse(raw);
         if (typeof data.block === 'number') currentBlock = data.block;
-        if (typeof data.index === 'number') currentIndex = data.index;
         if (typeof data.balance === 'number') balance = data.balance;
+        if (data.blockIndices) {
+          blockIndices = { ...blockIndices, ...data.blockIndices };
+        }
+        if (typeof data.b3CurrentRound === 'number') b3CurrentRound = data.b3CurrentRound;
       } catch (e) {
         console.error('Ошибка памяти:', e);
       }
@@ -312,13 +324,12 @@
   }
 
   function resetProgress() {
-    if (confirm('Сбросить текущий прогресс и начать выбранный блок сначала?')) {
-      currentIndex = 0;
+    if (confirm(`Начать Блок ${currentBlock} заново с 1-й фразы?`)) {
+      blockIndices[currentBlock] = 0;
       isWaitingNext = false;
       if (currentBlock === 3) {
         b3CurrentRound = 1;
         b3Round2 = [];
-        b3Index = 0;
       }
       saveProgress();
       renderCurrentTask();
@@ -328,7 +339,6 @@
   function onBlockChange() {
     const select = document.getElementById('blockSelector');
     currentBlock = parseInt(select.value, 10);
-    currentIndex = 0;
     isWaitingNext = false;
     parseCurrentBlock();
     saveProgress();
@@ -343,7 +353,6 @@
       loadProgress();
       document.getElementById('blockSelector').value = currentBlock;
       parseCurrentBlock();
-      if (currentBlock !== 3 && currentIndex >= tasks.length) currentIndex = 0;
       renderCurrentTask();
     } catch (err) {
       document.getElementById('sourcePhrase').innerText = 'Ошибка загрузки файла lessons/lesson_1.txt';
@@ -361,19 +370,15 @@
     let currentSubblock = 'ПОДБЛОК 1';
     tasks = [];
 
-    // === Парсинг Блока 3 (Строгая проверка заголовка) ===
+    // === Парсинг Блока 3 ===
     if (currentBlock === 3) {
       b3Round1 = [];
-      b3Round2 = [];
-      b3CurrentRound = 1;
-      b3Index = 0;
       let inB3 = false;
 
       for (let rawLine of lines) {
         let line = rawLine.trim();
         if (!line) continue;
 
-        // Входим строго при начале раздела БЛОК 3 (игнорируя 'ПОДБЛОК 3')
         if ((line.startsWith('# БЛОК 3') || line.startsWith('### БЛОК 3')) && !line.includes('ПОДБЛОК')) {
           inB3 = true;
           continue;
@@ -506,30 +511,33 @@
       listenBtn.style.display = 'none';
       input.placeholder = 'Исправьте предложение целиком на английском 🎙️...';
 
+      const currentIdx = blockIndices[3] || 0;
+
       if (b3CurrentRound === 1) {
-        if (b3Index >= b3Round1.length) {
+        if (currentIdx >= b3Round1.length) {
           if (b3Round2.length > 0) {
             b3CurrentRound = 2;
-            b3Index = 0;
+            blockIndices[3] = 0;
+            saveProgress();
             renderCurrentTask();
           } else {
             finishAllBlocks();
           }
           return;
         }
-        const item = b3Round1[b3Index];
+        const item = b3Round1[currentIdx];
         sourceEl.innerText = item.wrong;
         document.getElementById('subblockLabel').innerText = 'Круг 1 (Основной)';
-        document.getElementById('progressCount').innerText = `${b3Index + 1} из ${b3Round1.length}`;
+        document.getElementById('progressCount').innerText = `${currentIdx + 1} из ${b3Round1.length}`;
       } else {
-        if (b3Index >= b3Round2.length) {
+        if (currentIdx >= b3Round2.length) {
           finishAllBlocks();
           return;
         }
-        const item = b3Round2[b3Index];
+        const item = b3Round2[currentIdx];
         sourceEl.innerText = item.wrong;
         document.getElementById('subblockLabel').innerText = 'Штрафной раунд (Пересдача)';
-        document.getElementById('progressCount').innerText = `${b3Index + 1} из ${b3Round2.length}`;
+        document.getElementById('progressCount').innerText = `${currentIdx + 1} из ${b3Round2.length}`;
       }
       document.getElementById('balanceDisplay').innerText = `${balance} ₽`;
       return;
@@ -538,10 +546,11 @@
     // Отрисовка Блоков 1 и 2
     if (tasks.length === 0) return;
 
-    if (currentIndex >= tasks.length) {
+    let currentIdx = blockIndices[currentBlock] || 0;
+
+    if (currentIdx >= tasks.length) {
       if (currentBlock === 1) {
         currentBlock = 2;
-        currentIndex = 0;
         document.getElementById('blockSelector').value = 2;
         parseCurrentBlock();
         saveProgress();
@@ -550,7 +559,6 @@
         return;
       } else if (currentBlock === 2) {
         currentBlock = 3;
-        currentIndex = 0;
         document.getElementById('blockSelector').value = 3;
         parseCurrentBlock();
         saveProgress();
@@ -560,7 +568,7 @@
       }
     }
 
-    const t = tasks[currentIndex];
+    const t = tasks[currentIdx];
 
     if (currentBlock === 1) {
       sourceEl.innerText = t.ru;
@@ -574,7 +582,7 @@
     }
 
     document.getElementById('subblockLabel').innerText = t.subblock;
-    document.getElementById('progressCount').innerText = `${currentIndex + 1} из ${tasks.length}`;
+    document.getElementById('progressCount').innerText = `${currentIdx + 1} из ${tasks.length}`;
     document.getElementById('balanceDisplay').innerText = `${balance} ₽`;
   }
 
@@ -616,14 +624,9 @@
 
   function handleAction() {
     if (isWaitingNext) {
-      if (currentBlock === 3) {
-        b3Index++;
-        renderCurrentTask();
-      } else {
-        currentIndex++;
-        saveProgress();
-        renderCurrentTask();
-      }
+      blockIndices[currentBlock] = (blockIndices[currentBlock] || 0) + 1;
+      saveProgress();
+      renderCurrentTask();
     } else {
       checkAnswer();
     }
@@ -673,7 +676,8 @@
 
     // === Проверка Блока 3 ===
     if (currentBlock === 3) {
-      const item = b3CurrentRound === 1 ? b3Round1[b3Index] : b3Round2[b3Index];
+      const currentIdx = blockIndices[3] || 0;
+      const item = b3CurrentRound === 1 ? b3Round1[currentIdx] : b3Round2[currentIdx];
       const isCorrect = isEnglishMatch(userAns, item.correct);
 
       const isToTravel = cleanText(userAns) === cleanText('I like to travel');
@@ -734,8 +738,9 @@
     }
 
     // === Проверка Блоков 1 и 2 ===
-    if (tasks.length === 0 || currentIndex >= tasks.length) return;
-    const t = tasks[currentIndex];
+    let currentIdx = blockIndices[currentBlock] || 0;
+    if (tasks.length === 0 || currentIdx >= tasks.length) return;
+    const t = tasks[currentIdx];
 
     let isCorrect = false;
     if (currentBlock === 1) {
@@ -782,13 +787,17 @@
 
   function repeatCurrentAudio() {
     if (currentBlock === 3) {
-      const item = b3CurrentRound === 1 ? b3Round1[b3Index] : b3Round2[b3Index];
+      const currentIdx = blockIndices[3] || 0;
+      const item = b3CurrentRound === 1 ? b3Round1[currentIdx] : b3Round2[currentIdx];
       if (item) {
         const isToTravel = cleanText(document.getElementById('userInput').value) === cleanText('I like to travel');
         speakEnglish(isToTravel ? 'I like to travel' : item.correct.split('/')[0].trim());
       }
-    } else if (tasks.length > 0 && currentIndex < tasks.length) {
-      speakEnglish(tasks[currentIndex].en);
+    } else if (tasks.length > 0) {
+      const currentIdx = blockIndices[currentBlock] || 0;
+      if (currentIdx < tasks.length) {
+        speakEnglish(tasks[currentIdx].en);
+      }
     }
   }
 
