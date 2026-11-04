@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>English Master Trainer</title>
+  <!-- Подключение салюта конфетти -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <style>
     :root {
       --bg: #0b1e28;
@@ -187,7 +189,6 @@
       display: block !important;
     }
 
-    /* Карточка правила для Блока 3 */
     .rule-box {
       display: none;
       background: rgba(248, 113, 113, 0.12);
@@ -273,13 +274,12 @@
   const STORAGE_KEY = 'english_trainer_progress_v2';
 
   let rawLessonText = '';
-  let currentBlock = 2; // Текущий блок
+  let currentBlock = 2;
   let tasks = [];
   let currentIndex = 0;
   let balance = 0;
   let isWaitingNext = false;
 
-  // Данные для Блока 3 (Ошибки)
   let b3Round1 = [];
   let b3Round2 = [];
   let b3CurrentRound = 1;
@@ -382,10 +382,37 @@
         if (inB3 && line.includes('|')) {
           const parts = line.split('|').map(p => p.trim());
           if (parts.length >= 2) {
+            let wrongStr = parts[0];
+            let correctStr = parts[1];
+            let transStr = "";
+            let ruleStr = "";
+
+            if (parts.length >= 4) {
+              transStr = parts[2];
+              ruleStr = parts[3];
+            } else if (parts.length === 3) {
+              if (/[а-яёА-ЯЁ]/.test(parts[2]) && parts[2].length < 40 && !parts[2].includes(' ')) {
+                transStr = parts[2];
+              } else {
+                ruleStr = parts[2];
+              }
+            }
+
+            // Исправление склейки фраз про друзей
+            if (wrongStr.includes('I see my friends and spend time with his friends')) {
+              wrongStr = 'I spend time with his friends.';
+            }
+
+            // Поддержка синонимов I like traveling / I like to travel
+            if (correctStr.toLowerCase().includes('i like traveling') && !correctStr.includes('/')) {
+              correctStr = 'I like traveling / I like to travel';
+            }
+
             b3Round1.push({
-              wrong: parts[0],
-              correct: parts[1],
-              rule: parts[2] || ""
+              wrong: wrongStr,
+              correct: correctStr,
+              trans: transStr,
+              rule: ruleStr || "Проверьте грамматику и порядок слов."
             });
           }
         }
@@ -465,7 +492,7 @@
     btn.innerText = 'OK';
     isWaitingNext = false;
 
-    // === Отрисовка Блока 3 ===
+    // Отрисовка Блока 3
     if (currentBlock === 3) {
       listenBtn.style.display = 'none';
       input.placeholder = 'Исправьте предложение целиком на английском 🎙️...';
@@ -486,7 +513,6 @@
         document.getElementById('subblockLabel').innerText = 'Круг 1 (Основной)';
         document.getElementById('progressCount').innerText = `${b3Index + 1} из ${b3Round1.length}`;
       } else {
-        // Штрафной раунд
         if (b3Index >= b3Round2.length) {
           finishAllBlocks();
           return;
@@ -500,7 +526,7 @@
       return;
     }
 
-    // === Отрисовка Блоков 1 и 2 ===
+    // Отрисовка Блоков 1 и 2
     if (tasks.length === 0) return;
 
     if (currentIndex >= tasks.length) {
@@ -551,10 +577,20 @@
     document.getElementById('actionBtn').style.display = 'none';
     document.getElementById('transcriptionBox').classList.remove('visible');
     document.getElementById('ruleBox').style.display = 'none';
+    
     const st = document.getElementById('statusLine');
     st.className = 'status-line correct';
     st.style.display = 'block';
     st.innerText = `Великолепно! Итоговый баланс: ${balance} ₽`;
+
+    // Запуск фейерверка
+    if (typeof confetti === 'function') {
+      confetti({
+        particleCount: 150,
+        spread: 90,
+        origin: { y: 0.6 }
+      });
+    }
   }
 
   document.getElementById('userInput').addEventListener('input', function() {
@@ -605,6 +641,13 @@
     return userWords === targetWords;
   }
 
+  // Сравнение с поддержкой вариантов через слеш (например, I like traveling / I like to travel)
+  function isEnglishMatch(userText, targetText) {
+    const cleanUser = cleanText(userText);
+    const variants = targetText.split('/').map(v => cleanText(v));
+    return variants.includes(cleanUser);
+  }
+
   function checkAnswer() {
     if (isRecording) toggleMic();
 
@@ -621,18 +664,24 @@
 
     input.disabled = true;
 
-    // === Проверка для Блока 3 (Ошибки) ===
+    // === Проверка Блока 3 ===
     if (currentBlock === 3) {
-      if (b3CurrentRound === 1) {
-        const item = b3Round1[b3Index];
-        const isCorrect = cleanText(userAns) === cleanText(item.correct);
+      const item = b3CurrentRound === 1 ? b3Round1[b3Index] : b3Round2[b3Index];
+      const isCorrect = isEnglishMatch(userAns, item.correct);
+      const primaryVoice = item.correct.split('/')[0].trim();
 
+      if (b3CurrentRound === 1) {
         if (isCorrect) {
           balance += 5;
           statusLine.className = 'status-line correct';
           statusLine.style.display = 'block';
           statusLine.innerText = '✓ ВЕРНО! (+5 ₽)';
-          speakEnglish(item.correct);
+          speakEnglish(primaryVoice);
+
+          if (item.trans) {
+            transText.innerText = item.trans;
+            transBox.classList.add('visible');
+          }
         } else {
           balance -= 5;
           statusLine.className = 'status-line wrong';
@@ -641,23 +690,30 @@
           b3Round2.push(item);
         }
       } else {
-        // Штрафной раунд
-        const item = b3Round2[b3Index];
-        const isCorrect = cleanText(userAns) === cleanText(item.correct);
-
+        // Круг 2
         if (isCorrect) {
           balance += 3;
           statusLine.className = 'status-line correct';
           statusLine.style.display = 'block';
           statusLine.innerText = '✓ ОШИБКА ИСПРАВЛЕНА! (+3 ₽)';
-          speakEnglish(item.correct);
+          speakEnglish(primaryVoice);
+
+          if (item.trans) {
+            transText.innerText = item.trans;
+            transBox.classList.add('visible');
+          }
         } else {
           statusLine.className = 'status-line wrong';
           statusLine.style.display = 'block';
           statusLine.innerText = '✕ ПОВТОРНАЯ ОШИБКА (0 ₽)';
           ruleText.innerHTML = `<strong>Эталон:</strong> ${item.correct}<br><span style="color:#cbd5e1">${item.rule}</span>`;
           ruleBox.style.display = 'block';
-          speakEnglish(item.correct);
+          speakEnglish(primaryVoice);
+
+          if (item.trans) {
+            transText.innerText = item.trans;
+            transBox.classList.add('visible');
+          }
         }
       }
 
@@ -668,13 +724,13 @@
       return;
     }
 
-    // === Проверка для Блоков 1 и 2 ===
+    // === Проверка Блоков 1 и 2 ===
     if (tasks.length === 0 || currentIndex >= tasks.length) return;
     const t = tasks[currentIndex];
 
     let isCorrect = false;
     if (currentBlock === 1) {
-      isCorrect = cleanText(userAns) === cleanText(t.en);
+      isCorrect = isEnglishMatch(userAns, t.en);
     } else {
       isCorrect = checkRussianMatch(userAns, t.ru);
     }
@@ -718,7 +774,7 @@
   function repeatCurrentAudio() {
     if (currentBlock === 3) {
       const item = b3CurrentRound === 1 ? b3Round1[b3Index] : b3Round2[b3Index];
-      if (item) speakEnglish(item.correct);
+      if (item) speakEnglish(item.correct.split('/')[0].trim());
     } else if (tasks.length > 0 && currentIndex < tasks.length) {
       speakEnglish(tasks[currentIndex].en);
     }
@@ -765,7 +821,6 @@
       return;
     }
 
-    // Для Блоков 1 и 3 слушаем английский (en-US), для Блока 2 - русский (ru-RU)
     recognition.lang = (currentBlock === 1 || currentBlock === 3) ? 'en-US' : 'ru-RU';
 
     const btn = document.getElementById('micBtn');
