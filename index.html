@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>English Master Trainer</title>
+  <!-- Салют конфетти -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <style>
     :root {
@@ -248,8 +249,8 @@
       <button class="btn-sound" id="listenBtn" onclick="repeatCurrentAudio()" style="display: none;">🔊 Слушать</button>
     </div>
 
-    <div class="input-group">
-      <input type="text" id="userInput" placeholder="Введите перевод или продиктуйте 🎙️..." autofocus>
+    <div class="input-group" id="inputGroupRow">
+      <input type="text" id="userInput" placeholder="Введите ответ или продиктуйте 🎙️..." autofocus>
       <button class="btn-mic" id="micBtn" onclick="toggleMic()" title="Включить микрофон">🎙️</button>
       <button class="btn-action" id="actionBtn" onclick="handleAction()">OK</button>
     </div>
@@ -370,11 +371,11 @@
       for (let rawLine of lines) {
         let line = rawLine.trim();
         if (!line) continue;
-        if (line.startsWith('# БЛОК 3') || line.startsWith('### БЛОК 3')) {
+        if (line.includes('БЛОК 3') || line.includes('БЛОК: 3')) {
           inB3 = true;
           continue;
         }
-        if (inB3 && (line.startsWith('# БЛОК 4') || line.startsWith('### БЛОК 4'))) {
+        if (inB3 && (line.includes('БЛОК 4') || line.includes('БЛОК: 4'))) {
           break;
         }
         if (inB3 && line.includes('|')) {
@@ -416,25 +417,25 @@
       return;
     }
 
-    const startTag = currentBlock === 1 ? '# БЛОК 1' : '# БЛОК 2';
-    const stopTag = currentBlock === 1 ? '# БЛОК 2' : '# БЛОК 3';
     let insideTargetBlock = false;
 
     for (let rawLine of lines) {
       let line = rawLine.trim();
       if (!line) continue;
 
-      if (line.startsWith(startTag)) {
+      if (line.includes(`БЛОК ${currentBlock}`) || line.includes(`БЛОК: ${currentBlock}`)) {
         insideTargetBlock = true;
         continue;
       }
-      if (insideTargetBlock && line.startsWith(stopTag)) {
+      
+      const nextBlockNum = currentBlock + 1;
+      if (insideTargetBlock && (line.includes(`БЛОК ${nextBlockNum}`) || line.includes(`БЛОК: ${nextBlockNum}`))) {
         break;
       }
 
       if (insideTargetBlock) {
-        if (line.startsWith('## ПОДБЛОК')) {
-          currentSubblock = line.replace('##', '').trim();
+        if (line.toUpperCase().includes('ПОДБЛОК')) {
+          currentSubblock = line.replace(/^[#\s]+/, '').trim();
           continue;
         }
         if (line.startsWith('#')) continue;
@@ -473,10 +474,18 @@
     const sourceEl = document.getElementById('sourcePhrase');
     const listenBtn = document.getElementById('listenBtn');
     const input = document.getElementById('userInput');
+    const micBtn = document.getElementById('micBtn');
+    const btn = document.getElementById('actionBtn');
+    const inputGroupRow = document.getElementById('inputGroupRow');
     const statusLine = document.getElementById('statusLine');
     const transBox = document.getElementById('transcriptionBox');
     const ruleBox = document.getElementById('ruleBox');
-    const btn = document.getElementById('actionBtn');
+
+    // Принудительно восстанавливаем видимость инпутов и кнопок
+    inputGroupRow.style.display = 'flex';
+    input.style.display = 'block';
+    micBtn.style.display = 'block';
+    btn.style.display = 'block';
 
     input.value = '';
     input.disabled = false;
@@ -489,6 +498,7 @@
     btn.innerText = 'OK';
     isWaitingNext = false;
 
+    // Отрисовка Блока 3
     if (currentBlock === 3) {
       listenBtn.style.display = 'none';
       input.placeholder = 'Исправьте предложение целиком на английском 🎙️...';
@@ -522,6 +532,7 @@
       return;
     }
 
+    // Отрисовка Блоков 1 и 2
     if (tasks.length === 0) return;
 
     if (currentIndex >= tasks.length) {
@@ -657,6 +668,7 @@
 
     input.disabled = true;
 
+    // === Проверка Блока 3 ===
     if (currentBlock === 3) {
       const item = b3CurrentRound === 1 ? b3Round1[b3Index] : b3Round2[b3Index];
       const isCorrect = isEnglishMatch(userAns, item.correct);
@@ -718,6 +730,7 @@
       return;
     }
 
+    // === Проверка Блоков 1 и 2 ===
     if (tasks.length === 0 || currentIndex >= tasks.length) return;
     const t = tasks[currentIndex];
 
