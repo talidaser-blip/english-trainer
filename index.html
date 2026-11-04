@@ -20,12 +20,14 @@
     }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
     body { background-color: var(--bg); color: var(--text); padding: 20px; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
-    .container { width: 100%; max-width: 760px; display: flex; flex-direction: column; gap: 20px; }
+    
+    /* Увеличенная ширина контейнера для всех блоков и длинных текстов */
+    .container { width: 100%; max-width: 940px; display: flex; flex-direction: column; gap: 20px; }
     
     .header-card {
       background: var(--card-bg);
       border: 1px solid var(--border);
-      padding: 16px 22px;
+      padding: 16px 24px;
       border-radius: 14px;
       display: flex;
       justify-content: space-between;
@@ -33,7 +35,7 @@
       gap: 15px;
     }
     .balance-title { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
-    .balance-value { font-size: 30px; font-weight: 700; color: var(--accent); margin-top: 2px; }
+    .balance-value { font-size: 32px; font-weight: 700; color: var(--accent); margin-top: 2px; }
     
     .header-controls {
       display: flex;
@@ -46,25 +48,25 @@
       background: #0b1e28;
       color: var(--text);
       border: 1px solid var(--border);
-      padding: 6px 10px;
+      padding: 8px 12px;
       border-radius: 8px;
-      font-size: 13px;
+      font-size: 14px;
       font-weight: 600;
       outline: none;
       cursor: pointer;
     }
     .block-select:focus { border-color: var(--accent); }
 
-    .status-badge { text-align: right; font-size: 11px; color: var(--text-muted); }
+    .status-badge { text-align: right; font-size: 13px; color: var(--text-muted); }
     .badge-subblock { font-weight: 600; color: var(--success); text-transform: uppercase; }
 
     .btn-reset {
       background: transparent;
       border: 1px solid var(--border);
       color: var(--text-muted);
-      padding: 4px 8px;
+      padding: 5px 10px;
       border-radius: 6px;
-      font-size: 11px;
+      font-size: 12px;
       cursor: pointer;
       margin-top: 4px;
       transition: all 0.2s;
@@ -75,30 +77,30 @@
       background: var(--card-bg);
       border: 1px solid var(--border);
       border-radius: 16px;
-      padding: 30px 24px;
+      padding: 34px 30px;
       display: flex;
       flex-direction: column;
-      gap: 18px;
+      gap: 22px;
     }
 
     .phrase-box {
       background: #0b1e28;
       border: 1px solid var(--border);
-      padding: 24px 20px;
+      padding: 26px 24px;
       border-radius: 12px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 12px;
-      min-height: 100px;
+      gap: 14px;
+      min-height: 110px;
       text-align: center;
     }
 
     .phrase-text {
-      font-size: 24px;
+      font-size: 26px;
       font-weight: 600;
-      line-height: 1.35;
+      line-height: 1.4;
     }
 
     .audio-btns-group {
@@ -113,9 +115,9 @@
       background: rgba(20, 184, 166, 0.15);
       border: 1px solid var(--teal);
       color: var(--teal);
-      padding: 6px 14px;
+      padding: 8px 16px;
       border-radius: 8px;
-      font-size: 13px;
+      font-size: 14px;
       font-weight: 600;
       cursor: pointer;
       display: inline-flex;
@@ -125,16 +127,19 @@
     }
     .btn-sound:hover { background: rgba(20, 184, 166, 0.25); }
 
-    .input-group { display: flex; gap: 8px; align-items: center; }
+    /* Просторная строка ввода для всех блоков */
+    .input-group { display: flex; gap: 10px; align-items: center; width: 100%; }
     input[type="text"] {
       flex: 1;
+      width: 100%;
       background: #0b1e28;
       border: 1px solid var(--accent);
       color: #fff;
-      padding: 14px 16px;
+      padding: 16px 20px;
       border-radius: 10px;
-      font-size: 16px;
+      font-size: 18px;
       outline: none;
+      line-height: 1.4;
     }
     input[type="text"]:focus {
       border-color: var(--success);
@@ -145,9 +150,9 @@
       background: var(--accent);
       color: #fff;
       border: none;
-      padding: 14px 22px;
+      padding: 16px 28px;
       border-radius: 10px;
-      font-size: 16px;
+      font-size: 17px;
       font-weight: 600;
       cursor: pointer;
       white-space: nowrap;
@@ -159,10 +164,10 @@
       background: #0b1e28;
       border: 1px solid var(--border);
       color: #fff;
-      padding: 14px 18px;
+      padding: 16px 20px;
       border-radius: 10px;
       cursor: pointer;
-      font-size: 18px;
+      font-size: 20px;
       transition: all 0.2s;
     }
     .btn-mic.recording {
@@ -177,9 +182,9 @@
     }
 
     .status-line {
-      font-size: 15px;
-      padding: 12px 16px;
-      border-radius: 8px;
+      font-size: 17px;
+      padding: 14px 18px;
+      border-radius: 10px;
       display: none;
       font-weight: 600;
       line-height: 1.4;
@@ -201,31 +206,41 @@
       display: none;
       background: rgba(248, 113, 113, 0.12);
       border: 1px solid var(--danger);
-      padding: 14px 16px;
+      padding: 16px 18px;
       border-radius: 10px;
-      font-size: 14px;
+      font-size: 16px;
       line-height: 1.45;
       color: #fca5a5;
     }
     .rule-title {
       font-weight: 700;
       color: #ffffff;
-      margin-bottom: 4px;
+      margin-bottom: 6px;
     }
 
+    /* Увеличенный блок транскрипции с крупным читаемым шрифтом */
     .transcription-box {
       display: none;
       background: #0b1e28;
       border: 1px dashed var(--border);
-      padding: 12px 16px;
-      border-radius: 8px;
-      font-size: 14px;
+      padding: 16px 20px;
+      border-radius: 10px;
+      font-size: 17px;
       color: #cbd5e1;
       justify-content: space-between;
       align-items: center;
+      gap: 15px;
+      flex-wrap: wrap;
     }
     .transcription-box.visible { display: flex; }
-    .transcription-text { font-style: italic; color: #38bdf8; }
+    .transcription-text {
+      font-size: 20px;
+      font-weight: 600;
+      font-style: normal;
+      color: #38bdf8;
+      margin-left: 6px;
+      letter-spacing: 0.3px;
+    }
   </style>
 </head>
 <body>
@@ -277,7 +292,7 @@
 
     <div class="transcription-box" id="transcriptionBox">
       <div>Произношение: <span class="transcription-text" id="transcriptionText"></span></div>
-      <button class="btn-sound" onclick="repeatCurrentAudio(1.0)" style="padding: 4px 10px; font-size: 12px;">🔊 Повтор</button>
+      <button class="btn-sound" onclick="repeatCurrentAudio(1.0)" style="padding: 6px 12px; font-size: 13px;">🔊 Повтор</button>
     </div>
   </div>
 </div>
@@ -673,7 +688,7 @@
       if (item.isEnToRu) {
         sourceEl.innerText = item.en;
         listenBtn.style.display = 'inline-flex';
-        input.placeholder = 'Введите русский перевод или продиктуйте 🎙️...';
+        input.placeholder = 'Введите перевод на русском или продиктуйте 🎙️...';
         speakEnglish(item.en, 0.9);
       } else {
         sourceEl.innerText = item.ru;
@@ -1243,4 +1258,4 @@
   };
 </script>
 </body>
-</html> 
+</html>
