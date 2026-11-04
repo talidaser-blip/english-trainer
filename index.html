@@ -296,7 +296,7 @@
 
 <script>
   const LESSON_URL = './lessons/lesson_1.txt';
-  const STORAGE_KEY = 'english_trainer_progress_v5';
+  const STORAGE_KEY = 'english_trainer_progress_v6';
 
   let rawLessonText = '';
   let currentBlock = 1;
@@ -856,7 +856,7 @@
     }
   }
 
-  // Всегда заглавная первая буква при любом вводе с клавиатуры
+  // Автозаглавная первая буква при вводе
   document.getElementById('userInput').addEventListener('input', function() {
     const val = this.value;
     if (val.length > 0 && val.charAt(0) !== val.charAt(0).toUpperCase()) {
@@ -894,23 +894,24 @@
       .trim();
   }
 
-  function normalizeRussian(str) {
-    return cleanText(str)
-      .replace(/\bсвой\b/g, 'мой')
-      .replace(/\bсвоя\b/g, 'моя')
-      .replace(/\bсвое\b/g, 'мое')
-      .replace(/\bсвои\b/g, 'мои')
-      .replace(/\bсвоего\b/g, 'моего')
-      .replace(/\bсвоих\b/g, 'моих');
+  // Расширенная нормализация русского языка (свой/мой, с/со, стемминг окончаний)
+  function normalizeRussianWord(word) {
+    if (/^(со|с)$/.test(word)) return 'с';
+    if (/^(свой|мой|своя|моя|свое|мое|свои|мои|своего|моего|своих|моих|своим|моим|своими|моими)$/.test(word)) return 'свой';
+    if (/^(друг|друга|другу|другом|друзья|друзей|друзьям|друзьями)$/.test(word)) return 'друг';
+    if (/^(прогресс|прогресса|прогрессу|прогрессом)$/.test(word)) return 'прогресс';
+    if (/^(день|дня|дню|днем|дни|дней)$/.test(word)) return 'день';
+    if (/^(каждый|каждого|каждому|каждым)$/.test(word)) return 'каждый';
+    return word;
   }
 
   function checkRussianMatch(userText, targetText) {
-    const cleanUser = normalizeRussian(userText);
-    const cleanTarget = normalizeRussian(targetText);
+    const cleanUser = cleanText(userText);
+    const cleanTarget = cleanText(targetText);
     if (cleanUser === cleanTarget) return true;
 
-    const userWords = cleanUser.split(' ').filter(Boolean).sort().join(' ');
-    const targetWords = cleanTarget.split(' ').filter(Boolean).sort().join(' ');
+    const userWords = cleanUser.split(' ').filter(Boolean).map(normalizeRussianWord).sort().join(' ');
+    const targetWords = cleanTarget.split(' ').filter(Boolean).map(normalizeRussianWord).sort().join(' ');
     return userWords === targetWords;
   }
 
@@ -966,7 +967,6 @@
           statusLine.style.display = 'block';
           statusLine.innerText = '✕ ОШИБКА (-5 ₽) | Отправлено на пересдачу!';
           b5Round2.push(item);
-          // В 1-м круге при ошибке скрываем транскрипцию и эталон
           transBox.classList.remove('visible');
           ruleBox.style.display = 'none';
         }
