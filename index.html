@@ -244,6 +244,7 @@
         <option value="2">Блок 2: EN ➔ RU</option>
         <option value="3">Блок 3: Ошибки</option>
         <option value="4">Блок 4: Аудирование</option>
+        <option value="5">Блок 5: Сложные предложения</option>
       </select>
       <div class="status-badge">
         <div class="badge-subblock" id="subblockLabel">Загрузка...</div>
@@ -283,7 +284,7 @@
 
 <script>
   const LESSON_URL = './lessons/lesson_1.txt';
-  const STORAGE_KEY = 'english_trainer_progress_v3';
+  const STORAGE_KEY = 'english_trainer_progress_v4';
 
   let rawLessonText = '';
   let currentBlock = 1;
@@ -294,7 +295,8 @@
     1: 0,
     2: 0,
     3: 0,
-    4: 0
+    4: 0,
+    5: 0
   };
 
   let tasks = [];
@@ -306,6 +308,10 @@
   let b4Round1 = [];
   let b4Round2 = [];
   let b4CurrentRound = 1;
+
+  let b5Round1 = [];
+  let b5Round2 = [];
+  let b5CurrentRound = 1;
 
   let recognition = null;
   let isRecording = false;
@@ -321,7 +327,8 @@
       blockIndices: blockIndices,
       balance: balance,
       b3CurrentRound: b3CurrentRound,
-      b4CurrentRound: b4CurrentRound
+      b4CurrentRound: b4CurrentRound,
+      b5CurrentRound: b5CurrentRound
     };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
   }
@@ -338,6 +345,7 @@
         }
         if (typeof data.b3CurrentRound === 'number') b3CurrentRound = data.b3CurrentRound;
         if (typeof data.b4CurrentRound === 'number') b4CurrentRound = data.b4CurrentRound;
+        if (typeof data.b5CurrentRound === 'number') b5CurrentRound = data.b5CurrentRound;
       } catch (e) {
         console.error('Ошибка памяти:', e);
       }
@@ -354,6 +362,9 @@
       } else if (currentBlock === 4) {
         b4CurrentRound = 1;
         b4Round2 = [];
+      } else if (currentBlock === 5) {
+        b5CurrentRound = 1;
+        b5Round2 = [];
       }
       saveProgress();
       renderCurrentTask();
@@ -393,6 +404,65 @@
     const lines = rawLessonText.split('\n');
     let currentSubblock = 'ПОДБЛОК 1';
     tasks = [];
+
+    // === Блок 5 (Сложные предложения) ===
+    if (currentBlock === 5) {
+      b5Round1 = [];
+      let inB5 = false;
+      let currentStage = 'Ступень 1 (EN ➔ RU)';
+
+      for (let rawLine of lines) {
+        let line = rawLine.trim();
+        if (!line) continue;
+
+        if ((line.startsWith('# БЛОК 5') || line.startsWith('### БЛОК 5')) && !line.includes('ПОДБЛОК')) {
+          inB5 = true;
+          continue;
+        }
+        if (inB5 && (line.startsWith('# БЛОК 6') || line.startsWith('### БЛОК 6'))) {
+          break;
+        }
+
+        if (inB5) {
+          if (line.toLowerCase().includes('ступень 1') || line.toLowerCase().includes('en ➔ ru') || line.toLowerCase().includes('en -> ru')) {
+            currentStage = 'Ступень 1 (EN ➔ RU)';
+            continue;
+          }
+          if (line.toLowerCase().includes('ступень 2') || line.toLowerCase().includes('ru ➔ en') || line.toLowerCase().includes('ru -> en')) {
+            currentStage = 'Ступень 2 (RU ➔ EN)';
+            continue;
+          }
+          if (line.startsWith('#')) continue;
+
+          if (line.includes('|')) {
+            const parts = line.split('|').map(p => p.trim());
+            if (parts.length >= 2) {
+              let partA = parts[0];
+              let partB = parts[1];
+              let trans = parts[2] || '';
+              let enText = '', ruText = '';
+
+              if (isRussianText(partA)) {
+                ruText = partA;
+                enText = partB;
+              } else {
+                enText = partA;
+                ruText = partB;
+              }
+
+              b5Round1.push({
+                en: enText,
+                ru: ruText,
+                trans: trans,
+                stage: currentStage,
+                isEnToRu: currentStage.includes('EN ➔ RU')
+              });
+            }
+          }
+        }
+      }
+      return;
+    }
 
     // === Блок 4 (Аудирование) ===
     if (currentBlock === 4) {
@@ -577,6 +647,42 @@
     btn.innerText = 'OK';
     isWaitingNext = false;
 
+    // Отрисовка Блока 5 (Сложные предложения)
+    if (currentBlock === 5) {
+      const currentIdx = blockIndices[5] || 0;
+      const activeList = b5CurrentRound === 1 ? b5Round1 : b5Round2;
+
+      if (currentIdx >= activeList.length) {
+        if (b5CurrentRound === 1 && b5Round2.length > 0) {
+          b5CurrentRound = 2;
+          blockIndices[5] = 0;
+          saveProgress();
+          renderCurrentTask();
+        } else {
+          finishAllBlocks();
+        }
+        return;
+      }
+
+      const item = activeList[currentIdx];
+      const stageTitle = b5CurrentRound === 1 ? item.stage : `Штрафной раунд (${item.stage})`;
+      document.getElementById('subblockLabel').innerText = stageTitle;
+      document.getElementById('progressCount').innerText = `${currentIdx + 1} из ${activeList.length}`;
+      document.getElementById('balanceDisplay').innerText = `${balance} ₽`;
+
+      if (item.isEnToRu) {
+        sourceEl.innerText = item.en;
+        listenBtn.style.display = 'inline-flex';
+        input.placeholder = 'Введите русский перевод или продиктуйте 🎙️...';
+        speakEnglish(item.en, 0.9);
+      } else {
+        sourceEl.innerText = item.ru;
+        listenBtn.style.display = 'none';
+        input.placeholder = 'Постройте сложное предложение на английском 🎙️...';
+      }
+      return;
+    }
+
     // Отрисовка Блока 4
     if (currentBlock === 4) {
       sourceEl.innerText = '🎧 Слушайте и пишите на английском...';
@@ -594,7 +700,7 @@
             saveProgress();
             renderCurrentTask();
           } else {
-            finishAllBlocks();
+            advanceToBlock5();
           }
           return;
         }
@@ -604,7 +710,7 @@
         speakEnglish(item.en, 1.0);
       } else {
         if (currentIdx >= b4Round2.length) {
-          finishAllBlocks();
+          advanceToBlock5();
           return;
         }
         const item = b4Round2[currentIdx];
@@ -705,6 +811,15 @@
     renderCurrentTask();
   }
 
+  function advanceToBlock5() {
+    currentBlock = 5;
+    document.getElementById('blockSelector').value = 5;
+    parseCurrentBlock();
+    saveProgress();
+    alert('Поздравляем! Блок 4 завершён. Переходим ко Блоку 5 (Сложные предложения)!');
+    renderCurrentTask();
+  }
+
   function finishAllBlocks() {
     document.getElementById('sourcePhrase').innerText = '🎉 Все задания успешно завершены!';
     document.getElementById('listenBtn').style.display = 'none';
@@ -798,6 +913,60 @@
     const ruleText = document.getElementById('ruleText');
 
     input.disabled = true;
+
+    // === Проверка Блока 5 ===
+    if (currentBlock === 5) {
+      const currentIdx = blockIndices[5] || 0;
+      const item = b5CurrentRound === 1 ? b5Round1[currentIdx] : b5Round2[currentIdx];
+
+      let isCorrect = false;
+      if (item.isEnToRu) {
+        isCorrect = checkRussianMatch(userAns, item.ru);
+      } else {
+        isCorrect = isEnglishMatch(userAns, item.en);
+      }
+
+      if (b5CurrentRound === 1) {
+        if (isCorrect) {
+          balance += 5;
+          statusLine.className = 'status-line correct';
+          statusLine.style.display = 'block';
+          statusLine.innerText = '✓ ВЕРНО! (+5 ₽)';
+        } else {
+          balance -= 5;
+          statusLine.className = 'status-line wrong';
+          statusLine.style.display = 'block';
+          statusLine.innerText = '✕ ОШИБКА (-5 ₽) | Отправлено на пересдачу!';
+          b5Round2.push(item);
+        }
+      } else {
+        if (isCorrect) {
+          balance += 3;
+          statusLine.className = 'status-line correct';
+          statusLine.style.display = 'block';
+          statusLine.innerText = '✓ ИСПРАВЛЕНО! (+3 ₽)';
+        } else {
+          statusLine.className = 'status-line wrong';
+          statusLine.style.display = 'block';
+          statusLine.innerText = '✕ ПОВТОРНАЯ ОШИБКА (0 ₽)';
+          const expected = item.isEnToRu ? item.ru : item.en;
+          ruleText.innerHTML = `<strong>Правильный эталон:</strong> ${expected}`;
+          ruleBox.style.display = 'block';
+        }
+      }
+
+      speakEnglish(item.en, 0.9);
+      if (item.trans) {
+        transText.innerText = item.trans;
+        transBox.classList.add('visible');
+      }
+
+      document.getElementById('balanceDisplay').innerText = `${balance} ₽`;
+      saveProgress();
+      isWaitingNext = true;
+      btn.innerText = (b5CurrentRound === 2 && ruleBox.style.display === 'block') ? 'Понятно, дальше ➔' : 'Дальше ➔';
+      return;
+    }
 
     // === Проверка Блока 4 ===
     if (currentBlock === 4) {
@@ -977,7 +1146,11 @@
   }
 
   function repeatCurrentAudio(rate = 1.0) {
-    if (currentBlock === 4) {
+    if (currentBlock === 5) {
+      const currentIdx = blockIndices[5] || 0;
+      const item = b5CurrentRound === 1 ? b5Round1[currentIdx] : b5Round2[currentIdx];
+      if (item) speakEnglish(item.en, rate);
+    } else if (currentBlock === 4) {
       const currentIdx = blockIndices[4] || 0;
       const item = b4CurrentRound === 1 ? b4Round1[currentIdx] : b4Round2[currentIdx];
       if (item) speakEnglish(item.en, rate);
@@ -1036,7 +1209,15 @@
       return;
     }
 
-    recognition.lang = (currentBlock === 1 || currentBlock === 3 || currentBlock === 4) ? 'en-US' : 'ru-RU';
+    if (currentBlock === 5) {
+      const currentIdx = blockIndices[5] || 0;
+      const item = b5CurrentRound === 1 ? b5Round1[currentIdx] : b5Round2[currentIdx];
+      recognition.lang = (item && item.isEnToRu) ? 'ru-RU' : 'en-US';
+    } else if (currentBlock === 2) {
+      recognition.lang = 'ru-RU';
+    } else {
+      recognition.lang = 'en-US';
+    }
 
     const btn = document.getElementById('micBtn');
     if (!isRecording) {
