@@ -361,6 +361,7 @@
     let currentSubblock = 'ПОДБЛОК 1';
     tasks = [];
 
+    // === Парсинг Блока 3 (Строгая проверка заголовка) ===
     if (currentBlock === 3) {
       b3Round1 = [];
       b3Round2 = [];
@@ -371,11 +372,13 @@
       for (let rawLine of lines) {
         let line = rawLine.trim();
         if (!line) continue;
-        if (line.includes('БЛОК 3') || line.includes('БЛОК: 3')) {
+
+        // Входим строго при начале раздела БЛОК 3 (игнорируя 'ПОДБЛОК 3')
+        if ((line.startsWith('# БЛОК 3') || line.startsWith('### БЛОК 3')) && !line.includes('ПОДБЛОК')) {
           inB3 = true;
           continue;
         }
-        if (inB3 && (line.includes('БЛОК 4') || line.includes('БЛОК: 4'))) {
+        if (inB3 && (line.startsWith('# БЛОК 4') || line.startsWith('### БЛОК 4'))) {
           break;
         }
         if (inB3 && line.includes('|')) {
@@ -417,19 +420,20 @@
       return;
     }
 
+    // === Парсинг Блоков 1 и 2 ===
     let insideTargetBlock = false;
 
     for (let rawLine of lines) {
       let line = rawLine.trim();
       if (!line) continue;
 
-      if (line.includes(`БЛОК ${currentBlock}`) || line.includes(`БЛОК: ${currentBlock}`)) {
+      if ((line.startsWith(`# БЛОК ${currentBlock}`) || line.startsWith(`### БЛОК ${currentBlock}`)) && !line.includes('ПОДБЛОК')) {
         insideTargetBlock = true;
         continue;
       }
       
       const nextBlockNum = currentBlock + 1;
-      if (insideTargetBlock && (line.includes(`БЛОК ${nextBlockNum}`) || line.includes(`БЛОК: ${nextBlockNum}`))) {
+      if (insideTargetBlock && (line.startsWith(`# БЛОК ${nextBlockNum}`) || line.startsWith(`### БЛОК ${nextBlockNum}`)) && !line.includes('ПОДБЛОК')) {
         break;
       }
 
@@ -481,7 +485,6 @@
     const transBox = document.getElementById('transcriptionBox');
     const ruleBox = document.getElementById('ruleBox');
 
-    // Принудительно восстанавливаем видимость инпутов и кнопок
     inputGroupRow.style.display = 'flex';
     input.style.display = 'block';
     micBtn.style.display = 'block';
