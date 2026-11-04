@@ -332,7 +332,6 @@
   let b6Round2 = [];
   let b6CurrentRound = 1;
   let b6FullEnText = '';
-  let b6FullRuText = '';
 
   let recognition = null;
   let isRecording = false;
@@ -431,55 +430,81 @@
     let currentSubblock = 'ПОДБЛОК 1';
     tasks = [];
 
-    // === Блок 6 (Связный текст) ===
+    // === Блок 6 (Связный текст: универсальный парсер) ===
     if (currentBlock === 6) {
       b6Round1 = [];
       let inB6 = false;
-      let rawEnStr = '';
-      let rawRuStr = '';
+      let mode = ''; // 'EN' или 'RU'
+      let enItems = [];
+      let ruItems = [];
 
       for (let rawLine of lines) {
         let line = rawLine.trim();
         if (!line) continue;
 
-        if ((line.startsWith('# БЛОК 6') || line.startsWith('### БЛОК 6')) && !line.includes('ПОДБЛОК')) {
+        if (line.includes('БЛОК 6') && !line.includes('ПОДБЛОК')) {
           inB6 = true;
           continue;
         }
 
         if (inB6) {
-          if (line.startsWith('EN_TEXT:')) {
-            rawEnStr = line.replace('EN_TEXT:', '').trim();
-          } else if (line.startsWith('RU_TEXT:')) {
-            rawRuStr = line.replace('RU_TEXT:', '').trim();
+          const upper = line.toUpperCase();
+          if (upper.includes('EN TEXT') || upper.includes('EN_TEXT')) {
+            mode = 'EN';
+            continue;
+          }
+          if (upper.includes('RU TEXT') || upper.includes('RU_TEXT')) {
+            mode = 'RU';
+            continue;
+          }
+
+          if (line.startsWith('#')) continue;
+
+          if (line.includes('|')) {
+            const parts = line.split('|').map(p => p.trim());
+            let partA = parts[0] || '';
+            let partB = parts[1] || '';
+            let partC = parts[2] || '';
+
+            if (mode === 'EN') {
+              enItems.push({
+                en: partA,
+                trans: partB,
+                ru: ''
+              });
+            } else if (mode === 'RU') {
+              ruItems.push({
+                ru: partA,
+                en: partB,
+                trans: partC
+              });
+            }
           }
         }
       }
 
-      b6FullEnText = rawEnStr;
-      b6FullRuText = rawRuStr;
+      // Формируем озвучку всего английского рассказа
+      b6FullEnText = enItems.map(item => item.en).join(' ');
 
-      const splitSentences = (text) => {
-        return (text.match(/[^.!?]+[.!?]+/g) || [text]).map(s => s.trim()).filter(Boolean);
-      };
-
-      const enSentences = splitSentences(rawEnStr);
-      const ruSentences = splitSentences(rawRuStr);
-      const count = Math.min(enSentences.length, ruSentences.length);
-
-      for (let i = 0; i < count; i++) {
+      // Ступень 1: Чтение и аудирование EN -> RU
+      // Если для EN списка нет готового русского в строке, берем соответствующий по порядку из ruItems
+      for (let i = 0; i < enItems.length; i++) {
+        let matchedRu = (ruItems[i] ? ruItems[i].ru : enItems[i].en);
         b6Round1.push({
-          en: enSentences[i],
-          ru: ruSentences[i],
+          en: enItems[i].en,
+          ru: matchedRu,
+          trans: enItems[i].trans,
           stage: 'Ступень 1 (Чтение EN ➔ RU)',
           isEnToRu: true
         });
       }
 
-      for (let i = 0; i < count; i++) {
+      // Ступень 2: Обратный перевод RU -> EN
+      for (let i = 0; i < ruItems.length; i++) {
         b6Round1.push({
-          en: enSentences[i],
-          ru: ruSentences[i],
+          en: ruItems[i].en,
+          ru: ruItems[i].ru,
+          trans: ruItems[i].trans,
           stage: 'Ступень 2 (Обратный перевод RU ➔ EN)',
           isEnToRu: false
         });
@@ -501,7 +526,7 @@
           inB5 = true;
           continue;
         }
-        if (inB5 && (line.startsWith('# БЛОК 6') || line.startsWith('### БЛОК 6'))) {
+        if (inB5 && (line.includes('БЛОК 6') && !line.includes('ПОДБЛОК'))) {
           break;
         }
 
@@ -735,6 +760,11 @@
     if (currentBlock === 6) {
       const currentIdx = blockIndices[6] || 0;
       const activeList = b6CurrentRound === 1 ? b6Round1 : b6Round2;
+
+      if (activeList.length === 0) {
+        sourceEl.innerText = 'Загрузка предложений Блока 6...';
+        return;
+      }
 
       if (currentIdx >= activeList.length) {
         if (b6CurrentRound === 1 && b6Round2.length > 0) {
@@ -1077,6 +1107,11 @@
           statusLine.style.display = 'block';
           statusLine.innerText = '✓ ВЕРНО! (+5 ₽)';
           speakEnglish(item.en, 0.9);
+
+          if (item.trans) {
+            transText.innerText = item.trans;
+            transBox.classList.add('visible');
+          }
         } else {
           balance -= 5;
           statusLine.className = 'status-line wrong';
@@ -1094,6 +1129,11 @@
           statusLine.style.display = 'block';
           statusLine.innerText = '✓ ИСПРАВЛЕНО! (+3 ₽)';
           speakEnglish(item.en, 0.9);
+
+          if (item.trans) {
+            transText.innerText = item.trans;
+            transBox.classList.add('visible');
+          }
         } else {
           statusLine.className = 'status-line wrong';
           statusLine.style.display = 'block';
@@ -1102,6 +1142,11 @@
           ruleText.innerHTML = `<strong>Правильный эталон:</strong> ${expected}`;
           ruleBox.style.display = 'block';
           speakEnglish(item.en, 0.9);
+
+          if (item.trans) {
+            transText.innerText = item.trans;
+            transBox.classList.add('visible');
+          }
         }
       }
 
