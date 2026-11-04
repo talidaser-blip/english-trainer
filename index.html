@@ -101,6 +101,14 @@
       line-height: 1.35;
     }
 
+    .audio-btns-group {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
     .btn-sound {
       background: rgba(20, 184, 166, 0.15);
       border: 1px solid var(--teal);
@@ -235,6 +243,7 @@
         <option value="1">Блок 1: RU ➔ EN</option>
         <option value="2">Блок 2: EN ➔ RU</option>
         <option value="3">Блок 3: Ошибки</option>
+        <option value="4">Блок 4: Аудирование</option>
       </select>
       <div class="status-badge">
         <div class="badge-subblock" id="subblockLabel">Загрузка...</div>
@@ -246,7 +255,10 @@
   <div class="trainer-card">
     <div class="phrase-box">
       <div class="phrase-text" id="sourcePhrase">Загрузка урока 1...</div>
-      <button class="btn-sound" id="listenBtn" onclick="repeatCurrentAudio()" style="display: none;">🔊 Слушать</button>
+      <div class="audio-btns-group">
+        <button class="btn-sound" id="listenBtn" onclick="repeatCurrentAudio(1.0)" style="display: none;">🔊 Слушать</button>
+        <button class="btn-sound" id="slowBtn" onclick="repeatCurrentAudio(0.6)" style="display: none;">🐢 Медленно</button>
+      </div>
     </div>
 
     <div class="input-group" id="inputGroupRow">
@@ -264,7 +276,7 @@
 
     <div class="transcription-box" id="transcriptionBox">
       <div>Произношение: <span class="transcription-text" id="transcriptionText"></span></div>
-      <button class="btn-sound" onclick="repeatCurrentAudio()" style="padding: 4px 10px; font-size: 12px;">🔊 Повтор</button>
+      <button class="btn-sound" onclick="repeatCurrentAudio(1.0)" style="padding: 4px 10px; font-size: 12px;">🔊 Повтор</button>
     </div>
   </div>
 </div>
@@ -282,7 +294,8 @@
   let blockIndices = {
     1: 0,
     2: 0,
-    3: 0
+    3: 0,
+    4: 0
   };
 
   // Очереди Блока 1 и 2
@@ -293,6 +306,11 @@
   let b3Round2 = [];
   let b3CurrentRound = 1;
 
+  // Очереди Блока 4 (Аудирование)
+  let b4Round1 = [];
+  let b4Round2 = [];
+  let b4CurrentRound = 1;
+
   let recognition = null;
   let isRecording = false;
 
@@ -301,7 +319,8 @@
       block: currentBlock,
       blockIndices: blockIndices,
       balance: balance,
-      b3CurrentRound: b3CurrentRound
+      b3CurrentRound: b3CurrentRound,
+      b4CurrentRound: b4CurrentRound
     };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
   }
@@ -317,6 +336,7 @@
           blockIndices = { ...blockIndices, ...data.blockIndices };
         }
         if (typeof data.b3CurrentRound === 'number') b3CurrentRound = data.b3CurrentRound;
+        if (typeof data.b4CurrentRound === 'number') b4CurrentRound = data.b4CurrentRound;
       } catch (e) {
         console.error('Ошибка памяти:', e);
       }
@@ -330,6 +350,9 @@
       if (currentBlock === 3) {
         b3CurrentRound = 1;
         b3Round2 = [];
+      } else if (currentBlock === 4) {
+        b4CurrentRound = 1;
+        b4Round2 = [];
       }
       saveProgress();
       renderCurrentTask();
@@ -369,6 +392,51 @@
     const lines = rawLessonText.split('\n');
     let currentSubblock = 'ПОДБЛОК 1';
     tasks = [];
+
+    // === Парсинг Блока 4 (Аудирование) ===
+    if (currentBlock === 4) {
+      b4Round1 = [];
+      let inB4 = false;
+
+      for (let rawLine of lines) {
+        let line = rawLine.trim();
+        if (!line) continue;
+
+        if ((line.startsWith('# БЛОК 4') || line.startsWith('### БЛОК 4')) && !line.includes('ПОДБЛОК')) {
+          inB4 = true;
+          continue;
+        }
+        if (inB4 && (line.startsWith('# БЛОК 5') || line.startsWith('### БЛОК 5'))) {
+          break;
+        }
+
+        if (inB4) {
+          if (line.toUpperCase().includes('ПОДБЛОК')) {
+            currentSubblock = line.replace(/^[#\s]+/, '').trim();
+            continue;
+          }
+          if (line.startsWith('#')) continue;
+
+          if (line.includes('|')) {
+            const parts = line.split('|').map(p => p.trim());
+            if (parts.length >= 1 && parts[0]) {
+              b4Round1.push({
+                en: parts[0],
+                trans: parts[1] || "",
+                subblock: currentSubblock
+              });
+            }
+          } else if (line.length > 2 && !line.startsWith('#')) {
+            b4Round1.push({
+              en: line,
+              trans: "",
+              subblock: currentSubblock
+            });
+          }
+        }
+      }
+      return;
+    }
 
     // === Парсинг Блока 3 ===
     if (currentBlock === 3) {
@@ -482,6 +550,7 @@
   function renderCurrentTask() {
     const sourceEl = document.getElementById('sourcePhrase');
     const listenBtn = document.getElementById('listenBtn');
+    const slowBtn = document.getElementById('slowBtn');
     const input = document.getElementById('userInput');
     const micBtn = document.getElementById('micBtn');
     const btn = document.getElementById('actionBtn');
@@ -503,8 +572,48 @@
     statusLine.innerText = '';
     transBox.classList.remove('visible');
     ruleBox.style.display = 'none';
+    slowBtn.style.display = 'none';
     btn.innerText = 'OK';
     isWaitingNext = false;
+
+    // Отрисовка Блока 4 (Аудирование)
+    if (currentBlock === 4) {
+      sourceEl.innerText = '🎧 Слушайте и пишите на английском...';
+      listenBtn.style.display = 'inline-flex';
+      slowBtn.style.display = 'inline-flex';
+      input.placeholder = 'Наберите услышанную фразу на английском 🎙️...';
+
+      const currentIdx = blockIndices[4] || 0;
+
+      if (b4CurrentRound === 1) {
+        if (currentIdx >= b4Round1.length) {
+          if (b4Round2.length > 0) {
+            b4CurrentRound = 2;
+            blockIndices[4] = 0;
+            saveProgress();
+            renderCurrentTask();
+          } else {
+            finishAllBlocks();
+          }
+          return;
+        }
+        const item = b4Round1[currentIdx];
+        document.getElementById('subblockLabel').innerText = item.subblock || 'Круг 1 (Основной)';
+        document.getElementById('progressCount').innerText = `${currentIdx + 1} из ${b4Round1.length}`;
+        speakEnglish(item.en, 1.0);
+      } else {
+        if (currentIdx >= b4Round2.length) {
+          finishAllBlocks();
+          return;
+        }
+        const item = b4Round2[currentIdx];
+        document.getElementById('subblockLabel').innerText = 'Штрафной раунд (Пересдача)';
+        document.getElementById('progressCount').innerText = `${currentIdx + 1} из ${b4Round2.length}`;
+        speakEnglish(item.en, 1.0);
+      }
+      document.getElementById('balanceDisplay').innerText = `${balance} ₽`;
+      return;
+    }
 
     // Отрисовка Блока 3
     if (currentBlock === 3) {
@@ -521,7 +630,7 @@
             saveProgress();
             renderCurrentTask();
           } else {
-            finishAllBlocks();
+            advanceToBlock4();
           }
           return;
         }
@@ -531,7 +640,7 @@
         document.getElementById('progressCount').innerText = `${currentIdx + 1} из ${b3Round1.length}`;
       } else {
         if (currentIdx >= b3Round2.length) {
-          finishAllBlocks();
+          advanceToBlock4();
           return;
         }
         const item = b3Round2[currentIdx];
@@ -586,9 +695,19 @@
     document.getElementById('balanceDisplay').innerText = `${balance} ₽`;
   }
 
+  function advanceToBlock4() {
+    currentBlock = 4;
+    document.getElementById('blockSelector').value = 4;
+    parseCurrentBlock();
+    saveProgress();
+    alert('Поздравляем! Блок 3 завершён. Переходим ко Блоку 4 (Аудирование)!');
+    renderCurrentTask();
+  }
+
   function finishAllBlocks() {
     document.getElementById('sourcePhrase').innerText = '🎉 Все задания успешно завершены!';
     document.getElementById('listenBtn').style.display = 'none';
+    document.getElementById('slowBtn').style.display = 'none';
     document.getElementById('userInput').style.display = 'none';
     document.getElementById('micBtn').style.display = 'none';
     document.getElementById('actionBtn').style.display = 'none';
@@ -673,6 +792,65 @@
     const ruleText = document.getElementById('ruleText');
 
     input.disabled = true;
+
+    // === Проверка Блока 4 (Аудирование) ===
+    if (currentBlock === 4) {
+      const currentIdx = blockIndices[4] || 0;
+      const item = b4CurrentRound === 1 ? b4Round1[currentIdx] : b4Round2[currentIdx];
+      const isCorrect = isEnglishMatch(userAns, item.en);
+
+      if (b4CurrentRound === 1) {
+        if (isCorrect) {
+          balance += 5;
+          statusLine.className = 'status-line correct';
+          statusLine.style.display = 'block';
+          statusLine.innerText = '✓ ВЕРНО! (+5 ₽)';
+          speakEnglish(item.en, 1.0);
+
+          if (item.trans) {
+            transText.innerText = item.trans;
+            transBox.classList.add('visible');
+          }
+        } else {
+          balance -= 5;
+          statusLine.className = 'status-line wrong';
+          statusLine.style.display = 'block';
+          statusLine.innerText = '✕ ОШИБКА (-5 ₽) | Отправлено на повторение!';
+          b4Round2.push(item);
+        }
+      } else {
+        if (isCorrect) {
+          balance += 3;
+          statusLine.className = 'status-line correct';
+          statusLine.style.display = 'block';
+          statusLine.innerText = '✓ ИСПРАВЛЕНО! (+3 ₽)';
+          speakEnglish(item.en, 1.0);
+
+          if (item.trans) {
+            transText.innerText = item.trans;
+            transBox.classList.add('visible');
+          }
+        } else {
+          statusLine.className = 'status-line wrong';
+          statusLine.style.display = 'block';
+          statusLine.innerText = '✕ ПОВТОРНАЯ ОШИБКА (0 ₽)';
+          ruleText.innerHTML = `<strong>Правильный текст:</strong> ${item.en}`;
+          ruleBox.style.display = 'block';
+          speakEnglish(item.en, 1.0);
+
+          if (item.trans) {
+            transText.innerText = item.trans;
+            transBox.classList.add('visible');
+          }
+        }
+      }
+
+      document.getElementById('balanceDisplay').innerText = `${balance} ₽`;
+      saveProgress();
+      isWaitingNext = true;
+      btn.innerText = (b4CurrentRound === 2 && ruleBox.style.display === 'block') ? 'Понятно, дальше ➔' : 'Дальше ➔';
+      return;
+    }
 
     // === Проверка Блока 3 ===
     if (currentBlock === 3) {
@@ -776,27 +954,38 @@
     btn.innerText = 'Дальше ➔';
   }
 
-  function speakEnglish(phrase) {
+  function speakEnglish(phrase, rate = 1.0) {
     if (!('speechSynthesis' in window)) return;
     window.speechSynthesis.cancel();
-    const ut = new SpeechSynthesisUtterance(phrase);
-    ut.lang = 'en-US';
-    ut.rate = 0.9;
-    window.speechSynthesis.speak(ut);
+    setTimeout(() => {
+      const ut = new SpeechSynthesisUtterance(phrase);
+      ut.lang = 'en-US';
+      ut.rate = rate;
+
+      const voices = window.speechSynthesis.getVoices();
+      const enVoice = voices.find(v => v.lang.startsWith('en'));
+      if (enVoice) ut.voice = enVoice;
+
+      window.speechSynthesis.speak(ut);
+    }, 40);
   }
 
-  function repeatCurrentAudio() {
-    if (currentBlock === 3) {
+  function repeatCurrentAudio(rate = 1.0) {
+    if (currentBlock === 4) {
+      const currentIdx = blockIndices[4] || 0;
+      const item = b4CurrentRound === 1 ? b4Round1[currentIdx] : b4Round2[currentIdx];
+      if (item) speakEnglish(item.en, rate);
+    } else if (currentBlock === 3) {
       const currentIdx = blockIndices[3] || 0;
       const item = b3CurrentRound === 1 ? b3Round1[currentIdx] : b3Round2[currentIdx];
       if (item) {
         const isToTravel = cleanText(document.getElementById('userInput').value) === cleanText('I like to travel');
-        speakEnglish(isToTravel ? 'I like to travel' : item.correct.split('/')[0].trim());
+        speakEnglish(isToTravel ? 'I like to travel' : item.correct.split('/')[0].trim(), rate);
       }
     } else if (tasks.length > 0) {
       const currentIdx = blockIndices[currentBlock] || 0;
       if (currentIdx < tasks.length) {
-        speakEnglish(tasks[currentIdx].en);
+        speakEnglish(tasks[currentIdx].en, rate);
       }
     }
   }
@@ -842,7 +1031,7 @@
       return;
     }
 
-    recognition.lang = (currentBlock === 1 || currentBlock === 3) ? 'en-US' : 'ru-RU';
+    recognition.lang = (currentBlock === 1 || currentBlock === 3 || currentBlock === 4) ? 'en-US' : 'ru-RU';
 
     const btn = document.getElementById('micBtn');
     if (!isRecording) {
@@ -854,6 +1043,12 @@
       btn.classList.remove('recording');
       try { recognition.stop(); } catch(e) {}
     }
+  }
+
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.onvoiceschanged = () => {
+      window.speechSynthesis.getVoices();
+    };
   }
 
   window.onload = () => {
