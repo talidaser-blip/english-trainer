@@ -40,10 +40,16 @@
       display: flex;
       flex-direction: column;
       align-items: flex-end;
-      gap: 6px;
+      gap: 8px;
     }
 
-    .block-select {
+    .selectors-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .control-select {
       background: #0b1e28;
       color: var(--text);
       border: 1px solid var(--border);
@@ -54,7 +60,7 @@
       outline: none;
       cursor: pointer;
     }
-    .block-select:focus { border-color: var(--accent); }
+    .control-select:focus { border-color: var(--accent); }
 
     .status-badge { text-align: right; font-size: 13px; color: var(--text-muted); }
     .badge-subblock { font-weight: 600; color: var(--success); text-transform: uppercase; }
@@ -277,14 +283,24 @@
     </div>
 
     <div class="header-controls">
-      <select class="block-select" id="blockSelector" onchange="onBlockChange()">
-        <option value="1">Блок 1: RU ➔ EN</option>
-        <option value="2">Блок 2: EN ➔ RU</option>
-        <option value="3">Блок 3: Ошибки</option>
-        <option value="4">Блок 4: Аудирование</option>
-        <option value="5">Блок 5: Сложные предложения</option>
-        <option value="6">Блок 6: Связный текст</option>
-      </select>
+      <div class="selectors-row">
+        <!-- Выбор номера урока -->
+        <select class="control-select" id="lessonSelector" onchange="onLessonChange()">
+          <option value="1">Урок 1</option>
+          <option value="2">Урок 2</option>
+        </select>
+
+        <!-- Выбор блока внутри урока -->
+        <select class="control-select" id="blockSelector" onchange="onBlockChange()">
+          <option value="1">Блок 1: RU ➔ EN</option>
+          <option value="2">Блок 2: EN ➔ RU</option>
+          <option value="3">Блок 3: Ошибки</option>
+          <option value="4">Блок 4: Аудирование</option>
+          <option value="5">Блок 5: Сложные предложения</option>
+          <option value="6">Блок 6: Связный текст</option>
+        </select>
+      </div>
+
       <div class="status-badge">
         <div class="badge-subblock" id="subblockLabel">Загрузка...</div>
         <div id="progressCount" style="margin-top: 3px;">0 из 50</div>
@@ -295,7 +311,7 @@
   <div class="trainer-card">
     <!-- Для Блоков 1-5: одиночная фраза -->
     <div class="phrase-box" id="singlePhraseBox">
-      <div class="phrase-text" id="sourcePhrase">Загрузка урока 1...</div>
+      <div class="phrase-text" id="sourcePhrase">Загрузка урока...</div>
       <div class="audio-btns-group">
         <button class="btn-sound" id="listenBtn" onclick="repeatCurrentAudio(1.0)" style="display: none;">🔊 Слушать</button>
         <button class="btn-sound" id="slowBtn" onclick="repeatCurrentAudio(0.6)" style="display: none;">🐢 Медленно</button>
@@ -333,23 +349,13 @@
 </div>
 
 <script>
-  const LESSON_URL = './lessons/lesson_1.txt';
-  const STORAGE_KEY = 'english_trainer_progress_v8';
-
-  let rawLessonText = '';
+  let currentLesson = 1;
   let currentBlock = 1;
+  let rawLessonText = '';
   let balance = 0;
   let isWaitingNext = false;
 
-  let blockIndices = {
-    1: 0,
-    2: 0,
-    3: 0,
-    4: 0,
-    5: 0,
-    6: 0 // 0 = Ступень 1, 1 = Ступень 2
-  };
-
+  let blockIndices = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0 };
   let tasks = [];
 
   let b3Round1 = [];
@@ -372,6 +378,10 @@
   let recognition = null;
   let isRecording = false;
 
+  function getStorageKey() {
+    return `english_trainer_l${currentLesson}_v1`;
+  }
+
   function capitalizeText(text) {
     if (!text) return '';
     return text.charAt(0).toUpperCase() + text.slice(1);
@@ -386,11 +396,19 @@
       b4CurrentRound: b4CurrentRound,
       b5CurrentRound: b5CurrentRound
     };
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    localStorage.setItem(getStorageKey(), JSON.stringify(data));
   }
 
   function loadProgress() {
-    const raw = localStorage.getItem(STORAGE_KEY);
+    // Сброс значений по умолчанию перед загрузкой состояния урока
+    balance = 0;
+    currentBlock = 1;
+    blockIndices = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0 };
+    b3CurrentRound = 1;
+    b4CurrentRound = 1;
+    b5CurrentRound = 1;
+
+    const raw = localStorage.getItem(getStorageKey());
     if (raw) {
       try {
         const data = JSON.parse(raw);
@@ -409,7 +427,7 @@
   }
 
   function resetProgress() {
-    if (confirm(`Начать Блок ${currentBlock} заново?`)) {
+    if (confirm(`Начать Блок ${currentBlock} (Урок ${currentLesson}) заново?`)) {
       blockIndices[currentBlock] = 0;
       isWaitingNext = false;
       if (currentBlock === 3) {
@@ -427,6 +445,13 @@
     }
   }
 
+  function onLessonChange() {
+    const select = document.getElementById('lessonSelector');
+    currentLesson = parseInt(select.value, 10);
+    localStorage.setItem('english_trainer_active_lesson', currentLesson);
+    loadLesson();
+  }
+
   function onBlockChange() {
     const select = document.getElementById('blockSelector');
     currentBlock = parseInt(select.value, 10);
@@ -437,16 +462,18 @@
   }
 
   async function loadLesson() {
+    const lessonUrl = `./lessons/lesson_${currentLesson}.txt`;
     try {
-      const res = await fetch(LESSON_URL + '?v=' + Date.now());
-      if (!res.ok) throw new Error('Не удалось открыть файл урока');
+      const res = await fetch(lessonUrl + '?v=' + Date.now());
+      if (!res.ok) throw new Error('Не удалось открыть файл ' + lessonUrl);
       rawLessonText = await res.text();
       loadProgress();
+      document.getElementById('lessonSelector').value = currentLesson;
       document.getElementById('blockSelector').value = currentBlock;
       parseCurrentBlock();
       renderCurrentTask();
     } catch (err) {
-      document.getElementById('sourcePhrase').innerText = 'Ошибка загрузки файла lessons/lesson_1.txt';
+      document.getElementById('sourcePhrase').innerText = `Ошибка: файл lessons/lesson_${currentLesson}.txt не найден на GitHub!`;
       console.error(err);
     }
   }
@@ -455,7 +482,6 @@
     return /[а-яёА-ЯЁ]/.test(text);
   }
 
-  // Функция разбивки длинного связного текста на предложения
   function extractSentences(text) {
     return (text.match(/[^.!?]+[.!?]+/g) || [text]).map(s => s.trim()).filter(Boolean);
   }
@@ -466,7 +492,7 @@
     let currentSubblock = 'ПОДБЛОК 1';
     tasks = [];
 
-    // === Блок 6 (Связный текст: универсальное считывание любого формата) ===
+    // === Блок 6 (Связный текст: универсальный разбор) ===
     if (currentBlock === 6) {
       let inB6 = false;
       let mode = '';
@@ -486,7 +512,6 @@
           const upper = line.toUpperCase();
           if (upper.includes('EN TEXT') || upper.includes('EN_TEXT')) {
             mode = 'EN';
-            // Если текст идёт прямо в этой же строке после двоеточия
             if (line.includes(':')) {
               let afterCol = line.substring(line.indexOf(':') + 1).trim();
               if (afterCol) enLines.push(afterCol);
@@ -504,9 +529,7 @@
 
           if (line.startsWith('#')) continue;
 
-          // Очищаем от колонок транскрипции, если они были через палочку |
           let cleanLine = line.includes('|') ? line.split('|')[0].trim() : line;
-
           if (mode === 'EN' && cleanLine) {
             enLines.push(cleanLine);
           } else if (mode === 'RU' && cleanLine) {
@@ -541,11 +564,11 @@
         }
 
         if (inB5) {
-          if (line.toLowerCase().includes('ступень 1') || line.toLowerCase().includes('en ➔ ru') || line.toLowerCase().includes('en -> ru')) {
+          if (line.toLowerCase().includes('ступень 1') || line.toLowerCase().includes('en ➔ ru') || line.toLowerCase().includes('en -> ru') || line.toLowerCase().includes('en_to_ru')) {
             currentStage = 'Ступень 1 (EN ➔ RU)';
             continue;
           }
-          if (line.toLowerCase().includes('ступень 2') || line.toLowerCase().includes('ru ➔ en') || line.toLowerCase().includes('ru -> en')) {
+          if (line.toLowerCase().includes('ступень 2') || line.toLowerCase().includes('ru ➔ en') || line.toLowerCase().includes('ru -> en') || line.toLowerCase().includes('ru_to_en')) {
             currentStage = 'Ступень 2 (RU ➔ EN)';
             continue;
           }
@@ -661,19 +684,11 @@
               }
             }
 
-            if (wrongStr.includes('I see my friends and spend time with his friends')) {
-              wrongStr = 'I spend time with his friends.';
-            }
-
-            if (correctStr.toLowerCase().includes('i like traveling') && !correctStr.includes('/')) {
-              correctStr = 'I like traveling / I like to travel';
-            }
-
             b3Round1.push({
               wrong: wrongStr,
               correct: correctStr,
               trans: transStr,
-              rule: ruleStr || "Проверьте грамматику и порядок слов."
+              rule: ruleStr || "Проверьте грамматику и форму глагола."
             });
           }
         }
@@ -771,7 +786,7 @@
     btn.innerText = 'OK';
     isWaitingNext = false;
 
-    // === Отрисовка Блока 6: ВЕСЬ ТЕКСТ НА ОДНОМ ЭКРАНЕ ===
+    // === Отрисовка Блока 6 ===
     if (currentBlock === 6) {
       singlePhraseBox.style.display = 'none';
       input.style.display = 'none';
@@ -787,11 +802,11 @@
       document.getElementById('balanceDisplay').innerText = `${balance} ₽`;
 
       if (currentStage === 0) {
-        document.getElementById('subblockLabel').innerText = 'Ступень 1 (Чтение связного текста)';
+        document.getElementById('subblockLabel').innerText = 'Ступень 1 (Чтение рассказа)';
         document.getElementById('progressCount').innerText = '1 из 2';
         storyFullText.innerText = b6FullEnText || 'Загрузка английского рассказа...';
         listenAllBtn.style.display = 'inline-flex';
-        storyInput.placeholder = 'Прочитайте текст выше и введите его связный русский перевод целиком...';
+        storyInput.placeholder = 'Прочитайте связный текст выше и наберите его русский перевод целиком...';
         btn.innerText = 'Проверить перевод';
         storyInput.focus();
       } else {
@@ -997,7 +1012,7 @@
   function finishAllBlocks() {
     document.getElementById('singlePhraseBox').style.display = 'flex';
     document.getElementById('storyContainer').style.display = 'none';
-    document.getElementById('sourcePhrase').innerText = '🎉 Все задания и связный текст успешно завершены!';
+    document.getElementById('sourcePhrase').innerText = `🎉 Все задания Урока ${currentLesson} успешно завершены!`;
     document.getElementById('listenBtn').style.display = 'none';
     document.getElementById('slowBtn').style.display = 'none';
     document.getElementById('userInput').style.display = 'none';
@@ -1009,7 +1024,7 @@
     const st = document.getElementById('statusLine');
     st.className = 'status-line correct';
     st.style.display = 'block';
-    st.innerText = `Великолепно! Урок полностью пройден! Итоговый баланс: ${balance} ₽`;
+    st.innerText = `Великолепно! Урок ${currentLesson} пройден! Баланс урока: ${balance} ₽`;
 
     if (typeof confetti === 'function') {
       confetti({
@@ -1110,7 +1125,7 @@
       if (!userStory) return;
 
       storyInput.disabled = true;
-      const currentStage = blockIndices[6] || 0; // 0 = Ступень 1, 1 = Ступень 2
+      const currentStage = blockIndices[6] || 0;
 
       let matchCount = 0;
       let totalCount = currentStage === 0 ? b6RuSentences.length : b6EnSentences.length;
@@ -1287,9 +1302,7 @@
       const item = b3CurrentRound === 1 ? b3Round1[currentIdx] : b3Round2[currentIdx];
       const isCorrect = isEnglishMatch(userAns, item.correct);
 
-      const isToTravel = cleanText(userAns) === cleanText('I like to travel');
-      const voicePhrase = isToTravel ? 'I like to travel' : item.correct.split('/')[0].trim();
-      const transcriptionPhrase = isToTravel ? 'Ай лайк ту трэ́вл' : item.trans;
+      const voicePhrase = item.correct.split('/')[0].trim();
 
       if (b3CurrentRound === 1) {
         if (isCorrect) {
@@ -1299,8 +1312,8 @@
           statusLine.innerText = '✓ ВЕРНО! (+5 ₽)';
           speakEnglish(voicePhrase);
 
-          if (transcriptionPhrase) {
-            transText.innerText = transcriptionPhrase;
+          if (item.trans) {
+            transText.innerText = item.trans;
             transBox.classList.add('visible');
           }
         } else {
@@ -1320,8 +1333,8 @@
           statusLine.innerText = '✓ ОШИБКА ИСПРАВЛЕНА! (+3 ₽)';
           speakEnglish(voicePhrase);
 
-          if (transcriptionPhrase) {
-            transText.innerText = transcriptionPhrase;
+          if (item.trans) {
+            transText.innerText = item.trans;
             transBox.classList.add('visible');
           }
         } else {
@@ -1332,8 +1345,8 @@
           ruleBox.style.display = 'block';
           speakEnglish(voicePhrase);
 
-          if (transcriptionPhrase) {
-            transText.innerText = transcriptionPhrase;
+          if (item.trans) {
+            transText.innerText = item.trans;
             transBox.classList.add('visible');
           }
         }
@@ -1422,8 +1435,7 @@
       const currentIdx = blockIndices[3] || 0;
       const item = b3CurrentRound === 1 ? b3Round1[currentIdx] : b3Round2[currentIdx];
       if (item) {
-        const isToTravel = cleanText(document.getElementById('userInput').value) === cleanText('I like to travel');
-        speakEnglish(isToTravel ? 'I like to travel' : item.correct.split('/')[0].trim(), rate);
+        speakEnglish(item.correct.split('/')[0].trim(), rate);
       }
     } else if (tasks.length > 0) {
       const currentIdx = blockIndices[currentBlock] || 0;
@@ -1513,6 +1525,10 @@
   }
 
   window.onload = () => {
+    const savedLesson = localStorage.getItem('english_trainer_active_lesson');
+    if (savedLesson) {
+      currentLesson = parseInt(savedLesson, 10);
+    }
     initSpeech();
     loadLesson();
   };
