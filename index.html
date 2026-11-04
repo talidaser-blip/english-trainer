@@ -284,13 +284,10 @@
 
     <div class="header-controls">
       <div class="selectors-row">
-        <!-- Выбор номера урока -->
-        <select class="control-select" id="lessonSelector" onchange="onLessonChange()">
-          <option value="1">Урок 1</option>
-          <option value="2">Урок 2</option>
-        </select>
+        <!-- Выпадающий список на 50 уроков формируется автоматически через JS -->
+        <select class="control-select" id="lessonSelector" onchange="onLessonChange()"></select>
 
-        <!-- Выбор блока внутри урока -->
+        <!-- Выбор блока внутри выбранного урока -->
         <select class="control-select" id="blockSelector" onchange="onBlockChange()">
           <option value="1">Блок 1: RU ➔ EN</option>
           <option value="2">Блок 2: EN ➔ RU</option>
@@ -349,6 +346,7 @@
 </div>
 
 <script>
+  const TOTAL_AVAILABLE_LESSONS = 50; // Доступно сразу 50 уроков
   let currentLesson = 1;
   let currentBlock = 1;
   let rawLessonText = '';
@@ -378,6 +376,18 @@
   let recognition = null;
   let isRecording = false;
 
+  // Автоматическое заполнение выпадающего списка на 50 уроков
+  function buildLessonOptions() {
+    const sel = document.getElementById('lessonSelector');
+    sel.innerHTML = '';
+    for (let i = 1; i <= TOTAL_AVAILABLE_LESSONS; i++) {
+      const opt = document.createElement('option');
+      opt.value = i;
+      opt.textContent = `Урок ${i}`;
+      sel.appendChild(opt);
+    }
+  }
+
   function getStorageKey() {
     return `english_trainer_l${currentLesson}_v1`;
   }
@@ -400,7 +410,6 @@
   }
 
   function loadProgress() {
-    // Сброс значений по умолчанию перед загрузкой состояния урока
     balance = 0;
     currentBlock = 1;
     blockIndices = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0 };
@@ -473,8 +482,10 @@
       parseCurrentBlock();
       renderCurrentTask();
     } catch (err) {
-      document.getElementById('sourcePhrase').innerText = `Ошибка: файл lessons/lesson_${currentLesson}.txt не найден на GitHub!`;
-      console.error(err);
+      document.getElementById('sourcePhrase').innerText = `Файл lessons/lesson_${currentLesson}.txt ещё не загружен в репозиторий.`;
+      document.getElementById('subblockLabel').innerText = 'Ожидание файла';
+      document.getElementById('progressCount').innerText = '0 из 0';
+      console.warn(err);
     }
   }
 
@@ -492,7 +503,7 @@
     let currentSubblock = 'ПОДБЛОК 1';
     tasks = [];
 
-    // === Блок 6 (Связный текст: универсальный разбор) ===
+    // === Блок 6 (Связный текст) ===
     if (currentBlock === 6) {
       let inB6 = false;
       let mode = '';
@@ -792,7 +803,7 @@
       input.style.display = 'none';
       storyContainer.style.display = 'flex';
 
-      const currentStage = blockIndices[6] || 0; // 0 = Ступень 1, 1 = Ступень 2
+      const currentStage = blockIndices[6] || 0;
 
       if (currentStage >= 2) {
         finishAllBlocks();
@@ -804,7 +815,7 @@
       if (currentStage === 0) {
         document.getElementById('subblockLabel').innerText = 'Ступень 1 (Чтение рассказа)';
         document.getElementById('progressCount').innerText = '1 из 2';
-        storyFullText.innerText = b6FullEnText || 'Загрузка английского рассказа...';
+        storyFullText.innerText = b6FullEnText || 'Загрузка рассказа...';
         listenAllBtn.style.display = 'inline-flex';
         storyInput.placeholder = 'Прочитайте связный текст выше и наберите его русский перевод целиком...';
         btn.innerText = 'Проверить перевод';
@@ -812,7 +823,7 @@
       } else {
         document.getElementById('subblockLabel').innerText = 'Ступень 2 (Обратный связный перевод)';
         document.getElementById('progressCount').innerText = '2 из 2';
-        storyFullText.innerText = b6FullRuText || 'Загрузка русского рассказа...';
+        storyFullText.innerText = b6FullRuText || 'Загрузка рассказа...';
         listenAllBtn.style.display = 'none';
         storyInput.placeholder = 'По памяти переведите весь русский связный рассказ на английский язык...';
         btn.innerText = 'Проверить перевод';
@@ -1118,7 +1129,7 @@
     const ruleBox = document.getElementById('ruleBox');
     const ruleText = document.getElementById('ruleText');
 
-    // === Проверка Блока 6 (Связный рассказ целиком) ===
+    // === Проверка Блока 6 ===
     if (currentBlock === 6) {
       const storyInput = document.getElementById('storyInput');
       const userStory = storyInput.value.trim();
@@ -1489,7 +1500,7 @@
   function toggleMic() {
     if (!recognition) initSpeech();
     if (!recognition) {
-      alert('Голосовой ввод не поддерживается в данном браузере.');
+      alert('Голосовой ввод не поддерживается данным браузером.');
       return;
     }
 
@@ -1525,6 +1536,7 @@
   }
 
   window.onload = () => {
+    buildLessonOptions();
     const savedLesson = localStorage.getItem('english_trainer_active_lesson');
     if (savedLesson) {
       currentLesson = parseInt(savedLesson, 10);
