@@ -174,38 +174,9 @@ They live in New York and travel every year. | Они живут в Нью-Йо�
 
 
 # БЛОК 6: СВЯЗНЫЙ ТЕКСТ
+
 ## EN_TEXT
-I live in New York. | Ай лив ин нью йоок
-I work and study. | Ай уёок энд ста́ди
-I go to work. | Ай гоу ту уёок
-I also go to university. | Ай о́лсоу гоу ту юнивёосити
-I often go there. | Ай о́фн гоу зээ
-I learn English online. | Ай лёон и́нглиш онла́йн
-I learn English here. | Ай лёон и́нглиш хи́э
-I can speak English. | Ай кэн спиик и́нглиш
-I like music and sport. | Ай лайк мью́зик энд споот
-I often travel. | Ай о́фн трэ́вл
-I travel every year. | Ай трэ́вл э́ври йи́э
-I watch different videos. | Ай уо́тч ди́фрэн ви́диоуз
-I see my result. | Ай сии май риза́лт
-I see my progress. | Ай сии май про́грэс
-I like it. | Ай лайк ит
-I like English. | Ай лайк и́нглиш
+I live in New York. I work and study. I go to work. I also go to university. I often go there. I learn English online. I learn English here. I can speak English. I like music and sport. I often travel. I travel every year. I watch different videos. I see my result. I see my progress. I like it. I like English.
 
 ## RU_TEXT
-Я живу в Нью-Йорке. | I live in New York. | Ай лив ин нью йоок
-Я работаю и учусь. | I work and study. | Ай уёок энд ста́ди
-Я хожу на работу. | I go to work. | Ай гоу ту уёок
-Я также хожу в университет. | I also go to university. | Ай о́лсоу гоу ту юнивёосити
-Я часто хожу туда. | I often go there. | Ай о́фн гоу зээ
-Я изучаю английский онлайн. | I learn English online. | Ай лёон и́нглиш онла́йн
-Я изучаю английский здесь. | I learn English here. | Ай лёон и́нглиш хи́э
-Я могу говорить по-английски. | I can speak English. | Ай кэн спиик и́нглиш
-Мне нравится музыка и спорт. | I like music and sport. | Ай лайк мью́зик энд споот
-Я часто путешествую. | I often travel. | Ай о́фн трэ́вл
-Я путешествую каждый год. | I travel every year. | Ай трэ́вл э́ври йи́э
-Я смотрю различные видео. | I watch different videos. | Ай уо́тч ди́фрэн ви́диоуз
-Я вижу свой результат. | I see my result. | Ай сии май риза́лт
-Я вижу свой прогресс. | I see my progress. | Ай сии май про́грэс
-Мне это нравится. | I like it. | Ай лайк ит
-Мне нравится английский. | I like English. | Ай лайк и́нглиш
+Я говорю по-английски. Я живу в этом городе и работаю здесь. Мне действительно нравится эта работа. Я часто вижу своих друзей и провожу время с ними. Мы вместе играем в футбол. Я изучаю английский каждый день, потому что я хочу путешествовать. Я вижу свой прогресс. Мне очень нравится этот урок.
