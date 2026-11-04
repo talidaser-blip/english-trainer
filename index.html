@@ -290,7 +290,6 @@
   let balance = 0;
   let isWaitingNext = false;
 
-  // Раздельная память шагов для каждого блока
   let blockIndices = {
     1: 0,
     2: 0,
@@ -298,21 +297,23 @@
     4: 0
   };
 
-  // Очереди Блока 1 и 2
   let tasks = [];
 
-  // Очереди Блока 3
   let b3Round1 = [];
   let b3Round2 = [];
   let b3CurrentRound = 1;
 
-  // Очереди Блока 4 (Аудирование)
   let b4Round1 = [];
   let b4Round2 = [];
   let b4CurrentRound = 1;
 
   let recognition = null;
   let isRecording = false;
+
+  function capitalizeText(text) {
+    if (!text) return '';
+    return text.charAt(0).toUpperCase() + text.slice(1);
+  }
 
   function saveProgress() {
     const data = {
@@ -393,7 +394,7 @@
     let currentSubblock = 'ПОДБЛОК 1';
     tasks = [];
 
-    // === Парсинг Блока 4 (Аудирование) ===
+    // === Блок 4 (Аудирование) ===
     if (currentBlock === 4) {
       b4Round1 = [];
       let inB4 = false;
@@ -438,7 +439,7 @@
       return;
     }
 
-    // === Парсинг Блока 3 ===
+    // === Блок 3 (Ошибки) ===
     if (currentBlock === 3) {
       b3Round1 = [];
       let inB3 = false;
@@ -493,7 +494,7 @@
       return;
     }
 
-    // === Парсинг Блоков 1 и 2 ===
+    // === Блоки 1 и 2 ===
     let insideTargetBlock = false;
 
     for (let rawLine of lines) {
@@ -576,7 +577,7 @@
     btn.innerText = 'OK';
     isWaitingNext = false;
 
-    // Отрисовка Блока 4 (Аудирование)
+    // Отрисовка Блока 4
     if (currentBlock === 4) {
       sourceEl.innerText = '🎧 Слушайте и пишите на английском...';
       listenBtn.style.display = 'inline-flex';
@@ -728,9 +729,14 @@
     }
   }
 
+  // Всегда заглавная первая буква при любом вводе с клавиатуры
   document.getElementById('userInput').addEventListener('input', function() {
-    if (this.value.length === 1) {
-      this.value = this.value.toUpperCase();
+    const val = this.value;
+    if (val.length > 0 && val.charAt(0) !== val.charAt(0).toUpperCase()) {
+      const start = this.selectionStart;
+      const end = this.selectionEnd;
+      this.value = capitalizeText(val);
+      this.setSelectionRange(start, end);
     }
   });
 
@@ -793,7 +799,7 @@
 
     input.disabled = true;
 
-    // === Проверка Блока 4 (Аудирование) ===
+    // === Проверка Блока 4 ===
     if (currentBlock === 4) {
       const currentIdx = blockIndices[4] || 0;
       const item = b4CurrentRound === 1 ? b4Round1[currentIdx] : b4Round2[currentIdx];
@@ -1005,8 +1011,7 @@
       }
       finalTranscript = finalTranscript.trim();
       if (finalTranscript.length > 0) {
-        const capitalized = finalTranscript.charAt(0).toUpperCase() + finalTranscript.slice(1);
-        document.getElementById('userInput').value = capitalized;
+        document.getElementById('userInput').value = capitalizeText(finalTranscript);
       }
     };
 
