@@ -284,10 +284,10 @@
 
     <div class="header-controls">
       <div class="selectors-row">
-        <!-- Выпадающий список на 50 уроков формируется автоматически через JS -->
+        <!-- Автоматический список на 50 уроков -->
         <select class="control-select" id="lessonSelector" onchange="onLessonChange()"></select>
 
-        <!-- Выбор блока внутри выбранного урока -->
+        <!-- Выбор блока внутри урока -->
         <select class="control-select" id="blockSelector" onchange="onBlockChange()">
           <option value="1">Блок 1: RU ➔ EN</option>
           <option value="2">Блок 2: EN ➔ RU</option>
@@ -346,7 +346,9 @@
 </div>
 
 <script>
-  const TOTAL_AVAILABLE_LESSONS = 50; // Доступно сразу 50 уроков
+  const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyezcOB-j23-r-vkpmSddEVS7c9DBORH9eGHaqlrxHk_99f3WmlC3GWpuCNeY8OFTH4/exec';
+  const TOTAL_AVAILABLE_LESSONS = 50;
+  
   let currentLesson = 1;
   let currentBlock = 1;
   let rawLessonText = '';
@@ -376,7 +378,46 @@
   let recognition = null;
   let isRecording = false;
 
-  // Автоматическое заполнение выпадающего списка на 50 уроков
+  // 1. Отправка прогресса в Google Таблицу на лист «Английский»
+  function syncProgressToCloud() {
+    if (!GOOGLE_SCRIPT_URL) return;
+    fetch(GOOGLE_SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        action: 'save_english_progress',
+        lesson: currentLesson,
+        block: currentBlock,
+        index: blockIndices[currentBlock] || 0,
+        balance: balance
+      })
+    }).catch(err => console.warn('Офлайн режим сохранения:', err));
+  }
+
+  // 2. Получение актуального прогресса из таблицы при входе
+  async function syncProgressFromCloud() {
+    if (!GOOGLE_SCRIPT_URL) return;
+    try {
+      const res = await fetch(`${GOOGLE_SCRIPT_URL}?action=get_english_progress&t=${Date.now()}`);
+      const data = await res.json();
+      if (data && data.status === 'success' && data.lessons) {
+        const cloudLesson = data.lessons[currentLesson];
+        if (cloudLesson) {
+          balance = cloudLesson.balance;
+          currentBlock = cloudLesson.block;
+          blockIndices[currentBlock] = cloudLesson.index;
+          document.getElementById('blockSelector').value = currentBlock;
+          saveProgress();
+          renderCurrentTask();
+        }
+      }
+    } catch (e) {
+      console.warn('Используются локальные данные (офлайн):', e);
+    }
+  }
+
+  // Автоматическое заполнение списка уроков (1-50)
   function buildLessonOptions() {
     const sel = document.getElementById('lessonSelector');
     sel.innerHTML = '';
@@ -407,6 +448,7 @@
       b5CurrentRound: b5CurrentRound
     };
     localStorage.setItem(getStorageKey(), JSON.stringify(data));
+    syncProgressToCloud();
   }
 
   function loadProgress() {
@@ -481,6 +523,7 @@
       document.getElementById('blockSelector').value = currentBlock;
       parseCurrentBlock();
       renderCurrentTask();
+      syncProgressFromCloud();
     } catch (err) {
       document.getElementById('sourcePhrase').innerText = `Файл lessons/lesson_${currentLesson}.txt ещё не загружен в репозиторий.`;
       document.getElementById('subblockLabel').innerText = 'Ожидание файла';
