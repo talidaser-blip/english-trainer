@@ -1425,25 +1425,27 @@
       }
     }
   }
-
-  function initSpeech() {
+ function initSpeech() {
     const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRec) return;
 
     recognition = new SpeechRec();
     recognition.continuous = true;
-    recognition.interimResults = true;
+    recognition.interimResults = false;
 
     recognition.onresult = (event) => {
       let finalTranscript = '';
-      for (let i = 0; i < event.results.length; ++i) {
-        finalTranscript += event.results[i][0].transcript;
+      for (let i = event.resultIndex; i < event.results.length; ++i) {
+        if (event.results[i].isFinal) {
+          finalTranscript += event.results[i][0].transcript;
+        }
       }
       finalTranscript = finalTranscript.trim();
       if (finalTranscript.length > 0) {
         if (currentBlock === 6) {
           const area = document.getElementById('storyInput');
-          area.value = (area.value ? area.value + ' ' : '') + capitalizeText(finalTranscript);
+          const prev = area.value.trim();
+          area.value = prev ? (prev + ' ' + capitalizeText(finalTranscript)) : capitalizeText(finalTranscript);
         } else {
           document.getElementById('userInput').value = capitalizeText(finalTranscript);
         }
@@ -1463,7 +1465,6 @@
       }
     };
   }
-
   function toggleMic() {
     if (!recognition) initSpeech();
     if (!recognition) {
