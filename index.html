@@ -665,10 +665,15 @@
     input.disabled = true;
 
     // === Проверка Блока 3 ===
+    // === Проверка Блока 3 ===
     if (currentBlock === 3) {
       const item = b3CurrentRound === 1 ? b3Round1[b3Index] : b3Round2[b3Index];
       const isCorrect = isEnglishMatch(userAns, item.correct);
-      const primaryVoice = item.correct.split('/')[0].trim();
+
+      // Автоподбор озвучки и транскрипции под введенный вариант
+      const isToTravel = cleanText(userAns) === cleanText('I like to travel');
+      const voicePhrase = isToTravel ? 'I like to travel' : item.correct.split('/')[0].trim();
+      const transcriptionPhrase = isToTravel ? 'Ай лайк ту трэ́вл' : item.trans;
 
       if (b3CurrentRound === 1) {
         if (isCorrect) {
@@ -676,10 +681,10 @@
           statusLine.className = 'status-line correct';
           statusLine.style.display = 'block';
           statusLine.innerText = '✓ ВЕРНО! (+5 ₽)';
-          speakEnglish(primaryVoice);
+          speakEnglish(voicePhrase);
 
-          if (item.trans) {
-            transText.innerText = item.trans;
+          if (transcriptionPhrase) {
+            transText.innerText = transcriptionPhrase;
             transBox.classList.add('visible');
           }
         } else {
@@ -690,16 +695,16 @@
           b3Round2.push(item);
         }
       } else {
-        // Круг 2
+        // Круг 2 (Пересдача)
         if (isCorrect) {
           balance += 3;
           statusLine.className = 'status-line correct';
           statusLine.style.display = 'block';
           statusLine.innerText = '✓ ОШИБКА ИСПРАВЛЕНА! (+3 ₽)';
-          speakEnglish(primaryVoice);
+          speakEnglish(voicePhrase);
 
-          if (item.trans) {
-            transText.innerText = item.trans;
+          if (transcriptionPhrase) {
+            transText.innerText = transcriptionPhrase;
             transBox.classList.add('visible');
           }
         } else {
@@ -708,10 +713,21 @@
           statusLine.innerText = '✕ ПОВТОРНАЯ ОШИБКА (0 ₽)';
           ruleText.innerHTML = `<strong>Эталон:</strong> ${item.correct}<br><span style="color:#cbd5e1">${item.rule}</span>`;
           ruleBox.style.display = 'block';
-          speakEnglish(primaryVoice);
+          speakEnglish(voicePhrase);
 
-          if (item.trans) {
-            transText.innerText = item.trans;
+          if (transcriptionPhrase) {
+            transText.innerText = transcriptionPhrase;
+            transBox.classList.add('visible');
+          }
+        }
+      }
+
+      document.getElementById('balanceDisplay').innerText = `${balance} ₽`;
+      saveProgress();
+      isWaitingNext = true;
+      btn.innerText = (b3CurrentRound === 2 && ruleBox.style.display === 'block') ? 'Понятно, дальше ➔' : 'Дальше ➔';
+      return;
+    }
             transBox.classList.add('visible');
           }
         }
