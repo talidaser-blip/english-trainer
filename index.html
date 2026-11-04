@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>English Master Trainer</title>
-  <!-- Салют конфетти -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <style>
     :root {
@@ -210,4 +209,632 @@
       background: #0b1e28;
       border: 1px dashed var(--border);
       padding: 12px 16px;
-      border-radius:
+      border-radius: 8px;
+      font-size: 14px;
+      color: #cbd5e1;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .transcription-box.visible { display: flex; }
+    .transcription-text { font-style: italic; color: #38bdf8; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header-card">
+    <div>
+      <div class="balance-title">Баланс урока</div>
+      <div class="balance-value" id="balanceDisplay">0 ₽</div>
+      <button class="btn-reset" onclick="resetProgress()" title="Сбросить шаг и начать сначала">Начать заново ↺</button>
+    </div>
+
+    <div class="header-controls">
+      <select class="block-select" id="blockSelector" onchange="onBlockChange()">
+        <option value="1">Блок 1: RU ➔ EN</option>
+        <option value="2">Блок 2: EN ➔ RU</option>
+        <option value="3">Блок 3: Ошибки</option>
+      </select>
+      <div class="status-badge">
+        <div class="badge-subblock" id="subblockLabel">Загрузка...</div>
+        <div id="progressCount" style="margin-top: 3px;">0 из 50</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="trainer-card">
+    <div class="phrase-box">
+      <div class="phrase-text" id="sourcePhrase">Загрузка урока 1...</div>
+      <button class="btn-sound" id="listenBtn" onclick="repeatCurrentAudio()" style="display: none;">🔊 Слушать</button>
+    </div>
+
+    <div class="input-group">
+      <input type="text" id="userInput" placeholder="Введите перевод или продиктуйте 🎙️..." autofocus>
+      <button class="btn-mic" id="micBtn" onclick="toggleMic()" title="Включить микрофон">🎙️</button>
+      <button class="btn-action" id="actionBtn" onclick="handleAction()">OK</button>
+    </div>
+
+    <div class="status-line" id="statusLine"></div>
+
+    <div class="rule-box" id="ruleBox">
+      <div class="rule-title">Разбор правила:</div>
+      <div id="ruleText"></div>
+    </div>
+
+    <div class="transcription-box" id="transcriptionBox">
+      <div>Произношение: <span class="transcription-text" id="transcriptionText"></span></div>
+      <button class="btn-sound" onclick="repeatCurrentAudio()" style="padding: 4px 10px; font-size: 12px;">🔊 Повтор</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const LESSON_URL = './lessons/lesson_1.txt';
+  const STORAGE_KEY = 'english_trainer_progress_v2';
+
+  let rawLessonText = '';
+  let currentBlock = 1;
+  let tasks = [];
+  let currentIndex = 0;
+  let balance = 0;
+  let isWaitingNext = false;
+
+  let b3Round1 = [];
+  let b3Round2 = [];
+  let b3CurrentRound = 1;
+  let b3Index = 0;
+
+  let recognition = null;
+  let isRecording = false;
+
+  function saveProgress() {
+    const data = {
+      block: currentBlock,
+      index: currentIndex,
+      balance: balance
+    };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  }
+
+  function loadProgress() {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      try {
+        const data = JSON.parse(raw);
+        if (typeof data.block === 'number') currentBlock = data.block;
+        if (typeof data.index === 'number') currentIndex = data.index;
+        if (typeof data.balance === 'number') balance = data.balance;
+      } catch (e) {
+        console.error('Ошибка памяти:', e);
+      }
+    }
+  }
+
+  function resetProgress() {
+    if (confirm('Сбросить текущий прогресс и начать выбранный блок сначала?')) {
+      currentIndex = 0;
+      isWaitingNext = false;
+      if (currentBlock === 3) {
+        b3CurrentRound = 1;
+        b3Round2 = [];
+        b3Index = 0;
+      }
+      saveProgress();
+      renderCurrentTask();
+    }
+  }
+
+  function onBlockChange() {
+    const select = document.getElementById('blockSelector');
+    currentBlock = parseInt(select.value, 10);
+    currentIndex = 0;
+    isWaitingNext = false;
+    parseCurrentBlock();
+    saveProgress();
+    renderCurrentTask();
+  }
+
+  async function loadLesson() {
+    try {
+      const res = await fetch(LESSON_URL + '?v=' + Date.now());
+      if (!res.ok) throw new Error('Не удалось открыть файл урока');
+      rawLessonText = await res.text();
+      loadProgress();
+      document.getElementById('blockSelector').value = currentBlock;
+      parseCurrentBlock();
+      if (currentBlock !== 3 && currentIndex >= tasks.length) currentIndex = 0;
+      renderCurrentTask();
+    } catch (err) {
+      document.getElementById('sourcePhrase').innerText = 'Ошибка загрузки файла lessons/lesson_1.txt';
+      console.error(err);
+    }
+  }
+
+  function isRussianText(text) {
+    return /[а-яёА-ЯЁ]/.test(text);
+  }
+
+  function parseCurrentBlock() {
+    if (!rawLessonText) return;
+    const lines = rawLessonText.split('\n');
+    let currentSubblock = 'ПОДБЛОК 1';
+    tasks = [];
+
+    if (currentBlock === 3) {
+      b3Round1 = [];
+      b3Round2 = [];
+      b3CurrentRound = 1;
+      b3Index = 0;
+      let inB3 = false;
+
+      for (let rawLine of lines) {
+        let line = rawLine.trim();
+        if (!line) continue;
+        if (line.startsWith('# БЛОК 3') || line.startsWith('### БЛОК 3')) {
+          inB3 = true;
+          continue;
+        }
+        if (inB3 && (line.startsWith('# БЛОК 4') || line.startsWith('### БЛОК 4'))) {
+          break;
+        }
+        if (inB3 && line.includes('|')) {
+          const parts = line.split('|').map(p => p.trim());
+          if (parts.length >= 2) {
+            let wrongStr = parts[0];
+            let correctStr = parts[1];
+            let transStr = "";
+            let ruleStr = "";
+
+            if (parts.length >= 4) {
+              transStr = parts[2];
+              ruleStr = parts[3];
+            } else if (parts.length === 3) {
+              if (/[а-яёА-ЯЁ]/.test(parts[2]) && parts[2].length < 40 && !parts[2].includes(' ')) {
+                transStr = parts[2];
+              } else {
+                ruleStr = parts[2];
+              }
+            }
+
+            if (wrongStr.includes('I see my friends and spend time with his friends')) {
+              wrongStr = 'I spend time with his friends.';
+            }
+
+            if (correctStr.toLowerCase().includes('i like traveling') && !correctStr.includes('/')) {
+              correctStr = 'I like traveling / I like to travel';
+            }
+
+            b3Round1.push({
+              wrong: wrongStr,
+              correct: correctStr,
+              trans: transStr,
+              rule: ruleStr || "Проверьте грамматику и порядок слов."
+            });
+          }
+        }
+      }
+      return;
+    }
+
+    const startTag = currentBlock === 1 ? '# БЛОК 1' : '# БЛОК 2';
+    const stopTag = currentBlock === 1 ? '# БЛОК 2' : '# БЛОК 3';
+    let insideTargetBlock = false;
+
+    for (let rawLine of lines) {
+      let line = rawLine.trim();
+      if (!line) continue;
+
+      if (line.startsWith(startTag)) {
+        insideTargetBlock = true;
+        continue;
+      }
+      if (insideTargetBlock && line.startsWith(stopTag)) {
+        break;
+      }
+
+      if (insideTargetBlock) {
+        if (line.startsWith('## ПОДБЛОК')) {
+          currentSubblock = line.replace('##', '').trim();
+          continue;
+        }
+        if (line.startsWith('#')) continue;
+
+        if (line.includes('|')) {
+          const parts = line.split('|');
+          if (parts.length >= 2) {
+            let partA = parts[0].trim();
+            let partB = parts[1].trim();
+            let trans = parts[2] ? parts[2].trim() : '';
+
+            let ruText = '';
+            let enText = '';
+
+            if (isRussianText(partA)) {
+              ruText = partA;
+              enText = partB;
+            } else {
+              enText = partA;
+              ruText = partB;
+            }
+
+            tasks.push({
+              ru: ruText,
+              en: enText,
+              trans: trans,
+              subblock: currentSubblock
+            });
+          }
+        }
+      }
+    }
+  }
+
+  function renderCurrentTask() {
+    const sourceEl = document.getElementById('sourcePhrase');
+    const listenBtn = document.getElementById('listenBtn');
+    const input = document.getElementById('userInput');
+    const statusLine = document.getElementById('statusLine');
+    const transBox = document.getElementById('transcriptionBox');
+    const ruleBox = document.getElementById('ruleBox');
+    const btn = document.getElementById('actionBtn');
+
+    input.value = '';
+    input.disabled = false;
+    input.focus();
+    statusLine.style.display = 'none';
+    statusLine.className = 'status-line';
+    statusLine.innerText = '';
+    transBox.classList.remove('visible');
+    ruleBox.style.display = 'none';
+    btn.innerText = 'OK';
+    isWaitingNext = false;
+
+    if (currentBlock === 3) {
+      listenBtn.style.display = 'none';
+      input.placeholder = 'Исправьте предложение целиком на английском 🎙️...';
+
+      if (b3CurrentRound === 1) {
+        if (b3Index >= b3Round1.length) {
+          if (b3Round2.length > 0) {
+            b3CurrentRound = 2;
+            b3Index = 0;
+            renderCurrentTask();
+          } else {
+            finishAllBlocks();
+          }
+          return;
+        }
+        const item = b3Round1[b3Index];
+        sourceEl.innerText = item.wrong;
+        document.getElementById('subblockLabel').innerText = 'Круг 1 (Основной)';
+        document.getElementById('progressCount').innerText = `${b3Index + 1} из ${b3Round1.length}`;
+      } else {
+        if (b3Index >= b3Round2.length) {
+          finishAllBlocks();
+          return;
+        }
+        const item = b3Round2[b3Index];
+        sourceEl.innerText = item.wrong;
+        document.getElementById('subblockLabel').innerText = 'Штрафной раунд (Пересдача)';
+        document.getElementById('progressCount').innerText = `${b3Index + 1} из ${b3Round2.length}`;
+      }
+      document.getElementById('balanceDisplay').innerText = `${balance} ₽`;
+      return;
+    }
+
+    if (tasks.length === 0) return;
+
+    if (currentIndex >= tasks.length) {
+      if (currentBlock === 1) {
+        currentBlock = 2;
+        currentIndex = 0;
+        document.getElementById('blockSelector').value = 2;
+        parseCurrentBlock();
+        saveProgress();
+        alert('Поздравляем! Блок 1 завершён. Переходим ко Блоку 2 (EN ➔ RU)!');
+        renderCurrentTask();
+        return;
+      } else if (currentBlock === 2) {
+        currentBlock = 3;
+        currentIndex = 0;
+        document.getElementById('blockSelector').value = 3;
+        parseCurrentBlock();
+        saveProgress();
+        alert('Поздравляем! Блок 2 завершён. Переходим ко Блоку 3 (Ошибки)!');
+        renderCurrentTask();
+        return;
+      }
+    }
+
+    const t = tasks[currentIndex];
+
+    if (currentBlock === 1) {
+      sourceEl.innerText = t.ru;
+      listenBtn.style.display = 'none';
+      input.placeholder = 'Введите английский перевод или продиктуйте 🎙️...';
+    } else {
+      sourceEl.innerText = t.en;
+      listenBtn.style.display = 'inline-flex';
+      input.placeholder = 'Введите русский перевод или продиктуйте 🎙️...';
+      speakEnglish(t.en);
+    }
+
+    document.getElementById('subblockLabel').innerText = t.subblock;
+    document.getElementById('progressCount').innerText = `${currentIndex + 1} из ${tasks.length}`;
+    document.getElementById('balanceDisplay').innerText = `${balance} ₽`;
+  }
+
+  function finishAllBlocks() {
+    document.getElementById('sourcePhrase').innerText = '🎉 Все задания успешно завершены!';
+    document.getElementById('listenBtn').style.display = 'none';
+    document.getElementById('userInput').style.display = 'none';
+    document.getElementById('micBtn').style.display = 'none';
+    document.getElementById('actionBtn').style.display = 'none';
+    document.getElementById('transcriptionBox').classList.remove('visible');
+    document.getElementById('ruleBox').style.display = 'none';
+    
+    const st = document.getElementById('statusLine');
+    st.className = 'status-line correct';
+    st.style.display = 'block';
+    st.innerText = `Великолепно! Итоговый баланс: ${balance} ₽`;
+
+    if (typeof confetti === 'function') {
+      confetti({
+        particleCount: 150,
+        spread: 90,
+        origin: { y: 0.6 }
+      });
+    }
+  }
+
+  document.getElementById('userInput').addEventListener('input', function() {
+    if (this.value.length === 1) {
+      this.value = this.value.toUpperCase();
+    }
+  });
+
+  document.getElementById('userInput').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleAction();
+    }
+  });
+
+  function handleAction() {
+    if (isWaitingNext) {
+      if (currentBlock === 3) {
+        b3Index++;
+        renderCurrentTask();
+      } else {
+        currentIndex++;
+        saveProgress();
+        renderCurrentTask();
+      }
+    } else {
+      checkAnswer();
+    }
+  }
+
+  function cleanText(str) {
+    return (str || '')
+      .toLowerCase()
+      .replace(/ё/g, 'е')
+      .replace(/[-–—]/g, ' ')
+      .replace(/[.,!?;:'"()]/g, '')
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
+
+  function checkRussianMatch(userText, targetText) {
+    const cleanUser = cleanText(userText);
+    const cleanTarget = cleanText(targetText);
+    if (cleanUser === cleanTarget) return true;
+
+    const userWords = cleanUser.split(' ').filter(Boolean).sort().join(' ');
+    const targetWords = cleanTarget.split(' ').filter(Boolean).sort().join(' ');
+    return userWords === targetWords;
+  }
+
+  function isEnglishMatch(userText, targetText) {
+    const cleanUser = cleanText(userText);
+    const variants = targetText.split('/').map(v => cleanText(v));
+    return variants.includes(cleanUser);
+  }
+
+  function checkAnswer() {
+    if (isRecording) toggleMic();
+
+    const input = document.getElementById('userInput');
+    const userAns = input.value.trim();
+    if (!userAns) return;
+
+    const statusLine = document.getElementById('statusLine');
+    const btn = document.getElementById('actionBtn');
+    const transBox = document.getElementById('transcriptionBox');
+    const transText = document.getElementById('transcriptionText');
+    const ruleBox = document.getElementById('ruleBox');
+    const ruleText = document.getElementById('ruleText');
+
+    input.disabled = true;
+
+    if (currentBlock === 3) {
+      const item = b3CurrentRound === 1 ? b3Round1[b3Index] : b3Round2[b3Index];
+      const isCorrect = isEnglishMatch(userAns, item.correct);
+
+      const isToTravel = cleanText(userAns) === cleanText('I like to travel');
+      const voicePhrase = isToTravel ? 'I like to travel' : item.correct.split('/')[0].trim();
+      const transcriptionPhrase = isToTravel ? 'Ай лайк ту трэ́вл' : item.trans;
+
+      if (b3CurrentRound === 1) {
+        if (isCorrect) {
+          balance += 5;
+          statusLine.className = 'status-line correct';
+          statusLine.style.display = 'block';
+          statusLine.innerText = '✓ ВЕРНО! (+5 ₽)';
+          speakEnglish(voicePhrase);
+
+          if (transcriptionPhrase) {
+            transText.innerText = transcriptionPhrase;
+            transBox.classList.add('visible');
+          }
+        } else {
+          balance -= 5;
+          statusLine.className = 'status-line wrong';
+          statusLine.style.display = 'block';
+          statusLine.innerText = '✕ ОШИБКА (-5 ₽) | Отправлено на пересдачу!';
+          b3Round2.push(item);
+        }
+      } else {
+        if (isCorrect) {
+          balance += 3;
+          statusLine.className = 'status-line correct';
+          statusLine.style.display = 'block';
+          statusLine.innerText = '✓ ОШИБКА ИСПРАВЛЕНА! (+3 ₽)';
+          speakEnglish(voicePhrase);
+
+          if (transcriptionPhrase) {
+            transText.innerText = transcriptionPhrase;
+            transBox.classList.add('visible');
+          }
+        } else {
+          statusLine.className = 'status-line wrong';
+          statusLine.style.display = 'block';
+          statusLine.innerText = '✕ ПОВТОРНАЯ ОШИБКА (0 ₽)';
+          ruleText.innerHTML = `<strong>Эталон:</strong> ${item.correct}<br><span style="color:#cbd5e1">${item.rule}</span>`;
+          ruleBox.style.display = 'block';
+          speakEnglish(voicePhrase);
+
+          if (transcriptionPhrase) {
+            transText.innerText = transcriptionPhrase;
+            transBox.classList.add('visible');
+          }
+        }
+      }
+
+      document.getElementById('balanceDisplay').innerText = `${balance} ₽`;
+      saveProgress();
+      isWaitingNext = true;
+      btn.innerText = (b3CurrentRound === 2 && ruleBox.style.display === 'block') ? 'Понятно, дальше ➔' : 'Дальше ➔';
+      return;
+    }
+
+    if (tasks.length === 0 || currentIndex >= tasks.length) return;
+    const t = tasks[currentIndex];
+
+    let isCorrect = false;
+    if (currentBlock === 1) {
+      isCorrect = isEnglishMatch(userAns, t.en);
+    } else {
+      isCorrect = checkRussianMatch(userAns, t.ru);
+    }
+
+    if (isCorrect) {
+      balance += 5;
+      statusLine.className = 'status-line correct';
+      statusLine.style.display = 'block';
+      statusLine.innerText = '✓ ВЕРНО! (+5 ₽)';
+    } else {
+      balance -= 5;
+      statusLine.className = 'status-line wrong';
+      statusLine.style.display = 'block';
+      const expected = currentBlock === 1 ? t.en : t.ru;
+      statusLine.innerText = `✕ ОШИБКА (-5 ₽) | Правильно: ${expected}`;
+    }
+
+    document.getElementById('balanceDisplay').innerText = `${balance} ₽`;
+    saveProgress();
+
+    speakEnglish(t.en);
+
+    if (t.trans) {
+      transText.innerText = t.trans;
+      transBox.classList.add('visible');
+    }
+
+    isWaitingNext = true;
+    btn.innerText = 'Дальше ➔';
+  }
+
+  function speakEnglish(phrase) {
+    if (!('speechSynthesis' in window)) return;
+    window.speechSynthesis.cancel();
+    const ut = new SpeechSynthesisUtterance(phrase);
+    ut.lang = 'en-US';
+    ut.rate = 0.9;
+    window.speechSynthesis.speak(ut);
+  }
+
+  function repeatCurrentAudio() {
+    if (currentBlock === 3) {
+      const item = b3CurrentRound === 1 ? b3Round1[b3Index] : b3Round2[b3Index];
+      if (item) {
+        const isToTravel = cleanText(document.getElementById('userInput').value) === cleanText('I like to travel');
+        speakEnglish(isToTravel ? 'I like to travel' : item.correct.split('/')[0].trim());
+      }
+    } else if (tasks.length > 0 && currentIndex < tasks.length) {
+      speakEnglish(tasks[currentIndex].en);
+    }
+  }
+
+  function initSpeech() {
+    const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRec) return;
+
+    recognition = new SpeechRec();
+    recognition.continuous = true;
+    recognition.interimResults = true;
+
+    recognition.onresult = (event) => {
+      let finalTranscript = '';
+      for (let i = 0; i < event.results.length; ++i) {
+        finalTranscript += event.results[i][0].transcript;
+      }
+      finalTranscript = finalTranscript.trim();
+      if (finalTranscript.length > 0) {
+        const capitalized = finalTranscript.charAt(0).toUpperCase() + finalTranscript.slice(1);
+        document.getElementById('userInput').value = capitalized;
+      }
+    };
+
+    recognition.onerror = () => {
+      isRecording = false;
+      document.getElementById('micBtn').classList.remove('recording');
+    };
+
+    recognition.onend = () => {
+      if (isRecording) {
+        try { recognition.start(); } catch(e) {}
+      } else {
+        document.getElementById('micBtn').classList.remove('recording');
+      }
+    };
+  }
+
+  function toggleMic() {
+    if (!recognition) initSpeech();
+    if (!recognition) {
+      alert('Голосовой ввод не поддерживается в данном браузере.');
+      return;
+    }
+
+    recognition.lang = (currentBlock === 1 || currentBlock === 3) ? 'en-US' : 'ru-RU';
+
+    const btn = document.getElementById('micBtn');
+    if (!isRecording) {
+      isRecording = true;
+      btn.classList.add('recording');
+      try { recognition.start(); } catch(e) {}
+    } else {
+      isRecording = false;
+      btn.classList.remove('recording');
+      try { recognition.stop(); } catch(e) {}
+    }
+  }
+
+  window.onload = () => {
+    initSpeech();
+    loadLesson();
+  };
+</script>
+</body>
+</html>
