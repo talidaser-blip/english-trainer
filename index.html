@@ -378,7 +378,7 @@
   let recognition = null;
   let isRecording = false;
 
-  // 1. Отправка прогресса в Google Таблицу
+  // Отправка прогресса в Google Таблицу
   function syncProgressToCloud() {
     if (!GOOGLE_SCRIPT_URL) return;
     fetch(GOOGLE_SCRIPT_URL, {
@@ -395,7 +395,7 @@
     }).catch(err => console.warn('Офлайн режим сохранения:', err));
   }
 
-  // 2. Получение прогресса из таблицы при входе
+  // Получение прогресса из таблицы при входе
   async function syncProgressFromCloud() {
     if (!GOOGLE_SCRIPT_URL) return;
     try {
@@ -491,11 +491,14 @@
         b5Round2 = [];
       }
       
-      // Восстанавливаем видимость полей ввода
+      // Полное восстановление видимости интерфейса
       document.getElementById('inputGroupRow').style.display = 'flex';
       document.getElementById('userInput').style.display = 'block';
       document.getElementById('micBtn').style.display = 'block';
       document.getElementById('actionBtn').style.display = 'block';
+      document.getElementById('singlePhraseBox').style.display = (currentBlock === 6) ? 'none' : 'flex';
+      document.getElementById('storyContainer').style.display = (currentBlock === 6) ? 'flex' : 'none';
+      document.getElementById('storyInput').style.display = 'block';
       
       saveProgress();
       renderCurrentTask();
@@ -854,12 +857,9 @@
 
       const currentStage = blockIndices[6] || 0;
 
+      // Если Блок 6 пройден — запускаем триумфальный экран с фейерверком!
       if (currentStage >= 2) {
-        document.getElementById('subblockLabel').innerText = 'БЛОК ЗАВЕРШЁН';
-        document.getElementById('progressCount').innerText = '2 из 2';
-        storyFullText.innerText = '🎉 Все задания Блока 6 и Урока выполнены! Нажмите «Начать заново ↺», чтобы пройти снова.';
-        storyInput.style.display = 'none';
-        inputGroupRow.style.display = 'none';
+        finishAllBlocks();
         return;
       }
 
@@ -903,10 +903,7 @@
           saveProgress();
           renderCurrentTask();
         } else {
-          document.getElementById('subblockLabel').innerText = 'БЛОК ЗАВЕРШЁН';
-          document.getElementById('progressCount').innerText = `${activeList.length} из ${activeList.length}`;
-          sourceEl.innerText = '🎉 Блок 5 пройден! Перейдите к Блоку 6 в меню сверху или нажмите «Начать заново ↺» для повторения.';
-          inputGroupRow.style.display = 'none';
+          advanceToBlock6();
         }
         return;
       }
@@ -947,12 +944,7 @@
             saveProgress();
             renderCurrentTask();
           } else {
-            document.getElementById('subblockLabel').innerText = 'БЛОК ЗАВЕРШЁН';
-            document.getElementById('progressCount').innerText = `${b4Round1.length} из ${b4Round1.length}`;
-            sourceEl.innerText = '🎉 Блок 4 пройден! Перейдите к Блоку 5 или нажмите «Начать заново ↺» для повтора.';
-            inputGroupRow.style.display = 'none';
-            slowBtn.style.display = 'none';
-            listenBtn.style.display = 'none';
+            advanceToBlock5();
           }
           return;
         }
@@ -962,12 +954,7 @@
         speakEnglish(item.en, 1.0);
       } else {
         if (currentIdx >= b4Round2.length) {
-          document.getElementById('subblockLabel').innerText = 'БЛОК ЗАВЕРШЁН';
-          document.getElementById('progressCount').innerText = `${b4Round2.length} из ${b4Round2.length}`;
-          sourceEl.innerText = '🎉 Блок 4 пройден! Перейдите к следующему блоку или повторите этот.';
-          inputGroupRow.style.display = 'none';
-          slowBtn.style.display = 'none';
-          listenBtn.style.display = 'none';
+          advanceToBlock5();
           return;
         }
         const item = b4Round2[currentIdx];
@@ -994,10 +981,7 @@
             saveProgress();
             renderCurrentTask();
           } else {
-            document.getElementById('subblockLabel').innerText = 'БЛОК ЗАВЕРШЁН';
-            document.getElementById('progressCount').innerText = `${b3Round1.length} из ${b3Round1.length}`;
-            sourceEl.innerText = '🎉 Блок 3 пройден! Перейдите к Блоку 4 или нажмите «Начать заново ↺» для повтора.';
-            inputGroupRow.style.display = 'none';
+            advanceToBlock4();
           }
           return;
         }
@@ -1007,10 +991,7 @@
         document.getElementById('progressCount').innerText = `${currentIdx + 1} из ${b3Round1.length}`;
       } else {
         if (currentIdx >= b3Round2.length) {
-          document.getElementById('subblockLabel').innerText = 'БЛОК ЗАВЕРШЁН';
-          document.getElementById('progressCount').innerText = `${b3Round2.length} из ${b3Round2.length}`;
-          sourceEl.innerText = '🎉 Блок 3 пройден! Перейдите к Блоку 4 или нажмите «Начать заново ↺» для повтора.';
-          inputGroupRow.style.display = 'none';
+          advanceToBlock4();
           return;
         }
         const item = b3Round2[currentIdx];
@@ -1027,14 +1008,24 @@
 
     let currentIdx = blockIndices[currentBlock] || 0;
 
-    // ЕСЛИ БЛОК 1 ИЛИ БЛОК 2 ЗАВЕРШЁН:
     if (currentIdx >= tasks.length) {
-      document.getElementById('subblockLabel').innerText = 'БЛОК ЗАВЕРШЁН';
-      document.getElementById('progressCount').innerText = `${tasks.length} из ${tasks.length}`;
-      sourceEl.innerText = `🎉 Вы успешно прошли Блок ${currentBlock}! Нажмите «Начать заново ↺», чтобы пройти ещё раз, или выберите следующий блок в меню сверху.`;
-      inputGroupRow.style.display = 'none';
-      listenBtn.style.display = 'none';
-      return;
+      if (currentBlock === 1) {
+        currentBlock = 2;
+        document.getElementById('blockSelector').value = 2;
+        parseCurrentBlock();
+        saveProgress();
+        alert('Поздравляем! Блок 1 завершён. Переходим ко Блоку 2 (EN ➔ RU)!');
+        renderCurrentTask();
+        return;
+      } else if (currentBlock === 2) {
+        currentBlock = 3;
+        document.getElementById('blockSelector').value = 3;
+        parseCurrentBlock();
+        saveProgress();
+        alert('Поздравляем! Блок 2 завершён. Переходим ко Блоку 3 (Ошибки)!');
+        renderCurrentTask();
+        return;
+      }
     }
 
     const t = tasks[currentIdx];
@@ -1060,6 +1051,7 @@
     document.getElementById('blockSelector').value = 4;
     parseCurrentBlock();
     saveProgress();
+    alert('Поздравляем! Блок 3 завершён. Переходим ко Блоку 4 (Аудирование)!');
     renderCurrentTask();
   }
 
@@ -1068,6 +1060,7 @@
     document.getElementById('blockSelector').value = 5;
     parseCurrentBlock();
     saveProgress();
+    alert('Поздравляем! Блок 4 завершён. Переходим ко Блоку 5 (Сложные предложения)!');
     renderCurrentTask();
   }
 
@@ -1076,6 +1069,7 @@
     document.getElementById('blockSelector').value = 6;
     parseCurrentBlock();
     saveProgress();
+    alert('Поздравляем! Блок 5 завершён. Переходим к финальному Блоку 6 (Связный текст)!');
     renderCurrentTask();
   }
 
@@ -1085,23 +1079,39 @@
     document.getElementById('sourcePhrase').innerText = `🎉 Все задания Урока ${currentLesson} успешно завершены!`;
     document.getElementById('listenBtn').style.display = 'none';
     document.getElementById('slowBtn').style.display = 'none';
-    document.getElementById('userInput').style.display = 'none';
-    document.getElementById('micBtn').style.display = 'none';
-    document.getElementById('actionBtn').style.display = 'none';
+    document.getElementById('inputGroupRow').style.display = 'none';
     document.getElementById('transcriptionBox').classList.remove('visible');
     document.getElementById('ruleBox').style.display = 'none';
     
+    document.getElementById('subblockLabel').innerText = 'УРОК ПРОЙДЕН';
+    document.getElementById('progressCount').innerText = 'ФИНИШ';
+
     const st = document.getElementById('statusLine');
     st.className = 'status-line correct';
     st.style.display = 'block';
-    st.innerText = `Великолепно! Урок ${currentLesson} пройден! Баланс урока: ${balance} ₽`;
+    st.innerText = `Великолепно! Все 6 блоков пройдены! Баланс урока: ${balance} ₽. Чтобы повторить, нажмите «Начать заново ↺» под балансом.`;
 
+    // Запуск яркого фейерверка (салюта)
     if (typeof confetti === 'function') {
       confetti({
         particleCount: 180,
         spread: 100,
         origin: { y: 0.6 }
       });
+      setTimeout(() => {
+        confetti({
+          particleCount: 120,
+          angle: 60,
+          spread: 80,
+          origin: { x: 0 }
+        });
+        confetti({
+          particleCount: 120,
+          angle: 120,
+          spread: 80,
+          origin: { x: 1 }
+        });
+      }, 400);
     }
   }
 
