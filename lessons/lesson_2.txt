@@ -3,178 +3,161 @@
 
 # БЛОК 1: RU_TO_EN
 ## ПОДБЛОК 1: БАЗОВЫЕ КОНСТРУКЦИИ (5 ИЗ УР.1 + 5 ИЗ УР.2)
-Я живу в Нью-Йорке. | I live in New York.
-Он работает так много. | He works so much.
-Мы ходим на работу. | We go to work.
-Она понимает того человека. | She understands that person.
-Я говорю по-английски. | I speak English.
-Это стоит десять долларов. | It costs ten dollars.
-Они живут здесь. | They live here.
-Она смотрит эти видео. | She watches these videos.
-Я знаю это очень хорошо. | I know it very well.
-Он чувствует себя лучше. | He feels better.
+Я живу в Нью-Йорке. | I live in New York. | Ай лив ин нью йоок
+Он работает так много. | He works so much. | Хи уёокс соу матч
+Мы ходим на работу. | We go to work. | Уи гоу ту уёок
+Она понимает того человека. | She understands that person. | Ши андэстэ́ндз зэт пёосн
+Я говорю по-английски. | I speak English. | Ай спиик и́нглиш
+Это стоит десять долларов. | It costs ten dollars. | Ит костс тэн до́ларз
+Они живут здесь. | They live here. | Зэй лив хи́э
+Она смотрит эти видео. | She watches these videos. | Ши уо́тчиз зииз ви́диоуз
+Я знаю это очень хорошо. | I know it very well. | Ай ноу ит вэри уэл
+Он чувствует себя лучше. | He feels better. | Хи фиилз бэ́тэ
 
 ## ПОДБЛОК 2: ЗАКРЕПЛЕНИЕ ЭТАЛОНА (5 ИЗ УР.1 + 5 ИЗ УР.2)
-Я изучаю английский онлайн. | I learn English online.
-Это помогает мне. | It helps me.
-Ты говоришь по-английски очень хорошо. | You speak English very well.
-Она делает ошибки. | She makes mistakes.
-Мне нравится это место. | I like this place.
-Он играет в футбол очень хорошо. | He plays football very well.
-Они помогают мне. | They help me.
-Она учится здесь. | She studies here.
-Мы путешествуем каждый год. | We travel every year.
-Он часто делает это. | He often does it.
+Я изучаю английский онлайн. | I learn English online. | Ай лёон и́нглиш онла́йн
+Это помогает мне. | It helps me. | Ит хэлпс ми
+Ты говоришь по-английски очень хорошо. | You speak English very well. | Ю спиик и́нглиш вэри уэл
+Она делает ошибки. | She makes mistakes. | Ши мэйкс мистэ́йкс
+Мне нравится это место. | I like this place. | Ай лайк зис плэйс
+Он играет в футбол очень хорошо. | He plays football very well. | Хи плэйз фу́тбол вэри уэл
+Они помогают мне. | They help me. | Зэй хэлп ми
+Она учится здесь. | She studies here. | Ши ста́диз хи́э
+Мы путешествуем каждый год. | We travel every year. | Уи трэ́вл э́ври йи́э
+Он часто делает это. | He often does it. | Хи о́фн даз ит
 
 ## ПОДБЛОК 3: ТРАНСФОРМАЦИЯ ЛИЦ И МЕСТОИМЕНИЯ (5 ИЗ УР.1 + 5 ИЗ УР.2)
-Он видит это. | He sees it.
-Он часто звонит мне. | He often calls me.
-Она знает это. | She knows it.
-Она знает меня очень хорошо. | She knows me very well.
-Он живет в Нью-Йорке. | He lives in New York.
-Я слышу тебя. | I hear you.
-Она говорит по-английски. | She speaks English.
-Я вижу его. | I see him.
-Он часто думает об этом. | He often thinks about it.
-Она помогает им. | She helps them.
+Он видит это. | He sees it. | Хи сииз ит
+Он часто звонит мне. | He often calls me. | Хи о́фн коолз ми
+Она знает это. | She knows it. | Ши ноуз ит
+Она знает меня очень хорошо. | She knows me very well. | Ши ноуз ми вэри уэл
+Он живет в Нью-Йорке. | He lives in New York. | Хи ливз ин нью йоок
+Я слышу тебя. | I hear you. | Ай хи́э ю
+Она говорит по-английски. | She speaks English. | Ши спиикс и́нглиш
+Я вижу его. | I see him. | Ай сии хим
+Он часто думает об этом. | He often thinks about it. | Хи о́фн синкс эба́ут ит
+Она помогает им. | She helps them. | Ши хэлпс зэм
 
 ## ПОДБЛОК 4: НАРЕЧИЯ И УСИЛИТЕЛИ (5 ИЗ УР.1 + 5 ИЗ УР.2)
-Я действительно хочу это. | I really want it.
-Он очень много работает. | He works very much.
-Они обычно ходят туда. | They usually go there.
-Ты так много работаешь. | You work so much.
-Мы часто путешествуем. | We often travel.
-Я очень сильно люблю тебя. | I love you very much.
-Ты действительно помогаешь мне. | You really help me.
-Мне это так сильно нравится. | I like it so much.
-Я обычно делаю это утром. | I usually do it in the morning.
-Он много знает. | He knows a lot.
+Я действительно хочу это. | I really want it. | Ай ри́эли уо́нт ит
+Он очень много работает. | He works very much. | Хи уёокс вэри матч
+Они обычно ходят туда. | They usually go there. | Зэй ю́жуали гоу зээ
+Ты так много работаешь. | You work so much. | Ю уёок соу матч
+Мы часто путешествуем. | We often travel. | Уи о́фн трэ́вл
+Я очень сильно люблю тебя. | I love you very much. | Ай лав ю вэри матч
+Ты действительно помогаешь мне. | You really help me. | Ю ри́эли хэлп ми
+Мне это так сильно нравится. | I like it so much. | Ай лайк ит соу матч
+Я обычно делаю это утром. | I usually do it in the morning. | Ай ю́жуали ду ит ин зэ мо́онин
+Он много знает. | He knows a lot. | Хи ноуз э лот
 
 ## ПОДБЛОК 5: СЛОЖНЫЙ МИКС (5 ИЗ УР.1 + 5 ИЗ УР.2)
-Мне нравится проводить время с друзьями. | I like spending time with my friends.
-Мы часто слышим это по телевизору. | We often hear it on TV.
-Я вижу эту проблему. | I see this problem.
-Я понимаю тех людей. | I understand those people.
-Я смотрю разные видео. | I watch different videos.
-Я живу рядом с этим местом. | I live near this place.
-Я вижу свой результат. | I see my result.
-Это стоит дороже. | It costs more.
-Нам нравится этот язык. | We like this language.
-Это стоит дешевле. | It costs less.
+Мне нравится проводить время с друзьями. | I like spending time with my friends. | Ай лайк спэ́ндин тайм уиз май фрэндз
+Мы часто слышим это по телевизору. | We often hear it on TV. | Уи о́фн хи́э ит он ти ви
+Я вижу эту проблему. | I see this problem. | Ай сии зис про́блем
+Я понимаю тех людей. | I understand those people. | Ай андэстэ́нд зоуз пиипл
+Я смотрю разные видео. | I watch different videos. | Ай уо́тч ди́фрэн ви́диоуз
+Я живу рядом с этим местом. | I live near this place. | Ай лив ни́э зис плэйс
+Я вижу свой результат. | I see my result. | Ай сии май риза́лт
+Это стоит дороже. | It costs more. | Ит костс моо
+Нам нравится этот язык. | We like this language. | Уи лайк зис лэ́нгвидж
+Это стоит дешевле. | It costs less. | Ит костс лэс
 
 
-# БЛОК 2: EN_TO_RU (ДРУГИЕ ВАРИАЦИИ И ДРУГИЕ ЛИЦА, БЕЗ ЗЕРКАЛЬНОГО ПОВТОРА)
+# БЛОК 2: EN_TO_RU
 ## ПОДБЛОК 1: БАЗОВЫЕ КОНСТРУКЦИИ
-They live in London. | Они живут в Лондоне.
-She works so much. | Она работает так много.
-I go to university. | Я хожу в университет.
-He understands that student. | Он понимает того студента.
-We speak English here. | Мы говорим по-английски здесь.
-This ticket costs twenty dollars. | Этот билет стоит двадцать долларов.
-She lives here and works there. | Она живет здесь и работает там.
-He watches these movies. | Он смотрит эти фильмы.
-They know it very well. | Они знают это очень хорошо.
-She feels much better. | Она чувствует себя намного лучше.
+They live in London. | Они живут в Лондоне. | Зэй лив ин ла́ндэн
+She works so much. | Она работает так много. | Ши уёокс соу матч
+I go to university. | Я хожу в университет. | Ай гоу ту юнивёосити
+He understands that student. | Он понимает того студента. | Хи андэстэ́ндз зэт стью́дэнт
+We speak English here. | Мы говорим по-английски здесь. | Уи спиик и́нглиш хи́э
+This ticket costs twenty dollars. | Этот билет стоит двадцать долларов. | Зис ти́кит костс туэ́нти до́ларз
+She lives here and works there. | Она живет здесь и работает там. | Ши ливз хи́э энд уёокс зээ
+He watches these movies. | Он смотрит эти фильмы. | Хи уо́тчиз зииз му́вииз
+They know it very well. | Они знают это очень хорошо. | Зэй ноу ит вэри уэл
+She feels much better. | Она чувствует себя намного лучше. | Ши фиилз матч бэ́тэ
 
 ## ПОДБЛОК 2: ЗАКРЕПЛЕНИЕ ЭТАЛОНА
-We learn English together. | Мы учим английский вместе.
-This method really helps us. | Этот метод действительно помогает нам.
-He speaks English very well. | Он говорит по-английски очень хорошо.
-He makes simple mistakes. | Он делает простые ошибки.
-They like this new place. | Им нравится это новое место.
-She plays tennis very well. | Она играет в теннис очень хорошо.
-You always help them. | Ты всегда помогаешь им.
-He studies online. | Он учится онлайн.
-She travels every summer. | Она путешествует каждое лето.
-We often do it together. | Мы часто делаем это вместе.
+We learn English together. | Мы учим английский вместе. | Уи лёон и́нглиш тугэ́зэ
+This method really helps us. | Этот метод действительно помогает нам. | Зис мэ́сод ри́эли хэлпс ас
+He speaks English very well. | Он говорит по-английски очень хорошо. | Хи спиикс и́нглиш вэри уэл
+He makes simple mistakes. | Он делает простые ошибки. | Хи мэйкс симпл мистэ́йкс
+They like this new place. | Им нравится это новое место. | Зэй лайк зис нью плэйс
+She plays tennis very well. | Она играет в теннис очень хорошо. | Ши плэйз тэ́нис вэри уэл
+You always help them. | Ты всегда помогаешь им. | Ю о́лвэйз хэлп зэм
+He studies online. | Он учится онлайн. | Хи ста́диз онла́йн
+She travels every summer. | Она путешествует каждое лето. | Ши трэ́влз э́ври са́мэ
+We often do it together. | Мы часто делаем это вместе. | Уи о́фн ду ит тугэ́зэ
 
 ## ПОДБЛОК 3: ТРАНСФОРМАЦИЯ ЛИЦ И ОБЪЕКТНЫЕ МЕСТОИМЕНИЯ
-She sees him every day. | Она видит его каждый день.
-They often call us. | Они часто звонят нам.
-We know her brother. | Мы знаем её брата.
-He knows you very well. | Он знает тебя очень хорошо.
-They live in this country. | Они живут в этой стране.
-We hear him. | Мы слышим его.
-He speaks English and French. | Он говорит по-английски и по-французски.
-She sees them there. | Она видит их там.
-They often think about you. | Они часто думают о тебе.
-I help her with English. | Я помогаю ей с английским.
+She sees him every day. | Она видит его каждый день. | Ши сииз хим э́ври дэй
+They often call us. | Они часто звонят нам. | Зэй о́фн коол ас
+We know her brother. | Мы знаем её брата. | Уи ноу хёо бра́зэ
+He knows you very well. | Он знает тебя очень хорошо. | Хи ноуз ю вэри уэл
+They live in this country. | Они живут в этой стране. | Зэй лив ин зис ка́нтри
+We hear him. | Мы слышим его. | Уи хи́э хим
+He speaks English and French. | Он говорит по-английски и по-французски. | Хи спиикс и́нглиш энд фрэнч
+She sees them there. | Она видит их там. | Ши сииз зэм зээ
+They often think about you. | Они часто думают о тебе. | Зэй о́фн синк эба́ут ю
+I help her with English. | Я помогаю ей с английским. | Ай хэлп хёо уиз и́нглиш
 
 ## ПОДБЛОК 4: НАРЕЧИЯ И УСИЛИТЕЛИ
-He really wants a new car. | Он действительно хочет новую машину.
-She works very much every week. | Она очень много работает каждую неделю.
-We usually go to that park. | Мы обычно ходим в тот парк.
-They work so much here. | Они так много работают здесь.
-He often travels to Europe. | Он часто путешествует в Европу.
-She loves him very much. | Она очень сильно любит его.
-They really help our team. | Они действительно помогают нашей команде.
-He likes this song so much. | Ему так сильно нравится эта песня.
-She usually studies in the evening. | Она обычно учится вечером.
-You know a lot about it. | Ты много знаешь об этом.
+He really wants a new car. | Он действительно хочет новую машину. | Хи ри́эли уо́нтс э нью каа
+She works very much every week. | Она очень много работает каждую неделю. | Ши уёокс вэри матч э́ври уиик
+We usually go to that park. | Мы обычно ходим в тот парк. | Уи ю́жуали гоу ту зэт паак
+They work so much here. | Они так много работают здесь. | Зэй уёок соу матч хи́э
+He often travels to Europe. | Он часто путешествует в Европу. | Хи о́фн трэ́влз ту ю́рэп
+She loves him very much. | Она очень сильно любит его. | Ши лавз хим вэри матч
+They really help our team. | Они действительно помогают нашей команде. | Зэй ри́эли хэлп ауэ тиим
+He likes this song so much. | Ему так сильно нравится эта песня. | Хи лайкс зис сон соу матч
+She usually studies in the evening. | Она обычно учится вечером. | Ши ю́жуали ста́диз ин зи и́внин
+You know a lot about it. | Ты много знаешь об этом. | Ю ноу э лот эба́ут ит
 
 ## ПОДБЛОК 5: СЛОЖНЫЙ МИКС
-They like spending time in the city. | Им нравится проводить время в городе.
-I often see it on the internet. | Я часто вижу это в интернете.
-She sees these difficult problems. | Она видит эти трудные проблемы.
-We understand those students. | Мы понимаем тех студентов.
-He watches different lessons online. | Он смотрит разные уроки онлайн.
-She lives very far from here. | Она живет очень далеко отсюда.
-They see our real progress. | Они видят наш реальный прогресс.
-This lesson costs less. | Этот урок стоит дешевле.
-He likes learning foreign languages. | Ему нравится учить иностранные языки.
-That book costs more. | Та книга стоит дороже.
+They like spending time in the city. | Им нравится проводить время в городе. | Зэй лайк спэ́ндин тайм ин зэ си́ти
+I often see it on the internet. | Я часто вижу это в интернете. | Ай о́фн сии ит он зи и́нтэрнэт
+She sees these difficult problems. | Она видит эти трудные проблемы. | Ши сииз зииз ди́фикалт про́блемз
+We understand those students. | Мы понимаем тех студентов. | Уи андэстэ́нд зоуз стью́дэнтс
+He watches different lessons online. | Он смотрит разные уроки онлайн. | Хи уо́тчиз ди́фрэн лэ́снз онла́йн
+She lives very far from here. | Она живет очень далеко отсюда. | Ши ливз вэри фаа фром хи́э
+They see our real progress. | Они видят наш реальный прогресс. | Зэй сии ауэ ри́эл про́грэс
+This lesson costs less. | Этот урок стоит дешевле. | Зис лэ́сн костс лэс
+He likes learning foreign languages. | Ему нравится учить иностранные языки. | Хи лайкс лёонинг фо́рин лэ́нгвиджиз
+That book costs more. | Та книга стоит дороже. | Зэт бук костс моо
 
 
 # БЛОК 3: ОШИБКИ
-He work so much. | He works so much. | Для 3-го лица единственного числа (he/she/it) к глаголу добавляется -s.
-She study here. | She studies here. | Если глагол оканчивается на согласную + y, y меняется на -ies.
-He often do it. | He often does it. | Для he форма глагола 'do' меняется на 'does'.
-She watch this videos. | She watches these videos. | После шипящих (ch) к глаголу добавляется -es, а для множественного числа videos используется these.
-She do mistakes. | She makes mistakes. | 'Делать ошибки' — это устойчивое сочетание 'make mistakes'.
-He feels good. | He feels better. | Фраза 'чувствует себя лучше' переводится как 'feels better'.
-I agree you. | I agree with you. | Глагол agree с человеком требует предлога: agree with you.
-He works very much hard. | He works very much. | Наречие 'очень много' ставится в конце: works very much.
-It costs much expensive. | It costs more. | 'Стоить дороже' с глаголом cost выражается как 'costs more'.
-He often tells this thing. | He often says this thing. | Если адресат речи не указан, используется say (says), а не tell.
+He work so much. | He works so much. | Хи уёокс соу матч | Для 3-го лица единственного числа (he/she/it) к глаголу добавляется -s.
+She study here. | She studies here. | Ши ста́диз хи́э | Если глагол оканчивается на согласную + y, y меняется на -ies.
+He often do it. | He often does it. | Хи о́фн даз ит | Для he форма глагола 'do' меняется на 'does'.
+She watch this videos. | She watches these videos. | Ши уо́тчиз зииз ви́диоуз | После шипящих (ch) к глаголу добавляется -es, а для мн. числа videos используется these.
+She do mistakes. | She makes mistakes. | Ши мэйкс мистэ́йкс | 'Делать ошибки' — это устойчивое сочетание 'make mistakes'.
+He feels good. | He feels better. | Хи фиилз бэ́тэ | Фраза 'чувствует себя лучше' переводится как 'feels better'.
+I agree you. | I agree with you. | Ай эгри́ уиз ю | Глагол agree с человеком требует предлога: agree with you.
+He works very much hard. | He works very much. | Хи уёокс вэри матч | Наречие 'очень много' ставится в конце: works very much.
+It costs much expensive. | It costs more. | Ит костс моо | 'Стоить дороже' с глаголом cost выражается как 'costs more'.
+He often tells this thing. | He often says this thing. | Хи о́фн сэз зис син | Если адресат речи не указан, используется say (says), а не tell.
 
 
 # БЛОК 4: АУДИРОВАНИЕ
-## ПОДБЛОК 1: НОВЫЕ (УРОК 2)
-He works so much.
-She understands that person.
-It costs ten dollars.
-He often does it.
+## ПОДБЛОК 1
+He works so much. | Хи уёокс соу матч
+She understands that person. | Ши андэстэ́ндз зэт пёосн
+It costs ten dollars. | Ит костс тэн до́ларз
+He often does it. | Хи о́фн даз ит
 
-## ПОДБЛОК 2: СТАРЫЕ (УРОК 1)
-I live in New York.
-We travel every year.
-You speak English very well.
-I learn English online.
+## ПОДБЛОК 2
+I live in New York. | Ай лив ин нью йоок
+We travel every year. | Уи трэ́вл э́ври йи́э
+You speak English very well. | Ю спиик и́нглиш вэри уэл
+I learn English online. | Ай лёон и́нглиш онла́йн
 
-## ПОДБЛОК 3: МИКС (УРОК 1 + УРОК 2)
-She watches these videos.
-I often go there.
-He plays football very well.
-They live here.
+## ПОДБЛОК 3
+She watches these videos. | Ши уо́тчиз зииз ви́диоуз
+I often go there. | Ай о́фн гоу зээ
+He plays football very well. | Хи плэйз фу́тбол вэри уэл
+They live here. | Зэй лив хи́э
 
 
-# БЛОК 5: СЛОЖНЫЕ ПРЕДЛОЖЕНИЯ (СТУПЕНИ НЕ ДУБЛИРУЮТ ДРУГ ДРУГА)
+# БЛОК 5: СЛОЖНЫЕ ПРЕДЛОЖЕНИЯ
 ## СТУПЕНЬ 1: EN_TO_RU
-He lives in London and works very much. | Он живет в Лондоне и очень много работает.
-She speaks English very well and it helps us. | Она очень хорошо говорит по-английски, и это помогает нам.
-I know how that system works and I like it. | Я знаю, как работает та система, и мне это нравится.
-He often watches these videos because he wants to study here. | Он часто смотрит эти видео, потому что хочет учиться здесь.
-
-## СТУПЕНЬ 2: RU_TO_EN
-Я думаю, что она понимает того человека. | I think that she understands that person.
-Они часто звонят мне, потому что мы делаем это вместе. | They often call me because we do it together.
-Он видит эту проблему, и он чувствует себя лучше. | He sees this problem and he feels better.
-Мы знаем тех людей, и они действительно помогают нам. | We know those people and they really help us.
-
-
-# БЛОК 6: СВЯЗНЫЙ ТЕКСТ (ДВЕ ПОЛНОСТЬЮ РАЗНЫЕ ИСТОРИИ)
-## EN_TEXT
-My friend lives in London. He works so much and he studies online. In the evening he plays football with his friends. He speaks English very well and he often watches these videos. He sees this problem, but he feels better now. It costs ten dollars and it really helps him.
-
-## RU_TEXT
-Она живет рядом с этим местом и работает здесь. Она очень хорошо понимает тех людей. Мы часто слышим об этом по телевизору. Мой брат учится в этом городе и часто звонит мне. Он делает ошибки, но он видит свой результат. Это стоит дороже, но нам очень нравится эта работа.
+He lives in London and works very much. | Он живет в Лондоне и очень много работает. | Хи ливз ин ла́нд
