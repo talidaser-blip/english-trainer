@@ -2,127 +2,127 @@
 # НАЗВАНИЕ: Неопределённый артикль (A / An), неисчисляемые существительные (money, time) и квантификатор some
 
 # БЛОК 1: RU_TO_EN
-## ПОДБЛОК 1: НОВЫЕ (ЭТАЛОН ИЗ УРОКА)
+## ПОДБЛОК 1: БАЗОВЫЕ КОНСТРУКЦИИ (5 ИЗ УР.1-2 + 5 ИЗ УР.3)
+Я живу в Нью-Йорке. | I live in New York.
 У меня есть машина. | I have a car.
-У меня проблема. | I have a problem.
-У меня есть идея. | I have an idea.
-Я вижу отель. | I see a hotel.
-Мы видим такси. | We see a taxi.
-Я пью чай. | I drink tea.
-Она пьёт кофе. | She drinks coffee.
-Я ем рыбу. | I eat fish.
-У меня есть деньги. | I have money.
-У меня есть время. | I have time.
-
-## ПОДБЛОК 2: ЗАКРЕПЛЕНИЕ ЭТАЛОНА (ИНТЕРВАЛЬНОЕ ПОВТОРЕНИЕ: 5 ИЗ УРОКОВ 1-2 + 5 НОВЫХ)
 Он работает так много. | He works so much.
+У меня есть идея. | I have an idea.
 Она понимает того человека. | She understands that person.
+Я вижу отель. | I see a hotel.
 Это стоит десять долларов. | It costs ten dollars.
-Я изучаю английский онлайн. | I learn English online.
+Я пью чай. | I drink tea.
 Ты говоришь по-английски очень хорошо. | You speak English very well.
-Я вижу одного человека. | I see one person.
-Я вижу двух студентов. | I see two students.
-У меня есть работа. | I have a job.
-Я вижу университет. | I see a university.
+У меня есть деньги. | I have money.
+
+## ПОДБЛОК 2: ЗАКРЕПЛЕНИЕ ЭТАЛОНА (5 ИЗ УР.1-2 + 5 ИЗ УР.3)
+Я изучаю английский онлайн. | I learn English online.
+Мы видим такси. | We see a taxi.
+Она смотрит эти видео. | She watches these videos.
+Она пьёт кофе. | She drinks coffee.
+Он чувствует себя лучше. | He feels better.
+Я ем рыбу. | I eat fish.
+Мне нравится это место. | I like this place.
+У меня есть время. | I have time.
+Он часто делает это. | He often does it.
 У них есть компьютер. | They have a computer.
 
-## ПОДБЛОК 3: НЕИСЧИСЛЯЕМЫЕ И КВАНТИФИКАТОР SOME
+## ПОДБЛОК 3: НЕИСЧИСЛЯЕМЫЕ И КВАНТИФИКАТОР SOME (5 ИЗ УР.1-2 + 5 ИЗ УР.3)
+Он часто звонит мне. | He often calls me.
 У меня есть некоторые результаты. | I have some results.
+Она знает меня очень хорошо. | She knows me very well.
 У меня есть немного времени. | I have some time.
+Это помогает мне. | It helps me.
 У меня есть немного денег. | I have some money.
+Она помогает им. | She helps them.
 У неё есть немного времени. | She has some time.
+Я вижу его результат. | I see his result.
 У него есть немного денег. | He has some money.
-У него есть деньги. | He has money.
-У них есть деньги. | They have money.
-У меня очень мало свободного времени. | I have very little free time.
-У меня есть эти деньги. | I have this money.
-У нее есть время. | She has time.
 
-## ПОДБЛОК 4: УКАЗАТЕЛЬНЫЕ И ПРИТЯЖАТЕЛЬНЫЕ МЕСТОИМЕНИЯ (БЕЗ АРТИКЛЯ)
+## ПОДБЛОК 4: УКАЗАТЕЛЬНЫЕ И ПРИТЯЖАТЕЛЬНЫЕ МЕСТОИМЕНИЯ (5 ИЗ УР.1-2 + 5 ИЗ УР.3)
+Я действительно хочу это. | I really want it.
 Я вижу этот банк. | I see this bank.
+Он очень много работает. | He works very much.
 Мне нравится эта идея. | I like this idea.
-Я вижу этого мужчину. | I see this man.
+Мы часто путешествуем. | We often travel.
 Я вижу ту женщину. | I see that woman.
+Ты так много работаешь. | You work so much.
 Мне нравится мой результат. | I like my result.
-Я вижу свой прогресс. | I see my progress.
-Я вижу наш дом. | I see our house.
-Я понимаю твой вопрос. | I understand your question.
-Мне нравится его идея. | I like his idea.
+Они обычно ходят туда. | They usually go there.
 Я вижу её дом. | I see her house.
 
-## ПОДБЛОК 5: СЛОЖНЫЙ МИКС
+## ПОДБЛОК 5: СЛОЖНЫЙ МИКС (5 ИЗ УР.1-2 + 5 ИЗ УР.3)
+Мы часто слышим это по телевизору. | We often hear it on TV.
 Я вижу банк. | I see a bank.
-Я делаю разные упражнения. | I do different exercises.
-Я хожу на работу каждый день. | I go to work every day.
-Мне нравится моя работа. | I like my job.
-Я люблю спорт. | I love sport.
-Я люблю музыку. | I love music.
-Я действительно люблю спорт. | I really love sport.
-Я очень люблю музыку. | I really love music.
-Я знаю его друга. | I see his friend.
-Мы видим университет. | We see a university.
+Я живу рядом с этим местом. | I live near this place.
+У меня есть работа. | I have a job.
+Это стоит дороже. | It costs more.
+Я люблю спорт и музыку. | I love sport and music.
+Я понимаю тех людей. | I understand those people.
+Я вижу университет. | I see a university.
+Она делает ошибки. | She makes mistakes.
+У меня очень мало свободного времени. | I have very little free time.
 
 
-# БЛОК 2: EN_TO_RU
-## ПОДБЛОК 1: НОВЫЕ (ЭТАЛОН ИЗ УРОКА)
-I have a car. | У меня есть машина.
-I have a problem. | У меня проблема.
-I have an idea. | У меня есть идея.
-I see a hotel. | Я вижу отель.
-We see a taxi. | Мы видим такси.
-I drink tea. | Я пью чай.
-She drinks coffee. | Она пьёт кофе.
-I eat fish. | Я ем рыбу.
-I have money. | У меня есть деньги.
-I have time. | У меня есть время.
+# БЛОК 2: EN_TO_RU (ДРУГИЕ КОНСТРУКЦИИ И ЛИЦА, БЕЗ ЗЕРКАЛЬНОГО ПОВТОРА)
+## ПОДБЛОК 1: БАЗОВЫЕ КОНСТРУКЦИИ
+They live in this country. | Они живут в этой стране.
+He has a big car. | У него есть большая машина.
+She works very hard. | Она очень усердно работает.
+We have an interesting idea. | У нас есть интересная идея.
+He understands that problem. | Он понимает ту проблему.
+They see an old hotel. | Они видят старый отель.
+That shirt costs fifteen dollars. | Та рубашка стоит пятнадцать долларов.
+He drinks green tea every morning. | Он пьёт зелёный чай каждое утро.
+They speak English fluently. | Они бегло говорят по-английски.
+She has enough money. | У неё достаточно денег.
 
-## ПОДБЛОК 2: ЗАКРЕПЛЕНИЕ ЭТАЛОНА (ИНТЕРВАЛЬНОЕ ПОВТОРЕНИЕ: 5 ИЗ УРОКОВ 1-2 + 5 НОВЫХ)
-He works so much. | Он работает так много.
-She understands that person. | Она понимает того человека.
-It costs ten dollars. | Это стоит десять долларов.
-I learn English online. | Я изучаю английский онлайн.
-You speak English very well. | Ты говоришь по-английски очень хорошо.
-I see one person. | Я вижу одного человека.
-I see two students. | Я вижу двух студентов.
-I have a job. | У меня есть работа.
-I see a university. | Я вижу университет.
-They have a computer. | У них есть компьютер.
+## ПОДБЛОК 2: ЗАКРЕПЛЕНИЕ ЭТАЛОНА
+She learns Spanish online. | Она учит испанский онлайн.
+I see a yellow taxi. | Я вижу жёлтое такси.
+He watches educational videos. | Он смотрит обучающие видео.
+They drink black coffee. | Они пьют чёрный кофе.
+We feel much better today. | Мы чувствуем себя намного лучше сегодня.
+He eats fresh fish. | Он ест свежую рыбу.
+She really likes this city. | Ей действительно нравится этот город.
+They have free time now. | У них есть свободное время сейчас.
+She does it every morning. | Она делает это каждое утро.
+We have a modern computer. | У нас есть современный компьютер.
 
 ## ПОДБЛОК 3: НЕИСЧИСЛЯЕМЫЕ И КВАНТИФИКАТОР SOME
-I have some results. | У меня есть некоторые результаты.
-I have some time. | У меня есть немного времени.
-I have some money. | У меня есть немного денег.
-She has some time. | У неё есть немного времени.
-He has some money. | У него есть немного денег.
-He has money. | У него есть деньги.
-They have money. | У них есть деньги.
-I have very little free time. | У меня очень мало свободного времени.
-I have this money. | У меня есть эти деньги.
-She has time. | У нее есть время.
+She often calls her parents. | Она часто звонит своим родителям.
+He has some new questions. | У него есть некоторые новые вопросы.
+They know us very well. | Они знают нас очень хорошо.
+We have some time before work. | У нас есть немного времени перед работой.
+This advice helps him a lot. | Этот совет очень помогает ему.
+They have some money for travel. | У них есть немного денег на путешествия.
+He helps his friends every day. | Он помогает своим друзьям каждый день.
+I have some free time today. | У меня есть немного свободного времени сегодня.
+She sees their great results. | Она видит их отличные результаты.
+We have some money right now. | У нас есть немного денег прямо сейчас.
 
-## ПОДБЛОК 4: УКАЗАТЕЛЬНЫЕ И ПРИТЯЖАТЕЛЬНЫЕ МЕСТОИМЕНИЯ (БЕЗ АРТИКЛЯ)
-I see this bank. | Я вижу этот банк.
-I like this idea. | Мне нравится эта идея.
-I see this man. | Я вижу этого мужчину.
-I see that woman. | Я вижу ту женщину.
-I like my result. | Мне нравится мой результат.
-I see my progress. | Я вижу свой прогресс.
-I see our house. | Я вижу наш дом.
-I understand your question. | Я понимаю твой вопрос.
-I like his idea. | Мне нравится его идея.
-I see her house. | Я вижу её дом.
+## ПОДБЛОК 4: УКАЗАТЕЛЬНЫЕ И ПРИТЯЖАТЕЛЬНЫЕ МЕСТОИМЕНИЯ
+She really wants to travel. | Она действительно хочет путешествовать.
+We see that new bank. | Мы видим тот новый банк.
+My brother works so much. | Мой брат так много работает.
+He likes our project. | Ему нравится наш проект.
+They travel to Spain every year. | Они путешествуют в Испанию каждый год.
+I see that young woman. | Я вижу ту молодую женщину.
+You study so much every week. | Ты так много учишься каждую неделю.
+She likes her new progress. | Ей нравится её новый прогресс.
+He often goes there with his father. | Он часто ходит туда со своим отцом.
+We see their beautiful house. | Мы видим их красивый дом.
 
 ## ПОДБЛОК 5: СЛОЖНЫЙ МИКС
-I see a bank. | Я вижу банк.
-I do different exercises. | Я делаю разные упражнения.
-I go to work every day. | Я хожу на работу каждый день.
-I like my job. | Мне нравится моя работа.
-I love sport. | Я люблю спорт.
-I love music. | Я люблю музыку.
-I really love sport. | Я действительно люблю спорт.
-I really love music. | Я очень люблю музыку.
-I see his friend. | Я знаю его друга.
-We see a university. | Мы видим университет.
+I often hear good music on the radio. | Я часто слышу хорошую музыку по радио.
+They see an open bank. | Они видят открытый банк.
+She lives near that park. | Она живет рядом с тем парком.
+He has a good job in Boston. | У него хорошая работа в Бостоне.
+This ticket costs less now. | Этот билет сейчас стоит дешевле.
+We really love football and tennis. | Мы действительно любим футбол и теннис.
+She understands those new students. | Она понимает тех новых студентов.
+I see a famous university. | Я вижу известный университет.
+He makes common mistakes. | Он делает типичные ошибки.
+She has very little free time on Monday. | У неё очень мало свободного времени в понедельник.
 
 
 # БЛОК 3: ОШИБКИ
@@ -139,42 +139,42 @@ He have some time. | He has some time. | С местоимением he испо
 
 
 # БЛОК 4: АУДИРОВАНИЕ
-## ПОДБЛОК 1
+## ПОДБЛОК 1: НОВЫЕ (УРОК 3)
 I have a car.
 I have an idea.
 I see a hotel.
 We see a taxi.
 
-## ПОДБЛОК 2
-I drink tea.
-She drinks coffee.
-I have a job.
-They have a computer.
+## ПОДБЛОК 2: СТАРЫЕ (УРОКИ 1-2)
+He works so much.
+She understands that person.
+I learn English online.
+They live in New York.
 
-## ПОДБЛОК 3
-I see a university.
+## ПОДБЛОК 3: МИКС (УРОКИ 1-2 + УРОК 3)
+I drink tea every day.
+She watches these videos.
 I have some money.
-I see our house.
-I really love music.
+We see a university.
 
 
-# БЛОК 5: СЛОЖНЫЕ ПРЕДЛОЖЕНИЯ
+# БЛОК 5: СЛОЖНЫЕ ПРЕДЛОЖЕНИЯ (РАЗНЫЕ КОНСТРУКЦИИ НА ОБЕИХ СТУПЕНЯХ)
 ## СТУПЕНЬ 1: EN_TO_RU
-I have a job and I go to work every day. | У меня есть работа, и я хожу на работу каждый день.
-I see this hotel and I really like this place. | Я вижу этот отель, и мне действительно нравится это место.
-She drinks coffee in the morning and does different exercises. | Она пьёт кофе по утрам и делает разные упражнения.
-They have a computer and they study online. | У них есть компьютер, и они учатся онлайн.
+I have a job in New York and I go to work every day. | У меня есть работа в Нью-Йорке, и я хожу на работу каждый день.
+He works so much because he wants to have money. | Он работает так много, потому что хочет иметь деньги.
+She drinks coffee in the morning and watches these videos. | Она пьёт кофе по утрам и смотрит эти видео.
+They have a car and travel every year. | У них есть машина, и они путешествуют каждый год.
 
 ## СТУПЕНЬ 2: RU_TO_EN
-У меня есть работа, и мне нравится моя работа. | I have a job and I like my job.
-Я вижу этот университет, и я хочу учиться здесь. | I see this university and I want to study here.
-У меня есть немного времени, и я пью чай. | I have some time and I drink tea.
-Я вижу, у них есть деньги и у них есть машина. | I see they have money and they have a car.
+У нас есть немного времени, и мы изучаем английский онлайн. | We have some time and we learn English online.
+Он видит этот отель, и ему действительно нравится это место. | He sees this hotel and he really likes this place.
+Она говорит по-английски очень хорошо, и у неё есть работа. | She speaks English very well and she has a job.
+Я знаю, что это стоит десять долларов, и у них есть деньги. | I know that it costs ten dollars and they have money.
 
 
-# БЛОК 6: СВЯЗНЫЙ ТЕКСТ
+# БЛОК 6: СВЯЗНЫЙ ТЕКСТ (ДВЕ НЕЗАВИСИМЫЕ ИСТОРИИ)
 ## EN_TEXT
-I have a car and I have a job. I go to work every day. In the morning I drink tea and eat fish. I see my progress and I like my result. I have some free time. I really love music and sport. We see a hotel and we see a university. They have a computer. I see this problem and I have an idea.
+I live in New York and I have a good job. Every morning I drink tea and go to work by taxi. In the evening I have some free time. I see a big hotel and a university near my house. My friends have a car and we often travel together. I see my real progress and I really love it.
 
 ## RU_TEXT
-У меня есть работа, и мне нравится моя работа. Я хожу на работу каждый день. Она пьёт кофе по утрам. У меня очень мало свободного времени, но у меня есть немного денег. Я вижу наш дом и я вижу тот банк. Я делаю разные упражнения каждый день. Я действительно люблю спорт. У нас есть машина, и мы видим такси. Я понимаю твой вопрос.
+У него есть машина, и он очень много работает в этом банке. По утрам он пьёт кофе и читает новости. У него очень мало свободного времени, но у него есть деньги. Она учится в университете и говорит по-английски каждый день. Мы видим эту проблему, но у нас есть отличная идея.
