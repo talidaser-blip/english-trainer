@@ -174,7 +174,7 @@ They have a car and travel every year. | У них есть машина, и о�
 
 # БЛОК 6: СВЯЗНЫЙ ТЕКСТ
 ## EN_TEXT
-I live in New York and I have a good job. Every morning I drink tea and go to work by taxi. In the evening I have some free time. I see a big hotel and a university near my house. My friends have a car and we often travel together. I see my real progress and I really love it.
+I live in New York and I have a good job. Every morning I drink tea and go to work by taxi. In the evening I have some free time. I see a big hotel and a university near my house. My friends have a car and we often travel together. I see my real progress and I really love it. | Я живу в Нью-Йорке, и у меня есть хорошая работа. Каждое утро я пью чай и еду на работу на такси. Вечером у меня есть немного свободного времени. Я вижу большой отель и университет рядом с моим домом. У моих друзей есть машина, и мы часто путешествуем вместе. Я вижу свой реальный прогресс, и мне это действительно нравится.
 
 ## RU_TEXT
-У него есть машина, и он очень много работает в этом банке. По утрам он пьёт кофе и читает новости. У него очень мало свободного времени, но у него есть деньги. Она учится в университете и говорит по-английски каждый день. Мы видим эту проблему, но у нас есть отличная идея.
+У него есть машина, и он очень много работает в этом банке. По утрам он пьёт кофе и читает новости. У него очень мало свободного времени, но у него есть деньги. Она учится в университете и говорит по-английски каждый день. Мы видим эту проблему, но у нас есть отличная идея. | He has a car and he works very much in this bank. In the morning he drinks coffee and reads the news. He has very little free time, but he has money. She studies at university and speaks English every day. We see this problem, but we have a great idea.
