@@ -1350,17 +1350,22 @@
       storyInput.disabled = true;
       const currentStage = blockIndices[6] || 0;
 
-      let matchCount = 0;
-      let totalCount = currentStage === 0 ? b6RuSentences.length : b6EnSentences.length;
-      let targetList = currentStage === 0 ? b6RuSentences : b6EnSentences;
+      let targetFullText = '';
+    if (currentStage === 0) {
+      targetFullText = (window.b6Story1 && window.b6Story1.target) ? window.b6Story1.target : b6FullRuText;
+    } else {
+      targetFullText = (window.b6Story2 && window.b6Story2.target) ? window.b6Story2.target : b6FullEnText;
+    }
 
-      targetList.forEach(s => {
-        let snippet = cleanText(s).slice(0, 12);
-        if (cleanText(userStory).includes(snippet)) matchCount++;
-      });
+    // Разбиваем актуальный эталон на предложения для мягкой проверки
+    let targetList = targetFullText.split(/(?<=[.!?])\s+/).filter(Boolean);
+    let totalCount = targetList.length || 1;
+    let matchCount = 0;
 
-      let targetFullText = currentStage === 0 ? b6FullRuText : b6FullEnText;
-
+    targetList.forEach(s => {
+      let snippet = cleanText(s).slice(0, 12);
+      if (snippet && cleanText(userStory).includes(snippet)) matchCount++;
+    });
       if (matchCount >= Math.floor(totalCount * 0.35) || cleanText(userStory).length > cleanText(targetFullText).length * 0.45) {
         balance += 10;
         statusLine.className = 'status-line correct';
