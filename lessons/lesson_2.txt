@@ -2,134 +2,134 @@
 # НАЗВАНИЕ: Present Simple: He / She / It (-s, -es, -ies), местоимения в объектном падеже и устойчивые фразы
 
 # БЛОК 1: RU_TO_EN
-## ПОДБЛОК 1: НОВЫЕ (ЭТАЛОН ИЗ УРОКА)
+## ПОДБЛОК 1: БАЗОВЫЕ КОНСТРУКЦИИ (5 ИЗ УР.1 + 5 ИЗ УР.2)
+Я живу в Нью-Йорке. | I live in New York.
 Он работает так много. | He works so much.
+Мы ходим на работу. | We go to work.
 Она понимает того человека. | She understands that person.
+Я говорю по-английски. | I speak English.
 Это стоит десять долларов. | It costs ten dollars.
-Он часто делает это. | He often does it.
+Они живут здесь. | They live here.
 Она смотрит эти видео. | She watches these videos.
-Он играет в футбол очень хорошо. | He plays football very well.
-Она учится здесь. | She studies here.
-Это помогает мне. | It helps me.
-Она делает ошибки. | She makes mistakes.
+Я знаю это очень хорошо. | I know it very well.
 Он чувствует себя лучше. | He feels better.
 
-## ПОДБЛОК 2: ЗАКРЕПЛЕНИЕ ЭТАЛОНА (ИНТЕРВАЛЬНОЕ ПОВТОРЕНИЕ: 5 ИЗ УРОКА 1 + 5 НОВЫХ)
-Я живу в Нью-Йорке. | I live in New York.
-Мы ходим на работу. | We go to work.
+## ПОДБЛОК 2: ЗАКРЕПЛЕНИЕ ЭТАЛОНА (5 ИЗ УР.1 + 5 ИЗ УР.2)
 Я изучаю английский онлайн. | I learn English online.
+Это помогает мне. | It helps me.
 Ты говоришь по-английски очень хорошо. | You speak English very well.
+Она делает ошибки. | She makes mistakes.
 Мне нравится это место. | I like this place.
-Он видит эту проблему. | He sees this problem.
-Она смотрит различные фильмы. | She watches different movies.
-Я согласен с тобой. | I agree with you.
-Я абсолютно согласен с тобой. | I absolutely agree with you.
-Она живет в этом городе. | She lives in this city.
+Он играет в футбол очень хорошо. | He plays football very well.
+Они помогают мне. | They help me.
+Она учится здесь. | She studies here.
+Мы путешествуем каждый год. | We travel every year.
+Он часто делает это. | He often does it.
 
-## ПОДБЛОК 3: ТРАНСФОРМАЦИЯ ЛИЦ И ОБЪЕКТНЫЕ МЕСТОИМЕНИЯ
+## ПОДБЛОК 3: ТРАНСФОРМАЦИЯ ЛИЦ И МЕСТОИМЕНИЯ (5 ИЗ УР.1 + 5 ИЗ УР.2)
+Он видит это. | He sees it.
 Он часто звонит мне. | He often calls me.
+Она знает это. | She knows it.
 Она знает меня очень хорошо. | She knows me very well.
+Он живет в Нью-Йорке. | He lives in New York.
 Я слышу тебя. | I hear you.
-Он часто звонит тебе. | He often calls you.
-Я знаю ее. | I know her.
+Она говорит по-английски. | She speaks English.
 Я вижу его. | I see him.
-Я помогаю ему. | I help him.
+Он часто думает об этом. | He often thinks about it.
 Она помогает им. | She helps them.
-Я слышу их. | I hear them.
-Это действительно помогает нам. | It really helps us.
 
-## ПОДБЛОК 4: НАРЕЧИЯ И УСИЛИТЕЛИ (A LOT, VERY MUCH, SO MUCH, REALLY)
-Я много работаю. | I work a lot.
-Ты много работаешь. | You work a lot.
-Он много знает. | He knows a lot.
+## ПОДБЛОК 4: НАРЕЧИЯ И УСИЛИТЕЛИ (5 ИЗ УР.1 + 5 ИЗ УР.2)
+Я действительно хочу это. | I really want it.
 Он очень много работает. | He works very much.
+Они обычно ходят туда. | They usually go there.
 Ты так много работаешь. | You work so much.
+Мы часто путешествуем. | We often travel.
 Я очень сильно люблю тебя. | I love you very much.
-Я так сильно тебя люблю. | I love you so much.
-Мне это действительно нравится. | I really like it.
+Ты действительно помогаешь мне. | You really help me.
 Мне это так сильно нравится. | I like it so much.
-Мне это очень сильно нравится. | I like it very much.
+Я обычно делаю это утром. | I usually do it in the morning.
+Он много знает. | He knows a lot.
 
-## ПОДБЛОК 5: СЛОЖНЫЙ МИКС
+## ПОДБЛОК 5: СЛОЖНЫЙ МИКС (5 ИЗ УР.1 + 5 ИЗ УР.2)
+Мне нравится проводить время с друзьями. | I like spending time with my friends.
 Мы часто слышим это по телевизору. | We often hear it on TV.
-Ему это нравится. | He likes it.
-Ей нравится эта музыка. | She likes this music.
-Я вижу его друга. | I see his friend.
-Я вижу их друзей. | I see their friends.
+Я вижу эту проблему. | I see this problem.
 Я понимаю тех людей. | I understand those people.
+Я смотрю разные видео. | I watch different videos.
 Я живу рядом с этим местом. | I live near this place.
-Он живет очень далеко. | He lives very far.
+Я вижу свой результат. | I see my result.
 Это стоит дороже. | It costs more.
+Нам нравится этот язык. | We like this language.
 Это стоит дешевле. | It costs less.
 
 
-# БЛОК 2: EN_TO_RU
-## ПОДБЛОК 1: НОВЫЕ (ЭТАЛОН ИЗ УРОКА)
-He works so much. | Он работает так много.
-She understands that person. | Она понимает того человека.
-It costs ten dollars. | Это стоит десять долларов.
-He often does it. | Он часто делает это.
-She watches these videos. | Она смотрит эти видео.
-He plays football very well. | Он играет в футбол очень хорошо.
-She studies here. | Она учится здесь.
-It helps me. | Это помогает мне.
-She makes mistakes. | Она делает ошибки.
-He feels better. | Он чувствует себя лучше.
+# БЛОК 2: EN_TO_RU (ДРУГИЕ ВАРИАЦИИ И ДРУГИЕ ЛИЦА, БЕЗ ЗЕРКАЛЬНОГО ПОВТОРА)
+## ПОДБЛОК 1: БАЗОВЫЕ КОНСТРУКЦИИ
+They live in London. | Они живут в Лондоне.
+She works so much. | Она работает так много.
+I go to university. | Я хожу в университет.
+He understands that student. | Он понимает того студента.
+We speak English here. | Мы говорим по-английски здесь.
+This ticket costs twenty dollars. | Этот билет стоит двадцать долларов.
+She lives here and works there. | Она живет здесь и работает там.
+He watches these movies. | Он смотрит эти фильмы.
+They know it very well. | Они знают это очень хорошо.
+She feels much better. | Она чувствует себя намного лучше.
 
-## ПОДБЛОК 2: ЗАКРЕПЛЕНИЕ ЭТАЛОНА (ИНТЕРВАЛЬНОЕ ПОВТОРЕНИЕ: 5 ИЗ УРОКА 1 + 5 НОВЫХ)
-I live in New York. | Я живу в Нью-Йорке.
-We go to work. | Мы ходим на работу.
-I learn English online. | Я изучаю английский онлайн.
-You speak English very well. | Ты говоришь по-английски очень хорошо.
-I like this place. | Мне нравится это место.
-He sees this problem. | Он видит эту проблему.
-She watches different movies. | Она смотрит различные фильмы.
-I agree with you. | Я согласен с тобой.
-I absolutely agree with you. | Я абсолютно согласен с тобой.
-She lives in this city. | Она живет в этом городе.
+## ПОДБЛОК 2: ЗАКРЕПЛЕНИЕ ЭТАЛОНА
+We learn English together. | Мы учим английский вместе.
+This method really helps us. | Этот метод действительно помогает нам.
+He speaks English very well. | Он говорит по-английски очень хорошо.
+He makes simple mistakes. | Он делает простые ошибки.
+They like this new place. | Им нравится это новое место.
+She plays tennis very well. | Она играет в теннис очень хорошо.
+You always help them. | Ты всегда помогаешь им.
+He studies online. | Он учится онлайн.
+She travels every summer. | Она путешествует каждое лето.
+We often do it together. | Мы часто делаем это вместе.
 
 ## ПОДБЛОК 3: ТРАНСФОРМАЦИЯ ЛИЦ И ОБЪЕКТНЫЕ МЕСТОИМЕНИЯ
-He often calls me. | Он часто звонит мне.
-She knows me very well. | Она знает меня очень хорошо.
-I hear you. | Я слышу тебя.
-He often calls you. | Он часто звонит тебе.
-I know her. | Я знаю ее.
-I see him. | Я вижу его.
-I help him. | Я помогаю ему.
-She helps them. | Она помогает им.
-I hear them. | Я слышу их.
-It really helps us. | Это действительно помогает нам.
+She sees him every day. | Она видит его каждый день.
+They often call us. | Они часто звонят нам.
+We know her brother. | Мы знаем её брата.
+He knows you very well. | Он знает тебя очень хорошо.
+They live in this country. | Они живут в этой стране.
+We hear him. | Мы слышим его.
+He speaks English and French. | Он говорит по-английски и по-французски.
+She sees them there. | Она видит их там.
+They often think about you. | Они часто думают о тебе.
+I help her with English. | Я помогаю ей с английским.
 
-## ПОДБЛОК 4: НАРЕЧИЯ И УСИЛИТЕЛИ (A LOT, VERY MUCH, SO MUCH, REALLY)
-I work a lot. | Я много работаю.
-You work a lot. | Ты много работаешь.
-He knows a lot. | Он много знает.
-He works very much. | Он очень много работает.
-You work so much. | Ты так много работаешь.
-I love you very much. | Я очень сильно люблю тебя.
-I love you so much. | Я так сильно тебя люблю.
-I really like it. | Мне это действительно нравится.
-I like it so much. | Мне это так сильно нравится.
-I like it very much. | Мне это очень сильно нравится.
+## ПОДБЛОК 4: НАРЕЧИЯ И УСИЛИТЕЛИ
+He really wants a new car. | Он действительно хочет новую машину.
+She works very much every week. | Она очень много работает каждую неделю.
+We usually go to that park. | Мы обычно ходим в тот парк.
+They work so much here. | Они так много работают здесь.
+He often travels to Europe. | Он часто путешествует в Европу.
+She loves him very much. | Она очень сильно любит его.
+They really help our team. | Они действительно помогают нашей команде.
+He likes this song so much. | Ему так сильно нравится эта песня.
+She usually studies in the evening. | Она обычно учится вечером.
+You know a lot about it. | Ты много знаешь об этом.
 
 ## ПОДБЛОК 5: СЛОЖНЫЙ МИКС
-We often hear it on TV. | Мы часто слышим это по телевизору.
-He likes it. | Ему это нравится.
-She likes this music. | Ей нравится эта музыка.
-I see his friend. | Я вижу его друга.
-I see their friends. | Я вижу их друзей.
-I understand those people. | Я понимаю тех людей.
-I live near this place. | Я живу рядом с этим местом.
-He lives very far. | Он живет очень далеко.
-It costs more. | Это стоит дороже.
-It costs less. | Это стоит дешевле.
+They like spending time in the city. | Им нравится проводить время в городе.
+I often see it on the internet. | Я часто вижу это в интернете.
+She sees these difficult problems. | Она видит эти трудные проблемы.
+We understand those students. | Мы понимаем тех студентов.
+He watches different lessons online. | Он смотрит разные уроки онлайн.
+She lives very far from here. | Она живет очень далеко отсюда.
+They see our real progress. | Они видят наш реальный прогресс.
+This lesson costs less. | Этот урок стоит дешевле.
+He likes learning foreign languages. | Ему нравится учить иностранные языки.
+That book costs more. | Та книга стоит дороже.
 
 
 # БЛОК 3: ОШИБКИ
 He work so much. | He works so much. | Для 3-го лица единственного числа (he/she/it) к глаголу добавляется -s.
 She study here. | She studies here. | Если глагол оканчивается на согласную + y, y меняется на -ies.
 He often do it. | He often does it. | Для he форма глагола 'do' меняется на 'does'.
-He watches different films very well and he plays football very well, but she watch this. | She watches these videos. | После шипящих (ch) к глаголу в 3-м лице добавляется -es (watches).
+She watch this videos. | She watches these videos. | После шипящих (ch) к глаголу добавляется -es, а для множественного числа videos используется these.
 She do mistakes. | She makes mistakes. | 'Делать ошибки' — это устойчивое сочетание 'make mistakes'.
 He feels good. | He feels better. | Фраза 'чувствует себя лучше' переводится как 'feels better'.
 I agree you. | I agree with you. | Глагол agree с человеком требует предлога: agree with you.
@@ -139,42 +139,42 @@ He often tells this thing. | He often says this thing. | Если адресат
 
 
 # БЛОК 4: АУДИРОВАНИЕ
-## ПОДБЛОК 1
+## ПОДБЛОК 1: НОВЫЕ (УРОК 2)
 He works so much.
 She understands that person.
 It costs ten dollars.
 He often does it.
 
-## ПОДБЛОК 2
+## ПОДБЛОК 2: СТАРЫЕ (УРОК 1)
+I live in New York.
+We travel every year.
+You speak English very well.
+I learn English online.
+
+## ПОДБЛОК 3: МИКС (УРОК 1 + УРОК 2)
 She watches these videos.
+I often go there.
 He plays football very well.
-It helps me.
-She makes mistakes.
-
-## ПОДБЛОК 3
-He feels better.
-I agree with you.
-She lives in this city.
-He often calls me.
+They live here.
 
 
-# БЛОК 5: СЛОЖНЫЕ ПРЕДЛОЖЕНИЯ
+# БЛОК 5: СЛОЖНЫЕ ПРЕДЛОЖЕНИЯ (СТУПЕНИ НЕ ДУБЛИРУЮТ ДРУГ ДРУГА)
 ## СТУПЕНЬ 1: EN_TO_RU
-I think that you do it very well. | Я думаю, что ты делаешь это очень хорошо.
-I know how it works and it helps me. | Я знаю, как это работает, и это помогает мне.
-They often say it, but I do not agree. | Они часто говорят это, но я не согласен.
-He often tells me this thing and I see this problem. | Он часто говорит мне эту вещь, и я вижу эту проблему.
+He lives in London and works very much. | Он живет в Лондоне и очень много работает.
+She speaks English very well and it helps us. | Она очень хорошо говорит по-английски, и это помогает нам.
+I know how that system works and I like it. | Я знаю, как работает та система, и мне это нравится.
+He often watches these videos because he wants to study here. | Он часто смотрит эти видео, потому что хочет учиться здесь.
 
 ## СТУПЕНЬ 2: RU_TO_EN
-Я думаю, это работает лучше. | I think it works better.
-Я знаю, как это работает. | I know how it works.
-Он часто говорит мне эту вещь. | He often tells me this thing.
-Я думаю, что он нас понимает. | I think that he understands us.
+Я думаю, что она понимает того человека. | I think that she understands that person.
+Они часто звонят мне, потому что мы делаем это вместе. | They often call me because we do it together.
+Он видит эту проблему, и он чувствует себя лучше. | He sees this problem and he feels better.
+Мы знаем тех людей, и они действительно помогают нам. | We know those people and they really help us.
 
 
-# БЛОК 6: СВЯЗНЫЙ ТЕКСТ
+# БЛОК 6: СВЯЗНЫЙ ТЕКСТ (ДВЕ ПОЛНОСТЬЮ РАЗНЫЕ ИСТОРИИ)
 ## EN_TEXT
-He works so much. She understands that person. It costs ten dollars. He often does it. She watches these videos. He plays football very well. She studies here. It helps me. She makes mistakes. He feels better. I absolutely agree with you. He often calls me. She knows me very well. I hear you. It really helps us. We often hear it on TV. He likes it. I live near this place. He lives very far. It costs more.
+My friend lives in London. He works so much and he studies online. In the evening he plays football with his friends. He speaks English very well and he often watches these videos. He sees this problem, but he feels better now. It costs ten dollars and it really helps him.
 
 ## RU_TEXT
-Он работает так много. Она понимает того человека. Это стоит десять долларов. Он часто делает это. Она смотрит эти видео. Он играет в футбол очень хорошо. Она учится здесь. Это помогает мне. Она делает ошибки. Он чувствует себя лучше. Я абсолютно согласен с тобой. Он часто звонит мне. Она знает меня очень хорошо. Я слышу тебя. Это действительно помогает нам. Мы часто слышим это по телевизору. Ему это нравится. Я живу рядом с этим местом. Он живет очень далеко. Это стоит дороже.
+Она живет рядом с этим местом и работает здесь. Она очень хорошо понимает тех людей. Мы часто слышим об этом по телевизору. Мой брат учится в этом городе и часто звонит мне. Он делает ошибки, но он видит свой результат. Это стоит дороже, но нам очень нравится эта работа.
