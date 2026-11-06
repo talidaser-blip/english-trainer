@@ -402,6 +402,7 @@
 
   let recognition = null;
   let isRecording = false;
+  let speechAccumulated = '';
 
   function syncProgressToCloud() {
     if (!GOOGLE_SCRIPT_URL) return;
@@ -427,7 +428,6 @@
       if (data && data.status === 'success' && data.lessons) {
         const cloudLesson = data.lessons[currentLesson];
         if (cloudLesson) {
-          // Если локально было недавно сохранено ручное изменение, не перетираем его
           balance = cloudLesson.balance;
           currentBlock = cloudLesson.block;
           blockIndices[currentBlock] = cloudLesson.index;
@@ -511,7 +511,7 @@
     if (!isNaN(parsed)) {
       balance = parsed;
       document.getElementById('balanceDisplay').innerText = `${balance} ₽`;
-      saveProgress(); // Сразу фиксируем и в облаке!
+      saveProgress();
     } else {
       alert('Пожалуйста, введите корректное число.');
     }
@@ -521,7 +521,7 @@
     if (confirm(`Обнулить баланс Урока ${currentLesson} до 0 ₽?`)) {
       balance = 0;
       document.getElementById('balanceDisplay').innerText = `${balance} ₽`;
-      saveProgress(); // Сразу отправляем 0 ₽ в Google Таблицу!
+      saveProgress();
     }
   }
 
@@ -883,6 +883,7 @@
     micBtn.style.display = 'block';
     btn.style.display = 'block';
 
+    speechAccumulated = '';
     input.value = '';
     input.disabled = false;
     storyInput.value = '';
@@ -1320,7 +1321,6 @@
 
   function isEnglishMatch(userText, targetText) {
     let cleanUser = cleanText(userText);
-    // замена цифр на слова в английском
     cleanUser = cleanUser.replace(/\b10\b/g, 'ten').replace(/\b15\b/g, 'fifteen').replace(/\b20\b/g, 'twenty');
     const variants = targetText.split('/').map(v => {
       let cv = cleanText(v);
@@ -1675,25 +1675,31 @@
     recognition.interimResults = false;
 
     recognition.onresult = (event) => {
-      let finalTranscript = '';
+      let chunk = '';
       for (let i = event.resultIndex; i < event.results.length; ++i) {
         if (event.results[i].isFinal) {
-          finalTranscript += event.results[i][0].transcript;
+          chunk += event.results[i][0].transcript + ' ';
         }
       }
-      finalTranscript = finalTranscript.trim();
-      if (finalTranscript.length > 0) {
-        if (currentBlock === 6) {
-          const area = document.getElementById('storyInput');
-          const prev = area.value.trim();
-          area.value = prev ? (prev + ' ' + capitalizeText(finalTranscript)) : capitalizeText(finalTranscript);
-        } else {
-          document.getElementById('userInput').value = capitalizeText(finalTranscript);
-        }
+      chunk = chunk.trim();
+      if (!chunk) return;
+
+      if (currentBlock === 6) {
+        const area = document.getElementById('storyInput');
+        const prev = area.value.trim();
+        area.value = prev ? (prev + ' ' + capitalizeText(chunk)) : capitalizeText(chunk);
+      } else {
+        const input = document.getElementById('userInput');
+        speechAccumulated = speechAccumulated ? (speechAccumulated + ' ' + chunk) : chunk;
+        input.value = capitalizeText(speechAccumulated);
       }
     };
 
-    recognition.onerror = () => {
+    recognition.onerror = (e) => {
+      console.warn('Speech error:', e);
+      if (e.error === 'no-speech' && isRecording) {
+        return;
+      }
       isRecording = false;
       document.getElementById('micBtn').classList.remove('recording');
     };
@@ -1729,6 +1735,9 @@
 
     const btn = document.getElementById('micBtn');
     if (!isRecording) {
+      speechAccumulated = (currentBlock === 6) 
+        ? document.getElementById('storyInput').value.trim() 
+        : document.getElementById('userInput').value.trim();
       isRecording = true;
       btn.classList.add('recording');
       try { recognition.start(); } catch(e) {}
