@@ -604,7 +604,7 @@
     tasks = [];
 
     // === Блок 6 ===
-   if (currentBlock === 6) {
+    if (currentBlock === 6) {
       let inB6 = false;
       let mode = '';
       window.b6Story1 = { source: '', target: '' };
@@ -655,7 +655,6 @@
       b6FullEnText = window.b6Story1.source;
       b6FullRuText = window.b6Story2.source;
       return;
-    }
     }
 
     // === Блок 5 ===
@@ -1351,21 +1350,29 @@
       const currentStage = blockIndices[6] || 0;
 
       let targetFullText = '';
-    if (currentStage === 0) {
-      targetFullText = (window.b6Story1 && window.b6Story1.target) ? window.b6Story1.target : b6FullRuText;
-    } else {
-      targetFullText = (window.b6Story2 && window.b6Story2.target) ? window.b6Story2.target : b6FullEnText;
-    }
+      if (currentStage === 0) {
+        targetFullText = (window.b6Story1 && window.b6Story1.target) ? window.b6Story1.target : (b6FullRuText || '');
+      } else {
+        targetFullText = (window.b6Story2 && window.b6Story2.target) ? window.b6Story2.target : (b6FullEnText || '');
+      }
 
-    // Разбиваем актуальный эталон на предложения для мягкой проверки
-    let targetList = targetFullText.split(/(?<=[.!?])\s+/).filter(Boolean);
-    let totalCount = targetList.length || 1;
-    let matchCount = 0;
+      // Разбиваем эталон на предложения
+      let rawSentences = targetFullText.replace(/([.!?])/g, '$1|').split('|');
+      let targetList = [];
+      for (let i = 0; i < rawSentences.length; i++) {
+        let trimmed = rawSentences[i].trim();
+        if (trimmed.length > 0) targetList.push(trimmed);
+      }
+      let totalCount = targetList.length || 1;
+      let matchCount = 0;
 
-    targetList.forEach(s => {
-      let snippet = cleanText(s).slice(0, 12);
-      if (snippet && cleanText(userStory).includes(snippet)) matchCount++;
-    });
+      targetList.forEach(function(s) {
+        let snippet = cleanText(s).slice(0, 12);
+        if (snippet && cleanText(userStory).indexOf(snippet) !== -1) {
+          matchCount++;
+        }
+      });
+
       if (matchCount >= Math.floor(totalCount * 0.35) || cleanText(userStory).length > cleanText(targetFullText).length * 0.45) {
         balance += 10;
         statusLine.className = 'status-line correct';
