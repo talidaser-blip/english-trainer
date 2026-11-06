@@ -284,10 +284,10 @@
 
     <div class="header-controls">
       <div class="selectors-row">
-        <!-- Автоматический список на 50 уроков -->
+        <!-- Выбор урока -->
         <select class="control-select" id="lessonSelector" onchange="onLessonChange()"></select>
 
-        <!-- Выбор блока внутри урока -->
+        <!-- Выбор блока -->
         <select class="control-select" id="blockSelector" onchange="onBlockChange()">
           <option value="1">Блок 1: RU ➔ EN</option>
           <option value="2">Блок 2: EN ➔ RU</option>
@@ -315,7 +315,7 @@
       </div>
     </div>
 
-    <!-- Для Блока 6: весь связный текст на одном экране -->
+    <!-- Для Блока 6: весь связный текст -->
     <div id="storyContainer" style="display: none; flex-direction: column; gap: 14px;">
       <div class="story-full-text" id="storyFullText"></div>
       <div class="audio-btns-group" style="justify-content: flex-start;">
@@ -378,7 +378,7 @@
   let recognition = null;
   let isRecording = false;
 
-  // 1. Отправка прогресса в Google Таблицу на лист «Английский»
+  // 1. Отправка прогресса в Google Таблицу
   function syncProgressToCloud() {
     if (!GOOGLE_SCRIPT_URL) return;
     fetch(GOOGLE_SCRIPT_URL, {
@@ -395,7 +395,7 @@
     }).catch(err => console.warn('Офлайн режим сохранения:', err));
   }
 
-  // 2. Получение актуального прогресса из таблицы при входе
+  // 2. Получение прогресса из таблицы при входе
   async function syncProgressFromCloud() {
     if (!GOOGLE_SCRIPT_URL) return;
     try {
@@ -417,7 +417,6 @@
     }
   }
 
-  // Автоматическое заполнение списка уроков (1-50)
   function buildLessonOptions() {
     const sel = document.getElementById('lessonSelector');
     sel.innerHTML = '';
@@ -491,6 +490,13 @@
         b5CurrentRound = 1;
         b5Round2 = [];
       }
+      
+      // Восстанавливаем видимость полей ввода
+      document.getElementById('inputGroupRow').style.display = 'flex';
+      document.getElementById('userInput').style.display = 'block';
+      document.getElementById('micBtn').style.display = 'block';
+      document.getElementById('actionBtn').style.display = 'block';
+      
       saveProgress();
       renderCurrentTask();
     }
@@ -849,7 +855,11 @@
       const currentStage = blockIndices[6] || 0;
 
       if (currentStage >= 2) {
-        finishAllBlocks();
+        document.getElementById('subblockLabel').innerText = 'БЛОК ЗАВЕРШЁН';
+        document.getElementById('progressCount').innerText = '2 из 2';
+        storyFullText.innerText = '🎉 Все задания Блока 6 и Урока выполнены! Нажмите «Начать заново ↺», чтобы пройти снова.';
+        storyInput.style.display = 'none';
+        inputGroupRow.style.display = 'none';
         return;
       }
 
@@ -893,7 +903,10 @@
           saveProgress();
           renderCurrentTask();
         } else {
-          advanceToBlock6();
+          document.getElementById('subblockLabel').innerText = 'БЛОК ЗАВЕРШЁН';
+          document.getElementById('progressCount').innerText = `${activeList.length} из ${activeList.length}`;
+          sourceEl.innerText = '🎉 Блок 5 пройден! Перейдите к Блоку 6 в меню сверху или нажмите «Начать заново ↺» для повторения.';
+          inputGroupRow.style.display = 'none';
         }
         return;
       }
@@ -934,7 +947,12 @@
             saveProgress();
             renderCurrentTask();
           } else {
-            advanceToBlock5();
+            document.getElementById('subblockLabel').innerText = 'БЛОК ЗАВЕРШЁН';
+            document.getElementById('progressCount').innerText = `${b4Round1.length} из ${b4Round1.length}`;
+            sourceEl.innerText = '🎉 Блок 4 пройден! Перейдите к Блоку 5 или нажмите «Начать заново ↺» для повтора.';
+            inputGroupRow.style.display = 'none';
+            slowBtn.style.display = 'none';
+            listenBtn.style.display = 'none';
           }
           return;
         }
@@ -944,7 +962,12 @@
         speakEnglish(item.en, 1.0);
       } else {
         if (currentIdx >= b4Round2.length) {
-          advanceToBlock5();
+          document.getElementById('subblockLabel').innerText = 'БЛОК ЗАВЕРШЁН';
+          document.getElementById('progressCount').innerText = `${b4Round2.length} из ${b4Round2.length}`;
+          sourceEl.innerText = '🎉 Блок 4 пройден! Перейдите к следующему блоку или повторите этот.';
+          inputGroupRow.style.display = 'none';
+          slowBtn.style.display = 'none';
+          listenBtn.style.display = 'none';
           return;
         }
         const item = b4Round2[currentIdx];
@@ -971,7 +994,10 @@
             saveProgress();
             renderCurrentTask();
           } else {
-            advanceToBlock4();
+            document.getElementById('subblockLabel').innerText = 'БЛОК ЗАВЕРШЁН';
+            document.getElementById('progressCount').innerText = `${b3Round1.length} из ${b3Round1.length}`;
+            sourceEl.innerText = '🎉 Блок 3 пройден! Перейдите к Блоку 4 или нажмите «Начать заново ↺» для повтора.';
+            inputGroupRow.style.display = 'none';
           }
           return;
         }
@@ -981,7 +1007,10 @@
         document.getElementById('progressCount').innerText = `${currentIdx + 1} из ${b3Round1.length}`;
       } else {
         if (currentIdx >= b3Round2.length) {
-          advanceToBlock4();
+          document.getElementById('subblockLabel').innerText = 'БЛОК ЗАВЕРШЁН';
+          document.getElementById('progressCount').innerText = `${b3Round2.length} из ${b3Round2.length}`;
+          sourceEl.innerText = '🎉 Блок 3 пройден! Перейдите к Блоку 4 или нажмите «Начать заново ↺» для повтора.';
+          inputGroupRow.style.display = 'none';
           return;
         }
         const item = b3Round2[currentIdx];
@@ -998,24 +1027,14 @@
 
     let currentIdx = blockIndices[currentBlock] || 0;
 
+    // ЕСЛИ БЛОК 1 ИЛИ БЛОК 2 ЗАВЕРШЁН:
     if (currentIdx >= tasks.length) {
-      if (currentBlock === 1) {
-        currentBlock = 2;
-        document.getElementById('blockSelector').value = 2;
-        parseCurrentBlock();
-        saveProgress();
-        alert('Поздравляем! Блок 1 завершён. Переходим ко Блоку 2 (EN ➔ RU)!');
-        renderCurrentTask();
-        return;
-      } else if (currentBlock === 2) {
-        currentBlock = 3;
-        document.getElementById('blockSelector').value = 3;
-        parseCurrentBlock();
-        saveProgress();
-        alert('Поздравляем! Блок 2 завершён. Переходим ко Блоку 3 (Ошибки)!');
-        renderCurrentTask();
-        return;
-      }
+      document.getElementById('subblockLabel').innerText = 'БЛОК ЗАВЕРШЁН';
+      document.getElementById('progressCount').innerText = `${tasks.length} из ${tasks.length}`;
+      sourceEl.innerText = `🎉 Вы успешно прошли Блок ${currentBlock}! Нажмите «Начать заново ↺», чтобы пройти ещё раз, или выберите следующий блок в меню сверху.`;
+      inputGroupRow.style.display = 'none';
+      listenBtn.style.display = 'none';
+      return;
     }
 
     const t = tasks[currentIdx];
@@ -1041,7 +1060,6 @@
     document.getElementById('blockSelector').value = 4;
     parseCurrentBlock();
     saveProgress();
-    alert('Поздравляем! Блок 3 завершён. Переходим ко Блоку 4 (Аудирование)!');
     renderCurrentTask();
   }
 
@@ -1050,7 +1068,6 @@
     document.getElementById('blockSelector').value = 5;
     parseCurrentBlock();
     saveProgress();
-    alert('Поздравляем! Блок 4 завершён. Переходим ко Блоку 5 (Сложные предложения)!');
     renderCurrentTask();
   }
 
@@ -1059,7 +1076,6 @@
     document.getElementById('blockSelector').value = 6;
     parseCurrentBlock();
     saveProgress();
-    alert('Поздравляем! Блок 5 завершён. Переходим к финальному Блоку 6 (Связный текст)!');
     renderCurrentTask();
   }
 
