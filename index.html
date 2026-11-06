@@ -604,11 +604,11 @@
     tasks = [];
 
     // === Блок 6 ===
-    if (currentBlock === 6) {
+   if (currentBlock === 6) {
       let inB6 = false;
       let mode = '';
-      let enLines = [];
-      let ruLines = [];
+      window.b6Story1 = { source: '', target: '' };
+      window.b6Story2 = { source: '', target: '' };
 
       for (let rawLine of lines) {
         let line = rawLine.trim();
@@ -623,37 +623,39 @@
           const upper = line.toUpperCase();
           if (upper.includes('EN TEXT') || upper.includes('EN_TEXT')) {
             mode = 'EN';
-            if (line.includes(':')) {
-              let afterCol = line.substring(line.indexOf(':') + 1).trim();
-              if (afterCol) enLines.push(afterCol);
-            }
             continue;
           }
           if (upper.includes('RU TEXT') || upper.includes('RU_TEXT')) {
             mode = 'RU';
-            if (line.includes(':')) {
-              let afterCol = line.substring(line.indexOf(':') + 1).trim();
-              if (afterCol) ruLines.push(afterCol);
-            }
             continue;
           }
 
           if (line.startsWith('#')) continue;
 
-          let cleanLine = line.includes('|') ? line.split('|')[0].trim() : line;
-          if (mode === 'EN' && cleanLine) {
-            enLines.push(cleanLine);
-          } else if (mode === 'RU' && cleanLine) {
-            ruLines.push(cleanLine);
+          if (mode === 'EN') {
+            if (line.includes('|')) {
+              const parts = line.split('|').map(s => s.trim());
+              window.b6Story1.source = parts[0];
+              window.b6Story1.target = parts[1];
+            } else {
+              window.b6Story1.source = line;
+            }
+          } else if (mode === 'RU') {
+            if (line.includes('|')) {
+              const parts = line.split('|').map(s => s.trim());
+              window.b6Story2.source = parts[0];
+              window.b6Story2.target = parts[1];
+            } else {
+              window.b6Story2.source = line;
+            }
           }
         }
       }
 
-      b6FullEnText = enLines.join(' ');
-      b6FullRuText = ruLines.join(' ');
-      b6EnSentences = extractSentences(b6FullEnText);
-      b6RuSentences = extractSentences(b6FullRuText);
+      b6FullEnText = window.b6Story1.source;
+      b6FullRuText = window.b6Story2.source;
       return;
+    }
     }
 
     // === Блок 5 ===
