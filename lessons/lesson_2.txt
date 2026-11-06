@@ -51,7 +51,7 @@
 Он много знает. | He knows a lot. | Хи ноуз э лот
 
 ## ПОДБЛОК 5: СЛОЖНЫЙ МИКС (5 ИЗ УР.1 + 5 ИЗ УР.2)
-Мне нравится проводить время с друзьями. | I like spending time with  friends. | Ай лайк спэ́ндин тайм уиз  фрэндз
+Мне нравится проводить время с друзьями. | I like spending time with my friends. | Ай лайк спэ́ндин тайм уиз май фрэндз
 Мы часто слышим это по телевизору. | We often hear it on TV. | Уи о́фн хи́э ит он ти ви
 Я вижу эту проблему. | I see this problem. | Ай сии зис про́блем
 Я понимаю тех людей. | I understand those people. | Ай андэстэ́нд зоуз пиипл
@@ -160,4 +160,21 @@ They live here. | Зэй лив хи́э
 
 # БЛОК 5: СЛОЖНЫЕ ПРЕДЛОЖЕНИЯ
 ## СТУПЕНЬ 1: EN_TO_RU
-He lives in London and works very much. | Он живет в Лондоне и очень много работает. | Хи ливз ин ла́нд
+He lives in London and works very much. | Он живет в Лондоне и очень много работает. | Хи ливз ин ла́ндэн энд уёокс вэри матч
+She speaks English very well and it helps us. | Она очень хорошо говорит по-английски, и это помогает нам. | Ши спиикс и́нглиш вэри уэл энд ит хэлпс ас
+I know how that system works and I like it. | Я знаю, как работает та система, и мне это нравится. | Ай ноу хау зэт си́стэм уёокс энд ай лайк ит
+He often watches these videos because he wants to study here. | Он часто смотрит эти видео, потому что хочет учиться здесь. | Хи о́фн уо́тчиз зииз ви́диоуз бико́з хи уо́нтс ту ста́ди хи́э
+
+## СТУПЕНЬ 2: RU_TO_EN
+Я думаю, что она понимает того человека. | I think that she understands that person. | Ай синк зэт ши андэстэ́ндз зэт пёосн
+Они часто звонят мне, потому что мы делаем это вместе. | They often call me because we do it together. | Зэй о́фн коол ми бико́з уи ду ит тугэ́зэ
+Он видит эту проблему, и он чувствует себя лучше. | He sees this problem and he feels better. | Хи сииз зис про́блем энд хи фиилз бэ́тэ
+Мы знаем тех людей, и они действительно помогают нам. | We know those people and they really help us. | Уи ноу зоуз пиипл энд зэй ри́эли хэлп ас
+
+
+# БЛОК 6: СВЯЗНЫЙ ТЕКСТ
+## EN_TEXT
+My friend lives in London. He works so much and he studies online. In the evening he plays football with his friends. He speaks English very well and he often watches these videos. He sees this problem, but he feels better now. It costs ten dollars and it really helps him.
+
+## RU_TEXT
+Она живет рядом с этим местом и работает здесь. Она очень хорошо понимает тех людей. Мы часто слышим об этом по телевизору. Мой брат учится в этом городе и часто звонит мне. Он делает ошибки, но он видит свой результат. Это стоит дороже, но нам очень нравится эта работа.
