@@ -34,8 +34,22 @@
       gap: 15px;
     }
     .balance-title { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
-    .balance-value { font-size: 32px; font-weight: 700; color: var(--accent); margin-top: 2px; }
     
+    /* Кликабельный баланс для редактирования или обнуления */
+    .balance-value { 
+      font-size: 32px; 
+      font-weight: 700; 
+      color: var(--accent); 
+      margin-top: 2px; 
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: opacity 0.2s;
+    }
+    .balance-value:hover { opacity: 0.85; }
+    .balance-edit-hint { font-size: 14px; color: var(--text-muted); }
+
     .header-controls {
       display: flex;
       flex-direction: column;
@@ -65,18 +79,24 @@
     .status-badge { text-align: right; font-size: 13px; color: var(--text-muted); }
     .badge-subblock { font-weight: 600; color: var(--success); text-transform: uppercase; }
 
+    .reset-buttons-group {
+      display: flex;
+      gap: 6px;
+      margin-top: 4px;
+    }
+
     .btn-reset {
       background: transparent;
       border: 1px solid var(--border);
       color: var(--text-muted);
-      padding: 5px 10px;
+      padding: 5px 9px;
       border-radius: 6px;
       font-size: 12px;
       cursor: pointer;
-      margin-top: 4px;
       transition: all 0.2s;
     }
-    .btn-reset:hover { color: var(--danger); border-color: var(--danger); }
+    .btn-reset:hover { color: var(--accent); border-color: var(--accent); }
+    .btn-reset.danger:hover { color: var(--danger); border-color: var(--danger); }
 
     .trainer-card {
       background: var(--card-bg);
@@ -277,9 +297,16 @@
 <div class="container">
   <div class="header-card">
     <div>
-      <div class="balance-title">Баланс урока</div>
-      <div class="balance-value" id="balanceDisplay">0 ₽</div>
-      <button class="btn-reset" onclick="resetProgress()" title="Сбросить шаг текущего блока">Начать заново ↺</button>
+      <div class="balance-title">Баланс урока (нажмите для изменения/обнуления)</div>
+      <!-- Клик по балансу открывает prompt для смены или обнуления -->
+      <div class="balance-value" onclick="manualEditBalance()" title="Нажмите, чтобы изменить или обнулить баланс">
+        <span id="balanceDisplay">0 ₽</span>
+        <span class="balance-edit-hint">✎</span>
+      </div>
+      <div class="reset-buttons-group">
+        <button class="btn-reset" onclick="resetProgress()" title="Сбросить шаг текущего блока в 0">Заново блок ↺</button>
+        <button class="btn-reset danger" onclick="resetZeroBalance()" title="Обнулить баланс текущего урока до 0 ₽">Обнулить баланс (0 ₽)</button>
+      </div>
     </div>
 
     <div class="header-controls">
@@ -471,6 +498,29 @@
       } catch (e) {
         console.error('Ошибка памяти:', e);
       }
+    }
+  }
+
+  // Ручное редактирование баланса при клике на цифру
+  function manualEditBalance() {
+    const input = prompt(`Введите желаемый баланс для Урока ${currentLesson} в ₽ (например, 0 или любое другое число):`, balance);
+    if (input === null) return;
+    const parsed = parseInt(input, 10);
+    if (!isNaN(parsed)) {
+      balance = parsed;
+      document.getElementById('balanceDisplay').innerText = `${balance} ₽`;
+      saveProgress();
+    } else {
+      alert('Пожалуйста, введите корректное число.');
+    }
+  }
+
+  // Быстрое обнуление баланса
+  function resetZeroBalance() {
+    if (confirm(`Обнулить баланс Урока ${currentLesson} до 0 ₽?`)) {
+      balance = 0;
+      document.getElementById('balanceDisplay').innerText = `${balance} ₽`;
+      saveProgress();
     }
   }
 
@@ -901,7 +951,7 @@
         } else {
           document.getElementById('subblockLabel').innerText = 'БЛОК ЗАВЕРШЁН';
           document.getElementById('progressCount').innerText = `${activeList.length} из ${activeList.length}`;
-          sourceEl.innerText = '🎉 Блок 5 успешно пройден! Нажмите «Начать заново ↺» для повторения или выберите другой блок в меню.';
+          sourceEl.innerText = '🎉 Блок 5 успешно пройден! Нажмите «Заново блок ↺» для повторения или выберите другой блок в меню.';
           inputGroupRow.style.display = 'none';
           listenBtn.style.display = 'none';
         }
@@ -942,7 +992,7 @@
           } else {
             document.getElementById('subblockLabel').innerText = 'БЛОК ЗАВЕРШЁН';
             document.getElementById('progressCount').innerText = `${b4Round1.length} из ${b4Round1.length}`;
-            sourceEl.innerText = '🎉 Блок 4 успешно пройден! Нажмите «Начать заново ↺» для повторения или выберите другой блок в меню.';
+            sourceEl.innerText = '🎉 Блок 4 успешно пройден! Нажмите «Заново блок ↺» для повторения или выберите другой блок в меню.';
             inputGroupRow.style.display = 'none';
             slowBtn.style.display = 'none';
             listenBtn.style.display = 'none';
@@ -961,7 +1011,7 @@
         if (currentIdx >= b4Round2.length) {
           document.getElementById('subblockLabel').innerText = 'БЛОК ЗАВЕРШЁН';
           document.getElementById('progressCount').innerText = `${b4Round2.length} из ${b4Round2.length}`;
-          sourceEl.innerText = '🎉 Блок 4 успешно пройден! Нажмите «Начать заново ↺» для повторения или выберите другой блок в меню.';
+          sourceEl.innerText = '🎉 Блок 4 успешно пройден! Нажмите «Заново блок ↺» для повторения или выберите другой блок в меню.';
           inputGroupRow.style.display = 'none';
           slowBtn.style.display = 'none';
           listenBtn.style.display = 'none';
@@ -998,7 +1048,7 @@
           } else {
             document.getElementById('subblockLabel').innerText = 'БЛОК ЗАВЕРШЁН';
             document.getElementById('progressCount').innerText = `${b3Round1.length} из ${b3Round1.length}`;
-            sourceEl.innerText = '🎉 Блок 3 успешно пройден! Нажмите «Начать заново ↺» для повторения или выберите другой блок в меню.';
+            sourceEl.innerText = '🎉 Блок 3 успешно пройден! Нажмите «Заново блок ↺» для повторения или выберите другой блок в меню.';
             inputGroupRow.style.display = 'none';
             return;
           }
@@ -1011,7 +1061,7 @@
         if (currentIdx >= b3Round2.length) {
           document.getElementById('subblockLabel').innerText = 'БЛОК ЗАВЕРШЁН';
           document.getElementById('progressCount').innerText = `${b3Round2.length} из ${b3Round2.length}`;
-          sourceEl.innerText = '🎉 Блок 3 успешно пройден! Нажмите «Начать заново ↺» для повторения или выберите другой блок в меню.';
+          sourceEl.innerText = '🎉 Блок 3 успешно пройден! Нажмите «Заново блок ↺» для повторения или выберите другой блок в меню.';
           inputGroupRow.style.display = 'none';
           return;
         }
@@ -1032,7 +1082,7 @@
     if (currentIdx >= tasks.length) {
       document.getElementById('subblockLabel').innerText = 'БЛОК ЗАВЕРШЁН';
       document.getElementById('progressCount').innerText = `${tasks.length} из ${tasks.length}`;
-      sourceEl.innerText = `🎉 Вы успешно прошли Блок ${currentBlock}! Нажмите «Начать заново ↺», чтобы пройти ещё раз, или выберите другой блок в меню.`;
+      sourceEl.innerText = `🎉 Вы успешно прошли Блок ${currentBlock}! Нажмите «Заново блок ↺», чтобы пройти ещё раз, или выберите другой блок в меню.`;
       inputGroupRow.style.display = 'none';
       listenBtn.style.display = 'none';
       return;
@@ -1117,7 +1167,7 @@
     const st = document.getElementById('statusLine');
     st.className = 'status-line correct';
     st.style.display = 'block';
-    st.innerText = `Великолепно! Все 6 блоков пройдены! Баланс урока: ${balance} ₽. Чтобы повторить, нажмите «Начать заново ↺» под балансом.`;
+    st.innerText = `Великолепно! Все 6 блоков пройдены! Баланс урока: ${balance} ₽. Чтобы повторить, нажмите «Заново блок ↺» под балансом.`;
 
     if (typeof confetti === 'function') {
       confetti({
@@ -1175,7 +1225,6 @@
       blockIndices[currentBlock] = nextIdx;
       saveProgress();
 
-      // Автопереход к следующему блоку только если вы дошли до конца в процессе решения!
       if (currentBlock === 1 && nextIdx >= tasks.length) {
         advanceToBlock2();
         return;
@@ -1276,7 +1325,7 @@
     const ruleBox = document.getElementById('ruleBox');
     const ruleText = document.getElementById('ruleText');
 
-    // === Проверка Блока 6 ===
+    // === Блок 6 ===
     if (currentBlock === 6) {
       const storyInput = document.getElementById('storyInput');
       const userStory = storyInput.value.trim();
@@ -1325,7 +1374,7 @@
     if (!userAns) return;
     input.disabled = true;
 
-    // === Проверка Блока 5 ===
+    // === Блок 5 ===
     if (currentBlock === 5) {
       const currentIdx = blockIndices[5] || 0;
       const item = b5CurrentRound === 1 ? b5Round1[currentIdx] : b5Round2[currentIdx];
@@ -1393,7 +1442,7 @@
       return;
     }
 
-    // === Проверка Блока 4 ===
+    // === Блок 4 ===
     if (currentBlock === 4) {
       const currentIdx = blockIndices[4] || 0;
       const item = b4CurrentRound === 1 ? b4Round1[currentIdx] : b4Round2[currentIdx];
@@ -1454,7 +1503,7 @@
       return;
     }
 
-    // === Проверка Блока 3 ===
+    // === Блок 3 ===
     if (currentBlock === 3) {
       const currentIdx = blockIndices[3] || 0;
       const item = b3CurrentRound === 1 ? b3Round1[currentIdx] : b3Round2[currentIdx];
@@ -1517,7 +1566,7 @@
       return;
     }
 
-    // === Проверка Блоков 1 и 2 ===
+    // === Блоки 1 и 2 ===
     let currentIdx = blockIndices[currentBlock] || 0;
     if (tasks.length === 0 || currentIdx >= tasks.length) return;
     const t = tasks[currentIdx];
