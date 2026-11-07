@@ -39,21 +39,33 @@
     /* Календарь активности */
     .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; margin-top: 12px; }
     .cal-day-head { text-align: center; font-size: 12px; color: var(--text-muted); font-weight: bold; }
-    .cal-cell { background: var(--card-inner); border: 1px solid var(--border); border-radius: 8px; min-height: 52px; padding: 6px; display: flex; flex-direction: column; justify-content: space-between; font-size: 13px; transition: 0.2s; }
+    .cal-cell { background: var(--card-inner); border: 1px solid var(--border); border-radius: 8px; min-height: 54px; padding: 6px; display: flex; flex-direction: column; justify-content: space-between; font-size: 13px; transition: 0.2s; }
     .cal-cell.empty { background: transparent; border: none; }
     .cal-cell.active { background: #114b53; border-color: var(--success); color: #fff; font-weight: bold; box-shadow: 0 0 10px rgba(45, 212, 191, 0.2); }
     .cal-cell .dot { width: 8px; height: 8px; background: var(--success); border-radius: 50%; align-self: flex-end; }
 
     /* Сетка 50 уроков */
-    .lessons-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 10px; max-height: 480px; overflow-y: auto; padding-right: 6px; }
-    .lesson-card { background: var(--card-inner); border: 1px solid var(--border); border-radius: 10px; padding: 12px; display: flex; flex-direction: column; gap: 6px; }
+    .lessons-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 12px; max-height: 480px; overflow-y: auto; padding-right: 6px; }
+    .lesson-card { background: var(--card-inner); border: 1px solid var(--border); border-radius: 10px; padding: 12px; display: flex; flex-direction: column; gap: 8px; }
     .lesson-card.done { border-color: var(--success); background: #103844; }
-    .lesson-title { font-weight: bold; font-size: 14px; color: var(--accent); }
+    .lesson-title { font-weight: bold; font-size: 15px; color: var(--accent); }
     .lesson-status { font-size: 12px; color: var(--text-muted); }
     .lesson-bal { font-size: 13px; font-weight: 600; }
+    
+    .btn-goto-lesson {
+      background: #1e4557; color: #f1f5f9; border: 1px solid var(--teal);
+      border-radius: 6px; padding: 6px 10px; text-decoration: none; font-size: 12px;
+      font-weight: 600; text-align: center; display: block; margin-top: auto;
+      transition: all 0.2s;
+    }
+    .btn-goto-lesson:hover { background: var(--teal); color: #0b1e28; }
 
-    .nav-link { color: var(--teal); text-decoration: none; font-size: 14px; font-weight: bold; }
-    .nav-link:hover { text-decoration: underline; }
+    .nav-btn {
+      background: var(--accent); color: #fff; text-decoration: none;
+      padding: 8px 16px; border-radius: 8px; font-size: 14px; font-weight: 600;
+      transition: opacity 0.2s;
+    }
+    .nav-btn:hover { opacity: 0.9; }
   </style>
 </head>
 <body>
@@ -63,12 +75,12 @@
   <div class="panel">
     <div class="panel-header">
       <h2>👤 Личный кабинет ученика</h2>
-      <a href="./index.html" class="nav-link">➔ Перейти в Тренажёр</a>
+      <a href="./index.html" class="nav-btn">➔ Открыть Тренажёр</a>
     </div>
 
     <!-- Уровень и Цель -->
     <div class="badge-bar">
-      <div class="badge">Уровень: А0 (С нуля / Начальный)</div>
+      <div class="badge">Уровень: А0 (Начальный с нуля)</div>
       <div class="badge">Всего уроков: 50</div>
       <div class="badge" style="color: var(--accent); border-color: var(--accent);">Осталось пройти: <span id="lessonsLeft">50</span></div>
     </div>
@@ -103,7 +115,6 @@
       <span style="font-size: 12px; color: var(--success);">● — день занятий</span>
     </div>
     <div class="cal-grid" id="calendarDays">
-      <!-- Дни недели -->
       <div class="cal-day-head">Пн</div><div class="cal-day-head">Вт</div><div class="cal-day-head">Ср</div>
       <div class="cal-day-head">Чт</div><div class="cal-day-head">Пт</div><div class="cal-day-head">Сб</div><div class="cal-day-head">Вс</div>
     </div>
@@ -120,7 +131,6 @@
 </div>
 
 <script>
-  // Адрес вашего Google Apps Script
   const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyezcOB-j23-r-vkpmSddEVS7c9DBORH9eGHaqlrxHk_99f3WmlC3GWpuCNeY8OFTH4/exec';
 
   let cloudLessons = {};
@@ -133,7 +143,6 @@
     renderCalendar();
   };
 
-  // 1. Профиль ученика
   function loadProfile() {
     document.getElementById('profName').value = localStorage.getItem('eng_prof_name') || '';
     document.getElementById('profAge').value = localStorage.getItem('eng_prof_age') || '';
@@ -146,7 +155,6 @@
     localStorage.setItem('eng_prof_start', document.getElementById('profStartDate').value);
   }
 
-  // 2. Получение данных из Google Таблицы
   async function fetchCloudProgress() {
     try {
       const res = await fetch(`${GOOGLE_SCRIPT_URL}?action=get_english_progress&t=${Date.now()}`);
@@ -159,7 +167,12 @@
     }
   }
 
-  // 3. Отрисовка 50 уроков
+  function openSpecificLesson(lessonNum) {
+    // Запоминаем выбранный номер урока, чтобы index.html открыл именно его
+    localStorage.setItem('english_trainer_active_lesson', lessonNum);
+    window.location.href = `./index.html?lesson=${lessonNum}`;
+  }
+
   function renderLessonsGrid() {
     const container = document.getElementById('lessonsContainer');
     container.innerHTML = '';
@@ -173,7 +186,6 @@
       const isCompleted = (lesson.block >= 6);
       if (isCompleted) doneCount++;
 
-      // Сбор дат для календаря из таблицы
       if (lesson.updated) {
         const parts = lesson.updated.split(' ')[0].split('.');
         if (parts.length === 3) {
@@ -189,6 +201,7 @@
         <div class="lesson-bal" style="color: ${lesson.balance >= 0 ? 'var(--success)' : 'var(--danger)'}">
           ${lesson.balance || 0} ₽
         </div>
+        <button class="btn-goto-lesson" onclick="openSpecificLesson(${i})">К уроку ${i} ➔</button>
       `;
       container.appendChild(card);
     }
@@ -197,7 +210,6 @@
     document.getElementById('lessonsLeft').innerText = Math.max(0, 50 - doneCount);
   }
 
-  // 4. Отрисовка календаря активности
   function renderCalendar() {
     const grid = document.getElementById('calendarDays');
     const now = new Date();
@@ -207,7 +219,7 @@
     const monthNames = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"];
     document.getElementById('currentMonthYear').innerText = `${monthNames[month]} ${year}`;
 
-    const firstDayIndex = (new Date(year, month, 1).getDay() + 6) % 7; // с понедельника
+    const firstDayIndex = (new Date(year, month, 1).getDay() + 6) % 7;
     const totalDays = new Date(year, month + 1, 0).getDate();
 
     for (let e = 0; e < firstDayIndex; e++) {
