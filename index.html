@@ -105,6 +105,17 @@
     }
     .btn-reset:hover { color: var(--accent); border-color: var(--accent); }
     .btn-reset.danger:hover { color: var(--danger); border-color: var(--danger); }
+    .btn-reset.cabinet-link {
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      color: var(--teal);
+      border-color: var(--teal);
+    }
+    .btn-reset.cabinet-link:hover {
+      background: rgba(20, 184, 166, 0.15);
+      color: #fff;
+    }
 
     .trainer-card {
       background: var(--card-bg);
@@ -313,6 +324,7 @@
       <div class="reset-buttons-group">
         <button class="btn-reset" onclick="resetProgress()" title="Сбросить шаг текущего блока в 0">Заново блок ↺</button>
         <button class="btn-reset danger" onclick="resetZeroBalance()" title="Обнулить баланс текущего урока до 0 ₽">Обнулить баланс (0 ₽)</button>
+        <a href="./dashboard.html" class="btn-reset cabinet-link" title="Открыть Личный кабинет">👤 Личный кабинет</a>
       </div>
     </div>
 
