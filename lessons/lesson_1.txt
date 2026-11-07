@@ -174,9 +174,8 @@ They live in New York and travel every year. | Они живут в Нью-Йо�
 
 
 # БЛОК 6: СВЯЗНЫЙ ТЕКСТ
-
 ## EN_TEXT
-I live in New York. I work and study. I go to work. I also go to university. I often go there. I learn English online. I learn English here. I can speak English. I like music and sport. I often travel. I travel every year. I watch different videos. I see my result. I see my progress. I like it. I like English.
+I live in New York. I work and study. I go to work. I also go to university. I often go there. I learn English online. I learn English here. I can speak English. I like music and sport. I often travel. I travel every year. I watch different videos. I see my result. I see my progress. I like it. I like English. | Я живу в Нью-Йорке. Я работаю и учусь. Я хожу на работу. Я также хожу в университет. Я часто хожу туда. Я учу английский онлайн. Я учу английский здесь. Я умею говорить по-английски. Мне нравится музыка и спорт. Я часто путешествую. Я путешествую каждый год. Я смотрю разные видео. Я вижу свой результат. Я вижу свой прогресс. Мне это нравится. Мне нравится английский.
 
 ## RU_TEXT
-Я говорю по-английски. Я живу в этом городе и работаю здесь. Мне действительно нравится эта работа. Я часто вижу своих друзей и провожу время с ними. Мы вместе играем в футбол. Я изучаю английский каждый день, потому что я хочу путешествовать. Я вижу свой прогресс. Мне очень нравится этот урок.
+Я говорю по-английски. Я живу в этом городе и работаю здесь. Мне действительно нравится эта работа. Я часто вижу своих друзей и провожу время с ними. Мы вместе играем в футбол. Я изучаю английский каждый день, потому что я хочу путешествовать. Я вижу свой прогресс. Мне очень нравится этот урок. | I speak English. I live in this city and work here. I really like this work. I often see my friends and spend time with them. We play football together. I study English every day because I want to travel. I see my progress. I really like this lesson.
