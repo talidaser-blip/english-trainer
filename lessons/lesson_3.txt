@@ -68,11 +68,11 @@
 They live in this country. | Они живут в этой стране. | Зэй лив ин зис ка́нтри
 He has a big car. | У него есть большая машина. | Хи хэз э биг каа
 She works very hard. | Она очень усердно работает. | Ши уёокс вэри хаад
-We have an interesting idea. | У нас есть интересная идея. | Уи хэв эн и́нтристин айди́а
+We have an interesting idea. | У нас интересная идея. | Уи хэв эн и́нтристин айди́а
 He understands that problem. | Он понимает ту проблему. | Хи андэстэ́ндз зэт про́блем
 They see an old hotel. | Они видят старый отель. | Зэй сии эн оулд хоутэ́л
 That shirt costs fifteen dollars. | Та рубашка стоит пятнадцать долларов. | Зэт шёот костс фифти́ин до́ларз
-He drinks green tea every morning. | Он пьёт зелёный чай каждое утро. | Хи дринкс гриин тии э́ври мо́онин
+He drinks green tea every morning. | Он каждое утро пьёт зелёный чай. | Хи дринкс гриин тии э́ври мо́онин
 They speak English fluently. | Они бегло говорят по-английски. | Зэй спиик и́нглиш флу́энтли
 She has enough money. | У неё достаточно денег. | Ши хэз инáф ма́ни
 
@@ -81,31 +81,31 @@ She learns Spanish online. | Она учит испанский онлайн. | 
 I see a yellow taxi. | Я вижу жёлтое такси. | Ай сии э йэ́лоу тэ́кси
 He watches educational videos. | Он смотрит обучающие видео. | Хи уо́тчиз эджюкэ́йшнл ви́диоуз
 They drink black coffee. | Они пьют чёрный кофе. | Зэй дринк блэк ко́фи
-We feel much better today. | Мы чувствуем себя намного лучше сегодня. | Уи фиил матч бэ́тэ тудэ́й
+We feel much better today. | Мы сегодня чувствуем себя намного лучше. | Уи фиил матч бэ́тэ тудэ́й
 He eats fresh fish. | Он ест свежую рыбу. | Хи иитс фрэш фиш
 She really likes this city. | Ей действительно нравится этот город. | Ши ри́эли лайкс зис си́ти
-They have free time now. | У них есть свободное время сейчас. | Зэй хэв фрии тайм нау
+They have free time now. | У них сейчас есть свободное время. | Зэй хэв фрии тайм нау
 She does it every morning. | Она делает это каждое утро. | Ши даз ит э́ври мо́онин
 We have a modern computer. | У нас есть современный компьютер. | Уи хэв э мо́дэн компьtagьютэ
 
 ## ПОДБЛОК 3: НЕИСЧИСЛЯЕМЫЕ И КВАНТИФИКАТОР SOME
 She often calls her parents. | Она часто звонит своим родителям. | Ши о́фн коолз хёо пэ́рэнтс
-He has some new questions. | У него есть некоторые новые вопросы. | Хи хэз сам нью куэ́счэнз
+He has some new questions. | У него есть несколько новых вопросов. | Хи хэз сам нью куэ́счэнз
 They know us very well. | Они знают нас очень хорошо. | Зэй ноу ас вэри уэл
 We have some time before work. | У нас есть немного времени перед работой. | Уи хэв сам тайм бифо́о уёок
-This advice helps him a lot. | Этот совет очень помогает ему. | Зис эдва́йс хэлпс хим э лот
+This advice helps him a lot. | Этот совет ему очень помогает. | Зис эдва́йс хэлпс хим э лот
 They have some money for travel. | У них есть немного денег на путешествия. | Зэй хэв сам ма́ни фоо трэ́вл
 He helps his friends every day. | Он помогает своим друзьям каждый день. | Хи хэлпс хиз фрэндз э́ври дэй
-I have some free time today. | У меня есть немного свободного времени сегодня. | Ай хэв сам фрии тайм тудэ́й
+I have some free time today. | У меня сегодня есть немного свободного времени. | Ай хэв сам фрии тайм тудэ́й
 She sees their great results. | Она видит их отличные результаты. | Ши сииз зээ грэйт риза́лтс
-We have some money right now. | У нас есть немного денег прямо сейчас. | Уи хэв сам ма́ни райт нау
+We have some money right now. | У нас прямо сейчас есть немного денег. | Уи хэв сам ма́ни райт нау
 
 ## ПОДБЛОК 4: УКАЗАТЕЛЬНЫЕ И ПРИТЯЖАТЕЛЬНЫЕ МЕСТОИМЕНИЯ
 She really wants to travel. | Она действительно хочет путешествовать. | Ши ри́эли уо́нтс ту трэ́вл
 We see that new bank. | Мы видим тот новый банк. | Уи сии зэт нью бэнк
 My brother works so much. | Мой брат так много работает. | Май бра́зэ уёокс соу матч
 He likes our project. | Ему нравится наш проект. | Хи лайкс ауэ про́джект
-They travel to Spain every year. | Они путешествуют в Испанию каждый год. | Зэй трэ́вл ту спэйн э́ври йи́э
+They travel to Spain every year. | Они каждый год путешествуют в Испанию. | Зэй трэ́вл ту спэйн э́ври йи́э
 I see that young woman. | Я вижу ту молодую женщину. | Ай сии зэт ян уу́ман
 You study so much every week. | Ты так много учишься каждую неделю. | Ю ста́ди соу матч э́ври уиик
 She likes her new progress. | Ей нравится её новый прогресс. | Ши лайкс хёо нью про́грэс
@@ -126,55 +126,55 @@ She has very little free time on Monday. | У неё очень мало сво�
 
 
 # БЛОК 3: ОШИБКИ
-I have car. | I have a car. | Ай хэв э каа | Исчисляемое существительное в единственном числе требует артикль 'a'.
-I have a idea. | I have an idea. | Ай хэв эн айди́а | Перед гласным звуком используется артикль 'an'.
-I see an hotel. | I see a hotel. | Ай сии э хоутэ́л | Слово hotel начинается с согласного звука [h], поэтому нужен артикль 'a'.
-I see an university. | I see a university. | Ай сии э юнивёосити | Слово university начинается с согласного звука [j], поэтому ставится артикль 'a'.
-I drink a tea. | I drink tea. | Ай дринк тии | Чай (tea) — неисчисляемое существительное, неопределённый артикль не ставится.
-She drink coffee. | She drinks coffee. | Ши дринкс ко́фи | Для he/she/it к глаголу добавляется окончание -s.
-I have a money. | I have money. | Ай хэв ма́ни | Деньги (money) в английском неисчисляемые, артикль 'a' не используется.
-I have these money. | I have this money. | Ай хэв зис ма́ни | Слово money в английском согласуется в единственном числе: this money.
-I see this a bank. | I see this bank. | Ай сии зис бэнк | После указательного местоимения this артикль не ставится.
-He have some time. | He has some time. | Хи хэз сам тайм | С местоимением he используется форма has.
+I have flat. | I have a flat. | Ай хэв э флэт | Исчисляемое существительное в единственном числе требует артикль 'a'.
+She has a orange. | She has an orange. | Ши хэз эн о́риндж | Перед гласным звуком используется артикль 'an'.
+We see an good hotel. | We see a good hotel. | Уи сии э гуд хоутэ́л | Прилагательное good начинается с согласного звука [g], поэтому нужен артикль 'a'.
+He sees an uniform. | He sees a uniform. | Хи сииз э ю́нифоом | Слово uniform начинается с согласного звука [j], ставится артикль 'a'.
+I drink a water. | I drink water. | Ай дринк уо́тэ | Вода (water) — неисчисляемое, артикль 'a' не используется.
+He eat bread. | He eats bread. | Хи иитс брэд | Для he/she/it к глаголу добавляется окончание -s.
+She has a cash. | She has cash. | Ши хэз кэш | Наличные (cash) в английском неисчисляемые, артикль 'a' не ставится.
+They have these time. | They have this time. | Зэй хэв зис тайм | Неисчисляемое time согласуется в единственном числе (this time).
+I want this a computer. | I want this computer. | Ай уо́нт зис компьtagьютэ | После указательного местоимения this артикль не ставится.
+She have some milk. | She has some milk. | Ши хэз сам милк | С местоимением she используется форма has.
 
 
 # БЛОК 4: АУДИРОВАНИЕ
 ## ПОДБЛОК 1
-I have a car. | Ай хэв э каа
-I have an idea. | Ай хэв эн айди́а
-I see a hotel. | Ай сии э хоутэ́л
-We see a taxi. | Уи сии э тэ́кси
+She has an umbrella. | Ши хэз эн амбрэ́ла
+We need a ticket. | Уи ниид э ти́кит
+He wants a sandwich. | Хи уо́нтс э сэ́ндвич
+I see an airport. | Ай сии эн э́эпоот
 
 ## ПОДБЛОК 2
-He works so much. | Хи уёокс соу матч
-She understands that person. | Ши андэстэ́ндз зэт пёосн
-I learn English online. | Ай лёон и́нглиш онла́йн
-They live in New York. | Зэй лив ин нью йоок
+They study together. | Зэй ста́ди тугэ́зэ
+He knows that answer. | Хи ноуз зэт а́ансэ
+We remember our trip. | Уи римэ́мбэ ауэ трип
+She speaks French. | Ши спиикс фрэнч
 
 ## ПОДБЛОК 3
-I drink tea every day. | Ай дринк тии э́ври дэй
-She watches these videos. | Ши уо́тчиз зииз ви́диоуз
-I have some money. | Ай хэв сам ма́ни
-We see a university. | Уи сии э юнивёосити
+I have some bread. | Ай хэв сам брэд
+She wants some coffee. | Ши уо́нтс сам ко́фи
+They see an office. | Зэй сии эн о́фис
+He plays tennis well. | Хи плэйз тэ́нис уэл
 
 
 # БЛОК 5: СЛОЖНЫЕ ПРЕДЛОЖЕНИЯ
 ## СТУПЕНЬ 1: EN_TO_RU
-I have a job in New York and I go to work every day. | У меня есть работа в Нью-Йорке, и я хожу на работу каждый день. | Ай хэв э джоб ин нью йоок энд ай гоу ту уёок э́ври дэй
-He works so much because he wants to have money. | Он работает так много, потому что хочет иметь деньги. | Хи уёокс соу матч бико́з хи уо́нтс ту хэв ма́ни
-She drinks coffee in the morning and watches these videos. | Она пьёт кофе по утрам и смотрит эти видео. | Ши дринкс ко́фи ин зэ мо́онин энд уо́тчиз зииз ви́диоуз
-They have a car and travel every year. | У них есть машина, и они путешествуют каждый год. | Зэй хэв э каа энд трэ́вл э́ври йи́э
+He buys a ticket online because he wants to save money. | Он покупает билет онлайн, потому что хочет сэкономить деньги. | Хи байз э ти́кит онла́йн бико́з хи уо́нтс ту сэйв ма́ни
+We see that new restaurant and we have some time. | Мы видим тот новый ресторан, и у нас есть немного времени. | Уи сии зэт нью рэ́сторант энд уи хэв сам тайм
+She usually drinks milk in the morning and it helps her. | Она обычно пьёт молоко по утрам, и это помогает ей. | Ши ю́жуали дринкс милк ин зэ мо́онин энд ит хэлпс хёо
+They understand this lesson well and show great results. | Они хорошо понимают этот урок и показывают отличные результаты. | Зэй андэстэ́нд зис лэ́сн уэл энд шоу грэйт риза́лтс
 
 ## СТУПЕНЬ 2: RU_TO_EN
-У нас есть немного времени, и мы изучаем английский онлайн. | We have some time and we learn English online. | Уи хэв сам тайм энд уи лёон и́нглиш онла́йн
-Он видит этот отель, и ему действительно нравится это место. | He sees this hotel and he really likes this place. | Хи сииз зис хоутэ́л энд хи ри́эли лайкс зис плэйс
-Она говорит по-английски очень хорошо, и у неё есть работа. | She speaks English very well and she has a job. | Ши спиикс и́нглиш вэри уэл энд ши хэз э джоб
-Я знаю, что это стоит десять долларов, и у них есть деньги. | I know that it costs ten dollars and they have money. | Ай ноу зэт ит костс тэн до́ларз энд зэй хэв ма́ни
+У нас есть идея, и мы хотим поговорить об этом сейчас. | We have an idea and we want to talk about it now. | Уи хэв эн айди́а энд уи уо́нт ту тоок эба́ут ит нау
+Она видит тот университет, потому что она живет рядом с этим местом. | She sees that university because she lives near this place. | Ши сииз зэт юнивёосити бико́з ши ливз ни́э зис плэйс
+Он зарабатывает деньги здесь, и ему действительно нравится эта работа. | He makes money here and he really likes this job. | Хи мэйкс ма́ни хи́э энд хи ри́эли лайкс зис джоб
+Я знаю этого человека, и у него всегда есть немного свободного времени. | I know this person and he always has some free time. | Ай ноу зис пёосн энд хи о́луэйз хэз сам фрии тайм
 
 
 # БЛОК 6: СВЯЗНЫЙ ТЕКСТ
 ## EN_TEXT
-I live in New York and I have a good job. Every morning I drink tea and go to work by taxi. In the evening I have some free time. I see a big hotel and a university near my house. My friends have a car and we often travel together. I see my real progress and I really love it. | Я живу в Нью-Йорке, и у меня есть хорошая работа. Каждое утро я пью чай и еду на работу на такси. Вечером у меня есть немного свободного времени. Я вижу большой отель и университет рядом с моим домом. У моих друзей есть машина, и мы часто путешествуем вместе. Я вижу свой реальный прогресс, и мне это действительно нравится.
+I live in Boston and work at a modern clinic. In the morning I usually have some coffee and read an English article. Then I take a taxi and meet my colleagues. We see great progress in our work. In the evening I have some free time to walk in the park. | Я живу в Бостоне и работаю в современной клинике. Утром я обычно пью кофе и читаю статью на английском. Затем я беру такси и встречаюсь с коллегами. Мы видим отличный прогресс в нашей работе. Вечером у меня есть немного свободного времени, чтобы погулять по парку.
 
 ## RU_TEXT
-У него есть машина, и он очень много работает в этом банке. По утрам он пьёт кофе и читает новости. У него очень мало свободного времени, но у него есть деньги. Она учится в университете и говорит по-английски каждый день. Мы видим эту проблему, но у нас есть отличная идея. | He has a car and he works very much in this bank. In the morning he drinks coffee and reads the news. He has very little free time, but he has money. She studies at university and speaks English every day. We see this problem, but we have a great idea.
+Она учится в Лондоне и живёт в красивом доме со своей подругой. Днём она пьёт зелёный чай и учит новые слова онлайн. У неё есть немного денег на путешествия, и она часто летает в Испанию. Ей действительно нравится этот опыт, потому что она свободно говорит по-английски. | She studies in London and lives in a beautiful house with her friend. In the afternoon she drinks green tea and learns new words online. She has some money for travel and often flies to Spain. She really likes this experience because she speaks English fluently.
