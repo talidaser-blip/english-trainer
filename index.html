@@ -1331,14 +1331,36 @@
     return word;
   }
 
-  function checkRussianMatch(userText, targetText) {
+ function checkRussianMatch(userText, targetText) {
     const cleanUser = cleanText(userText);
     const cleanTarget = cleanText(targetText);
     if (cleanUser === cleanTarget) return true;
 
-    const userWords = cleanUser.split(' ').filter(Boolean).map(normalizeRussianWord).sort().join(' ');
-    const targetWords = cleanTarget.split(' ').filter(Boolean).map(normalizeRussianWord).sort().join(' ');
-    return userWords === targetWords;
+    const userWords = cleanUser.split(' ').filter(Boolean).map(normalizeRussianWord);
+    const targetWords = cleanTarget.split(' ').filter(Boolean).map(normalizeRussianWord);
+    if (userWords.length === 0 || targetWords.length === 0) return false;
+
+    let hits = 0;
+    targetWords.forEach(w => {
+      if (userWords.includes(w)) hits++;
+    });
+    return (hits / targetWords.length) >= 0.75;
+  }
+
+  function checkSentenceMatch(userSent, targetSent, isRu) {
+    if (isRu) return checkRussianMatch(userSent, targetSent);
+    const cleanU = cleanText(userSent);
+    const cleanT = cleanText(targetSent);
+    if (cleanU === cleanT) return true;
+    const uWords = cleanU.split(' ').filter(Boolean);
+    const tWords = cleanT.split(' ').filter(Boolean);
+    if (uWords.length === 0 || tWords.length === 0) return false;
+    let hits = 0;
+    tWords.forEach(w => {
+      if (uWords.includes(w)) hits++;
+    });
+    return (hits / tWords.length) >= 0.75 && Math.abs(uWords.length - tWords.length) <= 3;
+  }
   }
 
   function isEnglishMatch(userText, targetText) {
@@ -1377,24 +1399,21 @@
         targetFullText = (window.b6Story2 && window.b6Story2.target) ? window.b6Story2.target : (b6FullEnText || '');
       }
 
-      // Разбиваем эталон на предложения
-      let rawSentences = targetFullText.replace(/([.!?])/g, '$1|').split('|');
-      let targetList = [];
-      for (let i = 0; i < rawSentences.length; i++) {
-        let trimmed = rawSentences[i].trim();
-        if (trimmed.length > 0) targetList.push(trimmed);
-      }
-      let totalCount = targetList.length || 1;
-      let matchCount = 0;
+      const isTargetRu = (currentStage === 0);
+      const targetSentences = extractSentences(targetFullText);
+      const userSentences = extractSentences(userStory);
+      const totalCount = targetSentences.length || 1;
+      let correctCount = 0;
 
-      targetList.forEach(function(s) {
-        let snippet = cleanText(s).slice(0, 12);
-        if (snippet && cleanText(userStory).indexOf(snippet) !== -1) {
-          matchCount++;
-        }
+      targetSentences.forEach((tSent) => {
+        const found = userSentences.some(uSent => checkSentenceMatch(uSent, tSent, isTargetRu));
+        if (found) correctCount++;
       });
 
-      if (matchCount >= Math.floor(totalCount * 0.35) || cleanText(userStory).length > cleanText(targetFullText).length * 0.45) {
+      // Текст засчитывается только при совпадении не менее 70% предложений
+      const isOverallCorrect = (correctCount / totalCount) >= 0.7;
+
+      if (isOverallCorrect) {
         balance += 10;
         statusLine.className = 'status-line correct';
         statusLine.style.display = 'block';
@@ -1402,6 +1421,7 @@
         if (currentStage === 1) {
           playFullStory();
         }
+      }
       } else {
         balance -= 5;
         statusLine.className = 'status-line wrong';
