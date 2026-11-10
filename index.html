@@ -1361,8 +1361,6 @@
     });
     return (hits / tWords.length) >= 0.75 && Math.abs(uWords.length - tWords.length) <= 3;
   }
-  }
-
   function isEnglishMatch(userText, targetText) {
     let cleanUser = cleanText(userText);
     cleanUser = cleanUser.replace(/\b10\b/g, 'ten').replace(/\b15\b/g, 'fifteen').replace(/\b20\b/g, 'twenty');
@@ -1421,7 +1419,6 @@
         if (currentStage === 1) {
           playFullStory();
         }
-      }
       } else {
         balance -= 5;
         statusLine.className = 'status-line wrong';
