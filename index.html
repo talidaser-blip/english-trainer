@@ -1349,17 +1349,37 @@
 
   function checkSentenceMatch(userSent, targetSent, isRu) {
     if (isRu) return checkRussianMatch(userSent, targetSent);
-    const cleanU = cleanText(userSent);
-    const cleanT = cleanText(targetSent);
+    let cleanU = cleanText(userSent)
+      .replace(/\bdon't\b/g, 'do not')
+      .replace(/\bdoesn't\b/g, 'does not')
+      .replace(/\bcan't\b/g, 'cannot')
+      .replace(/\bi'm\b/g, 'i am')
+      .replace(/\bhe's\b/g, 'he is')
+      .replace(/\bshe's\b/g, 'she is')
+      .replace(/\bit's\b/g, 'it is');
+    let cleanT = cleanText(targetSent)
+      .replace(/\bdon't\b/g, 'do not')
+      .replace(/\bdoesn't\b/g, 'does not')
+      .replace(/\bcan't\b/g, 'cannot')
+      .replace(/\bi'm\b/g, 'i am')
+      .replace(/\bhe's\b/g, 'he is')
+      .replace(/\bshe's\b/g, 'she is')
+      .replace(/\bit's\b/g, 'it is');
+
     if (cleanU === cleanT) return true;
+
     const uWords = cleanU.split(' ').filter(Boolean);
     const tWords = cleanT.split(' ').filter(Boolean);
     if (uWords.length === 0 || tWords.length === 0) return false;
-    let hits = 0;
-    tWords.forEach(w => {
-      if (uWords.includes(w)) hits++;
-    });
-    return (hits / tWords.length) >= 0.75 && Math.abs(uWords.length - tWords.length) <= 3;
+    if (Math.abs(uWords.length - tWords.length) > 2) return false;
+
+    let exactMatches = 0;
+    const minLen = Math.min(uWords.length, tWords.length);
+    for (let i = 0; i < minLen; i++) {
+      if (uWords[i] === tWords[i]) exactMatches++;
+    }
+
+    return (exactMatches / tWords.length) >= 0.85;
   }
   function isEnglishMatch(userText, targetText) {
     let cleanUser = cleanText(userText);
