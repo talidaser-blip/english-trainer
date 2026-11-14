@@ -170,3 +170,14 @@ He doesn't discuss politics at work and he doesn't talk about it at home. | Он
 Он не занимается бизнесом в этой стране, но он хочет поехать в другое место. | He doesn't do business in this country, but he wants to go to another place. | Хи да́знт ду би́знис ин зис ка́нтри бат хи уо́нтс ту гоу ту эна́зэ плэйс
 Мы не понимаем того человека, и это совсем не помогает нам. | We don't understand that person and it doesn't help us at all. | Уи доунт андэстэ́нд зэт пёосн энд ит да́знт хэлп ас эт оол
 У него нет машины, поэтому он часто ездит на работу на такси и пьёт там кофе. | He doesn't have a car, so he often goes to work by taxi and drinks coffee there. | Хи да́знт хэв э каа соу хи о́фн гоуз ту
+
+
+У него нет машины, поэтому он часто ездит на работу на такси и пьёт там кофе. | He doesn't have a car, so he often goes to work by taxi and drinks coffee there. | Хи да́знт хэв э каа соу хи о́фн гоуз ту уёок бай тэ́кси энд дринкс ко́фи зээ
+
+
+# БЛОК 6: СВЯЗНЫЙ ТЕКСТ
+## EN_TEXT
+My friend lives in Boston and works in a big bank. He works so much, but he doesn't want to be a businessman. He doesn't like politics and never talks about it at work. Every morning he drinks black coffee and goes to the office by taxi. In the evening he has some free time and plays football with his friends. He wants to visit other countries with his family next year. | Мой друг живёт в Бостоне и работает в большом банке. Он так много работает, но не хочет быть бизнесменом. Ему не нравится политика, и он никогда не говорит о ней на работе. Каждое утро он пьёт чёрный кофе и едет в офис на такси. Вечером у него есть немного свободного времени, и он играет в футбол со своими друзьями. В следующем году он хочет посетить другие страны со своей семьёй.
+
+## RU_TEXT
+Она учится в университете в Нью-Йорке и живёт рядом с этим парком. Она не пьёт кофе по утрам, она предпочитает зелёный чай. Она говорит по-английски очень хорошо, потому что смотрит эти видео каждый день. У неё есть отличная идея, но у неё очень мало свободного времени. Она не хочет тратить деньги на бесполезные вещи, потому что она хочет путешествовать вместе со своей сестрой. | She studies at university in New York and lives near this park. She doesn't drink coffee in the morning, she prefers green tea. She speaks English very well because she watches these videos every day. She has a great idea, but she has very little free time. She doesn't want to spend money on useless things because she wants to travel together with her sister.
