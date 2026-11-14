@@ -48,4 +48,135 @@
 Когда это обычно происходит? | When does it usually happen? | Уэн даз ит ю́жуали хэ́пэн
 Что она обычно говорит? | What does she usually say? | Уот даз ши ю́жуали сэй
 Как они объясняют это? | How do they explain it? | Хау ду зэй эксплэ́йн ит
-Куда ты хочешь пойти? | Where do
+Куда ты хочешь пойти? | Where do you want to go? | Уээ ду ю уо́нт ту гоу
+
+
+
+## ПОДБЛОК 5: СЛОЖНЫЙ МИКС УРОКА 12 (5 ИЗ УР.1-11 + 5 ИЗ УР.12)
+Я не занимаюсь бизнесом. | I don't do business. | Ай доунт ду би́знис
+Она не делает ошибок в тестах. | She doesn't make mistakes in tests. | Ши да́знт мэйк мистэ́йкс ин тэстс
+Он хочет пойти на ту вечеринку? | Does he want to go to that party? | Даз хи уо́нт ту гоу ту зэт па́ати
+Ты знаешь, где купить эту книгу? | Do you know where to buy this book? | Ду ю ноу уээ ту бай зис бук
+Я думаю, что это не работает. | I think that it doesn't work. | Ай синк зэт ит да́знт уёок
+Что ты обычно делаешь в свободное время? | What do you usually do in your free time? | Уот ду ю ю́жуали ду ин ёо фрии тайм
+Почему он так много работает? | Why does he work so much? | Уай даз хи уёок соу матч
+Сколько времени у тебя есть сегодня? | How much time do you have today? | Хау матч тайм ду ю хэв тудэ́й
+Какие языки она изучает? | What languages does she learn? | Уот лэ́нгвиджиз даз ши лёон
+Как часто вы обсуждаете эти проекты? | How often do you discuss these projects? | Хау о́фн ду ю диска́с зииз про́джектс
+
+
+# БЛОК 2: EN_TO_RU
+## ПОДБЛОК 1: СПЕЦИАЛЬНЫЕ ВОПРОСЫ И СТОИМОСТЬ
+Where does your brother work? | Где работает твой брат? | Уээ даз ёо бра́зэ уёок
+What do they think about this new method? | Что они думают об этом новом методе? | Уот ду зэй синк эба́ут зис нью мэ́сод
+How much does that modern laptop cost? | Сколько стоит тот современный ноутбук? | Хау матч даз зэт мо́дэн лэ́птоп кост
+Why does she study foreign languages online? | Почему она учит иностранные языки онлайн? | Уай даз ши ста́ди фо́рин лэ́нгвиджиз онла́йн
+Where do you usually buy fresh fruit? | Где ты обычно покупаешь свежие фрукты? | Уээ ду ю ю́жуали бай фрэш фруут
+She doesn't work in this noisy office. | Она не работает в этом шумном офисе. | Ши да́знт уёок ин зис но́йзи о́фис
+We understand those foreign students very well. | Мы очень хорошо понимаем тех иностранных студентов. | Уи андэстэ́нд зоуз фо́рин стью́дэнтс вэри уэл
+Does he often listen to classical music? | Он часто слушает классическую музыку? | Даз хи о́фн лисн ту клэ́сикл мью́зик
+They don't have any questions about this rule. | У них нет каких-либо вопросов по поводу этого правила. | Зэй доунт хэв э́ни куэ́счэнз эба́ут зис руул
+He lives in another quiet town now. | Он сейчас живёт в другом тихом городке. | Хи ливз ин эна́зэ куа́йэт таун нау
+
+## ПОДБЛОК 2: ВРЕМЯ И РЕГУЛЯРНОСТЬ
+When do they usually come home from work? | Когда они обычно приходят домой с работы? | Уэн ду зэй ю́жуали кам хоум фром уёок
+What time does your friend start work? | Во сколько твой друг начинает работу? | Уот тайм даз ёо фрэнд стаат уёок
+How regularly does she visit her parents? | Как регулярно она навещает своих родителей? | Хау рэ́гьюлэли даз ши ви́зит хёо пэ́рэнтс
+How often do you use the Internet for study? | Как часто ты пользуешься интернетом для учёбы? | Хау о́фн ду ю юуз зи и́нтэрнэт фоо ста́ди
+When does he have free time for sport? | Когда у него есть свободное время на спорт? | Уэн даз хи хэв фрии тайм фоо споот
+She plays tennis with her sister every Sunday. | Она играет в теннис со своей сестрой каждое воскресенье. | Ши плэйз тэ́нис уиз хёо си́стэ э́ври са́ндэй
+We don't need this expensive ticket. | Нам не нужен этот дорогой билет. | Уи доунт ниид зис экспэ́нсив ти́кит
+Does your colleague work from home on Friday? | Твой коллега работает из дома в пятницу? | Даз ёо ко́лиг уёок фром хоум он фра́йдэй
+He doesn't feel happy at that boring job. | Он не чувствует себя счастливым на той скучной работе. | Хи да́знт фиил хэ́ппи эт зэт бо́орин джоб
+I like spending time with my family. | Мне нравится проводить время с семьёй. | Ай лайк спэ́ндин тайм уиз май фэ́мили
+
+## ПОДБЛОК 3: ВОПРОСЫ С WHAT + СУЩЕСТВИТЕЛЬНОЕ И ОПЛАТА
+How much do they pay for this apartment? | Сколько они платят за эту квартиру? | Хау матч ду зэй пэй фоо зис эпа́атмэнт
+What books does she read in English? | Какие книги она читает по-английски? | Уот букс даз ши риид ин и́нглиш
+What music do you like listening to? | Какую музыку тебе нравится слушать? | Уот мью́зик ду ю лайк ли́снин ту
+What does your teacher recommend for beginners? | Что твой учитель рекомендует для начинающих? | Уот даз ёо ти́чэ рэкэмэ́нд фоо биги́нэз
+How does she feel after this long trip? | Как она себя чувствует после этой долгой поездки? | Хау даз ши фиил а́афтэ зис лон трип
+They don't pay for these extra online courses. | Они не платят за эти дополнительные онлайн-курсы. | Зэй доунт пэй фоо зииз э́кстрэ онла́йн ко́сиз
+He tells me this interesting story every week. | Он рассказывает мне эту интересную историю каждую неделю. | Хи тэлз ми зис и́нтристин сто́ри э́ври уиик
+Do you have any pets in your flat? | У тебя в квартире есть какие-либо домашние животные? | Ду ю хэв э́ни пэтс ин ёо флэт
+She doesn't think so about our new plan. | Она так не думает о нашем новом плане. | Ши да́знт синк соу эба́ут ауэ нью плэн
+We know how to get to the airport by bus. | Мы знаем, как добраться до аэропорта на автобусе. | Уи ноу хау ту гэт ту зи э́апоот бай бас
+
+## ПОДБЛОК 4: СПЕЦИАЛЬНЫЕ ВОПРОСЫ С 3-М ЛИЦОМ И ОБРАЗ ДЕЙСТВИЯ
+How does this new program work on your computer? | Как эта новая программа работает на твоём компьютере? | Хау даз зис нью про́грэм уёок он ёо компьютэ
+When does that shop open in the morning? | Когда тот магазин открывается утром? | Уэн даз зэт шоп о́упэн ин зэ мо́онин
+What does he usually tell his colleagues at meetings? | Что он обычно говорит своим коллегам на встречах? | Уот даз хи ю́жуали тэл хиз ко́лигз эт ми́тинз
+How do you remember so many English words? | Как ты запоминаешь так много английских слов? | Хау ду ю римэ́мбэ соу мэ́ни и́нглиш уёодз
+Where do they want to travel next summer? | Куда они хотят поехать следующим летом? | Уээ ду зэй уо́нт ту трэ́вл нэкст са́мэ
+I can speak English a little bit with native speakers. | Я могу чуточку говорить по-английски с носителями языка. | Ай кэн спиик и́нглиш э литл бит уиз нэ́йтив спи́икэз
+He doesn't make mistakes in these difficult exercises. | Он не делает ошибок в этих трудных упражнениях. | Хи да́знт мэйк мистэ́йкс ин зииз ди́фикалт э́ксэсайзиз
+Does she live alone in that big house? | Она живёт одна в том большом доме? | Даз ши лив эло́ун ин зэт биг хаус
+We don't discuss private things with strangers. | Мы не обсуждаем личные вещи с незнакомцами. | Уи доунт диска́с пра́йвит синз уиз стрэ́йнджэз
+They want to communicate with other foreign students. | Они хотят общаться с другими иностранными студентами. | Зэй уо́нт ту комью́никэйт уиз а́зэ фо́рин стью́дэнтс
+
+## ПОДБЛОК 5: СЛОЖНЫЙ МИКС УРОКА 12
+What do you usually do after work on Friday? | Что ты обычно делаешь после работы в пятницу? | Уот ду ю ю́жуали ду а́афтэ уёок он фра́йдэй
+Why does this strange problem happen every winter? | Почему эта странная проблема происходит каждую зиму? | Уай даз зис стрэйндж про́блем хэ́пэн э́ври уи́нтэ
+How much money do you spend on food every week? | Сколько денег ты тратишь на еду каждую неделю? | Хау матч ма́ни ду ю спэнд он фууд э́ври уиик
+What cities does your friend want to visit in America? | Какие города твой друг хочет посетить в Америке? | Уот си́тиз даз ёо фрэнд уо́нт ту ви́зит ин эмэ́рикэ
+How often do they discuss business with their partners? | Как часто они обсуждают бизнес со своими партнёрами? | Хау о́фн ду зэй диска́с би́знис уиз зээ па́атнэз
+He doesn't do business with that unreliable company. | Он не ведёт бизнес с той ненадёжной компанией. | Хи да́знт ду би́знис уиз зэт анрилáйэбл ка́мпэни
+She needs more time for her difficult homework. | Ей нужно больше времени на её трудное домашнее задание. | Ши нийдз моо тайм фоо хёо ди́фикалт хо́ум-уёок
+Do you know where to find this useful information? | Ты знаешь, где найти эту полезную информацию? | Ду ю ноу уээ ту файнд зис ю́сфул инфэмэ́йшн
+I know two doctors who speak three foreign languages. | Я знаю двух врачей, которые говорят на трёх иностранных языках. | Ай ноу туу до́ктэз ху спиик срии фо́рин лэ́нгвиджиз
+Does she come home early on Monday evening? | Она приходит домой рано в понедельник вечером? | Даз ши кам хоум ёоли он ма́ндэй и́внин
+
+
+# БЛОК 3: ОШИБКИ
+Where you live? | Where do you live? | Уээ ду ю лив | В специальном вопросе в Present Simple после вопросительного слова обязателен вспомогательный глагол do/does.
+Where does she studies? | Where does she study? | Уээ даз ши ста́ди | В вопросе вспомогательный глагол does забирает окончание -s, поэтому смысловой глагол ставится в начальной форме (study).
+How much it costs? | How much does it cost? | Хау матч даз ит кост | В вопросе о стоимости после How much используется вспомогательный глагол does и глагол cost без окончания -s.
+What time do you come to home? | What time do you come home? | Уот тайм ду ю кам хоум | В устойчивом выражении «приходить домой» предлог to перед словом home не ставится.
+How much do you pay this course? | How much do you pay for this course? | Хау матч ду ю пэй фоо зис коос | Глагол pay в значении «платить за что-то» требует предлога for: pay for.
+Which countries do you want to visit? | What countries do you want to visit? | Уот ка́нтриз ду ю уо́нт ту ви́зит | При широком выборе без ограниченного списка используется вопросительное слово What: What countries.
+What food you like more? | What food do you like more? | Уот фууд ду ю лайк моо | После связки «What + существительное» сохраняется вопросительный порядок слов с глаголом do/does.
+How regularly do you play sport? | How regularly do you do sport? | Хау рэ́гьюлэли ду ю ду споот | Со словом sport («заниматься спортом») используется глагол do, а не play.
+Why he works so much? | Why does he work so much? | Уай даз хи уёок соу матч | После вопросительного слова Why для 3-го лица (he) ставится вспомогательный глагол does, а смысловой глагол идёт без -s.
+How many time do you have? | How much time do you have? | Хау матч тайм ду ю хэв | Слово time (время) является неисчисляемым, поэтому для вопроса «сколько» используется How much, а не How many.
+
+
+# БЛОК 4: АУДИРОВАНИЕ
+## ПОДБЛОК 1
+Where do you live? | Уээ ду ю лив
+What do you think about it? | Уот ду ю синк эба́ут ит
+How much does it cost? | Хау матч даз ит кост
+Why do you learn English? | Уай ду ю лёон и́нглиш
+
+## ПОДБЛОК 2
+What time do you usually come home? | Уот тайм ду ю ю́жуали кам хоум
+How regularly do you train? | Хау рэ́гьюлэли ду ю трэйн
+What countries do you want to visit? | Уот ка́нтриз ду ю уо́нт ту ви́зит
+How does it work? | Хау даз ит уёок
+
+## ПОДБЛОК 3
+We often speak English at work. | Уи о́фн спиик и́нглиш эт уёок
+Do you work from home? | Ду ю уёок фром хоум
+How much do you pay for it? | Хау матч ду ю пэй фоорит
+What do you usually do in your free time? | Уот ду ю ю́жуали ду ин ёо фрии тайм
+
+
+# БЛОК 5: СЛОЖНЫЕ ПРЕДЛОЖЕНИЯ
+## СТУПЕНЬ 1: EN_TO_RU
+Where do you usually go after work when you have some free time with your friends? | Куда ты обычно ходишь после работы, когда у тебя есть немного свободного времени со своими друзьями? | Уээ ду ю ю́жуали гоу а́афтэ уёок уэн ю хэв сам фрии тайм уиз ёо фрэндз
+How much does this online course cost if we want to study English every day? | Сколько стоит этот онлайн-курс, если мы хотим учить английский каждый день? | Хау матч даз зис онла́йн коос кост иф уи уо́нт ту ста́ди и́нглиш э́ври дэй
+Why does she work from home on Friday when her colleagues go to the office? | Почему она работает из дома в пятницу, когда её коллеги ездят в офис? | Уай даз ши уёок фром хоум он фра́йдэй уэн хёо ко́лигз гоу ту зи о́фис
+What countries does he want to visit when he has enough money for travel? | Какие страны он хочет посетить, когда у него будет достаточно денег на путешествия? | Уот ка́нтриз даз хи уо́нт ту ви́зит уэн хи хэз инáф ма́ни фоо трэ́вл
+
+## СТУПЕНЬ 2: RU_TO_EN
+Во сколько ты обычно приходишь домой, когда у тебя много работы в офисе? | What time do you usually come home when you have much work in the office? | Уот тайм ду ю ю́жуали кам хоум уэн ю хэв матч уёок ин зи о́фис
+Как регулярно они занимаются спортом и почему они предпочитают тренироваться утром? | How regularly do they do sport and why do they prefer to train in the morning? | Хау рэ́гьюлэли ду зэй ду споот энд уай ду зэй прифёо ту трэйн ин зэ мо́онин
+Что она обычно говорит, когда видит такие грубые ошибки в наших тестах? | What does she usually say when she sees such simple mistakes in our tests? | Уот даз ши ю́жуали сэй уэн ши сииз сач симпл мистэ́йкс ин ауэ тэстс
+Сколько ты платишь за этот интернет и как он работает в твоём новом доме? | How much do you pay for this Internet and how does it work in your new house? | Хау матч ду ю пэй фоо зис и́нтэрнэт энд хау даз ит уёок ин ёо нью хаус
+
+
+# БЛОК 6: СВЯЗНЫЙ ТЕКСТ
+## EN_TEXT
+Where do you live and what do you usually do in your free time? My friend lives in London and works in a big company. What time does he usually come home after work? He often comes home late, so he has very little free time. How regularly does he train in the gym? He trains three times a week because he wants to feel good. What countries does he want to visit this year? He wants to travel to Spain and America with his family. | Где ты живёшь и что ты обычно делаешь в свободное время? Мой друг живёт в Лондоне и работает в крупной компании. Во сколько он обычно приходит домой после работы? Он часто приходит домой поздно, поэтому у него очень мало свободного времени. Как регулярно он тренируется в зале? Он тренируется три раза в неделю, потому что хочет чувствовать себя хорошо. Какие страны он хочет посетить в этом году? Он хочет поехать в Испанию и Америку со своей семьёй.
+
+## RU_TEXT
+Почему ты изучаешь английский онлайн и сколько времени ты тратишь на это каждый день? Я вижу, что ты очень много работаешь, но где ты находишь свободное время на уроки? Как ты запоминаешь эти новые слова и правила? Сколько стоит этот курс и что ты думаешь о наших результатах? Мы часто обсуждаем разные темы и тренируемся вместе. Я думаю, ты понимаешь носителей языка намного лучше сейчас. | Why do you learn English online and how much time do you spend on it every day? I see that you work very much, but where do you find free time for lessons? How do you remember these new words and rules? How much does this course cost and what do you think about our results? We often discuss different topics and train together. I think you understand native speakers much better now.
