@@ -494,9 +494,17 @@
     localStorage.setItem(getStorageKey(), JSON.stringify(data));
   }
 
-  function saveProgress() {
-    saveProgressLocalOnly();
-    syncProgressToCloud();
+   function saveProgress() {
+   saveProgressLocalOnly();
+    // Фиксируем сегодняшний день активности (даже за 1 упражнение)
+    const today = new Date();
+    const dateKey = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+    let activeDays = JSON.parse(localStorage.getItem('english_trainer_active_days') || '[]');
+    if (!activeDays.includes(dateKey)) {
+      activeDays.push(dateKey);
+      localStorage.setItem('english_trainer_active_days', JSON.stringify(activeDays));
+    }
+   syncProgressToCloud();
   }
 
   function loadProgress() {
