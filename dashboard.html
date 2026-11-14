@@ -39,7 +39,7 @@
     /* Календарь активности */
     .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; margin-top: 12px; }
     .cal-day-head { text-align: center; font-size: 12px; color: var(--text-muted); font-weight: bold; }
-    .cal-cell { background: var(--card-inner); border: 1px solid var(--border); border-radius: 8px; min-height: 54px; padding: 6px; display: flex; flex-direction: column; justify-content: space-between; font-size: 13px; transition: 0.2s; }
+    .cal-cell { background: var(--card-inner); border: 1px solid var(--border); border-radius: 8px; min-height: 54px; padding: 6px; display: flex; flex-direction: column; justify-content: space-between; font-size: 13px; transition: 0.2s; cursor: pointer; }
     .cal-cell.empty { background: transparent; border: none; }
     .cal-cell.active { background: #114b53; border-color: var(--success); color: #fff; font-weight: bold; box-shadow: 0 0 10px rgba(45, 212, 191, 0.2); }
     .cal-cell .dot { width: 8px; height: 8px; background: var(--success); border-radius: 50%; align-self: flex-end; }
@@ -83,8 +83,8 @@
       <div class="badge">Уровень: А0 (Начальный с нуля)</div>
       <div class="badge">Всего уроков: 50</div>
       <div class="badge" style="color: var(--accent); border-color: var(--accent);">Осталось пройти: <span id="lessonsLeft">50</span></div>
+      <div class="badge" onclick="editBaseDays()" style="cursor: pointer;" title="Нажмите, чтобы задать или изменить количество дней">🔥 Дней занятий: <span id="totalDaysCount">0</span> ✎</div>
     </div>
-  </div>
 
   <!-- Персональная анкета -->
   <div class="panel">
@@ -139,8 +139,10 @@
   window.onload = async () => {
     loadProfile();
     await fetchCloudProgress();
+    loadSavedActiveDays();
     renderLessonsGrid();
     renderCalendar();
+    updateDaysCounter();
   };
 
   function loadProfile() {
@@ -210,8 +212,48 @@
     document.getElementById('lessonsLeft').innerText = Math.max(0, 50 - doneCount);
   }
 
+  function loadSavedActiveDays() {
+    const saved = JSON.parse(localStorage.getItem('english_trainer_active_days') || '[]');
+    saved.forEach(d => activeDatesSet.add(d));
+  }
+
+  function updateDaysCounter() {
+    const baseOffset = Number(localStorage.getItem('english_trainer_base_days') || 0);
+    const total = Math.max(0, activeDatesSet.size + baseOffset);
+    document.getElementById('totalDaysCount').innerText = total;
+  }
+
+  function editBaseDays() {
+    const baseOffset = Number(localStorage.getItem('english_trainer_base_days') || 0);
+    const currentTotal = Math.max(0, activeDatesSet.size + baseOffset);
+    const input = prompt('Укажите общее количество дней занятий (например: 2, 5, 500):', currentTotal);
+    if (input !== null && input.trim() !== '' && !isNaN(Number(input)) && Number(input) >= 0) {
+      const newOffset = Number(input) - activeDatesSet.size;
+      localStorage.setItem('english_trainer_base_days', newOffset);
+      updateDaysCounter();
+    }
+  }
+
+  function toggleManualDay(dateKey) {
+    let saved = JSON.parse(localStorage.getItem('english_trainer_active_days') || '[]');
+    if (activeDatesSet.has(dateKey)) {
+      activeDatesSet.delete(dateKey);
+      saved = saved.filter(d => d !== dateKey);
+    } else {
+      activeDatesSet.add(dateKey);
+      if (!saved.includes(dateKey)) saved.push(dateKey);
+    }
+    localStorage.setItem('english_trainer_active_days', JSON.stringify(saved));
+    renderCalendar();
+    updateDaysCounter();
+  }
+
   function renderCalendar() {
     const grid = document.getElementById('calendarDays');
+    grid.innerHTML = `
+      <div class="cal-day-head">Пн</div><div class="cal-day-head">Вт</div><div class="cal-day-head">Ср</div>
+      <div class="cal-day-head">Чт</div><div class="cal-day-head">Пт</div><div class="cal-day-head">Сб</div><div class="cal-day-head">Вс</div>
+    `;
     const now = new Date();
     const year = now.getFullYear();
     const month = now.getMonth();
@@ -234,11 +276,14 @@
 
       const cell = document.createElement('div');
       cell.className = `cal-cell ${isActive ? 'active' : ''}`;
+      cell.onclick = () => toggleManualDay(dateKey);
+      cell.title = 'Нажмите, чтобы отметить или снять отметку за этот день';
       cell.innerHTML = `
         <span>${day}</span>
         ${isActive ? '<div class="dot" title="Были занятия"></div>' : ''}
       `;
       grid.appendChild(cell);
+    }
     }
   }
 </script>
