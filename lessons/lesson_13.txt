@@ -142,4 +142,39 @@ It too expensive. | It is too expensive. | Ит из туу экспэ́нсив
 ## ПОДБЛОК 1
 I am ready for this lesson. | Ай эм рэ́ди фоо зис лэ́сн
 He is very busy now. | Хи из вэри би́зи нау
-It
+It is very important for us. | Ит из вэри импо́отэнт фоорас
+You are absolutely right. | Ю аар э́бсэлютли райт
+
+## ПОДБЛОК 2
+We often speak English at work. | Уи о́фн спиик и́нглиш эт уёок
+Where do you usually work? | Уээ ду ю ю́жуали уёок
+How much does it cost? | Хау матч даз ит кост
+Do you know how to get there? | Ду ю ноу хау ту гэт зээ
+
+## ПОДБЛОК 3
+She is a talented designer. | Ши из э тэ́лэнтид диза́йнэ
+I am thirty years old. | Ай эм сёоти йи́эз оулд
+He is from England. | Хи из фром и́нглэнд
+We are at home now. | Уи аар эт хоум нау
+
+
+# БЛОК 5: СЛОЖНЫЕ ПРЕДЛОЖЕНИЯ
+## СТУПЕНЬ 1: EN_TO_RU
+I think that this course is very important for beginners because it is easy and effective. | Я думаю, что этот курс очень важен для начинающих, потому что он лёгкий и эффективный. | Ай синк зэт зис коос из вэри импо́отэнт фоо биги́нэз бико́з ит из и́зи энд ифэ́ктив
+He is a successful businessman from London, but he is very busy at work every day. | Он успешный бизнесмен из Лондона, но он очень занят на работе каждый день. | Хи из э сэксэ́сфул би́знисмэн фром ла́ндэн бат хи из вэри би́зи эт уёок э́ври дэй
+We are happy to study at this university because our teachers are experienced and kind. | Мы счастливы учиться в этом университете, потому что наши преподаватели опытные и добрые. | Уи аа хэ́ппи ту ста́ди эт зис юнивёосити бико́з ауэ ти́чэз аар экспи́риэнст энд кайнд
+It is too expensive to buy a big house in this city, so they live in a small flat. | Слишком дорого покупать большой дом в этом городе, поэтому они живут в маленькой квартире. | Ит из туу экспэ́нсив ту бай э биг хаус ин зис си́ти соу зэй лив ин э смоол флэт
+
+## СТУПЕНЬ 2: RU_TO_EN
+Я думаю, ты совершенно прав, и это действительно хорошая идея для нашей команды. | I think you are absolutely right and it is a really good idea for our team. | Ай синк ю аар э́бсэлютли райт энд ит из э ри́эли гуд айди́а фоо ауэ тиим
+Ей двадцать восемь лет, она талантливый дизайнер и сейчас находится на работе. | She is twenty-eight years old, she is a talented designer and she is at work now. | Ши из туэ́нти эйт йи́эз оулд ши из э тэ́лэнтид диза́йнэ энд ши из эт уёок нау
+Я вижу, что это очень сложно, но мы готовы к этому важному экзамену. | I see that it is very difficult, but we are ready for this important exam. | Ай сии зэт ит из вэри ди́фикалт бат уи аа рэ́ди фоо зис импо́отэнт игзэ́м
+Они из Соединённых Штатов, и они такие гостеприимные и дружелюбные люди. | They are from the United States and they are so hospitable and friendly people. | Зэй аа фром зэ юна́йтид стэйтс энд зэй аа соу хо́спитэбл энд фрэ́ндли пиипл
+
+
+# БЛОК 6: СВЯЗНЫЙ ТЕКСТ
+## EN_TEXT
+My sister is a talented designer and she is twenty-six years old. She is from England, but now she lives and works in New York. She is very busy at work every day because her projects are really important. In the evening she is at home and she is happy to relax with her family. It is wonderful to have a creative job and good colleagues. | Моя сестра — талантливый дизайнер, и ей двадцать шесть лет. Она из Англии, но сейчас живёт и работает в Нью-Йорке. Она очень занята на работе каждый день, потому что её проекты действительно важны. Вечером она дома и рада отдохнуть со своей семьёй. Прекрасно иметь творческую работу и хороших коллег.
+
+## RU_TEXT
+Он мой лучший друг, и ему тридцать лет. Он успешный менеджер в крупном банке и сейчас находится в офисе. Мы из России, но часто путешествуем в другие страны и говорим по-английски. Я думаю, он совершенно прав насчёт этого нового курса. Этот метод действительно эффективен, и мы готовы к нашему следующему уроку. | He is my best friend and he is thirty years old. He is a successful manager in a big bank and he is in the office now. We are from Russia, but we often travel to other countries and speak English. I think he is absolutely right about this new course. This method is really effective and we are ready for our next lesson.
