@@ -35,17 +35,26 @@
     .nav-btn.primary:hover { opacity: 0.9; background: var(--accent); color: #fff; }
 
     /* Форма добавления слова */
-    .add-grid { display: grid; grid-template-columns: 1.2fr 1fr 1.2fr; gap: 12px; margin-bottom: 12px; }
+    .add-grid { display: grid; grid-template-columns: 1.3fr 1fr 1.2fr; gap: 12px; margin-bottom: 12px; }
     @media (max-width: 720px) { .add-grid { grid-template-columns: 1fr; } }
 
     .input-box { display: flex; flex-direction: column; gap: 5px; }
-    .input-box label { font-size: 12px; color: var(--text-muted); }
+    .input-box label { font-size: 12px; color: var(--text-muted); display: flex; justify-content: space-between; align-items: center; }
+    .en-input-row { display: flex; gap: 6px; }
     input, textarea {
       background: var(--card-inner); border: 1px solid var(--border); color: #fff;
       padding: 10px 12px; border-radius: 8px; font-size: 15px; outline: none; width: 100%;
     }
     input:focus, textarea:focus { border-color: var(--teal); }
     textarea { resize: vertical; min-height: 42px; }
+
+    .btn-fetch {
+      background: rgba(20, 184, 166, 0.15); border: 1px solid var(--teal); color: var(--teal);
+      border-radius: 8px; padding: 0 12px; font-size: 13px; font-weight: 600; cursor: pointer;
+      white-space: nowrap; transition: 0.2s;
+    }
+    .btn-fetch:hover { background: var(--teal); color: #0b1e28; }
+    .btn-fetch:disabled { opacity: 0.5; cursor: wait; }
 
     .add-footer { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 10px; }
     .btn-add {
@@ -123,20 +132,23 @@
   <div class="panel">
     <div class="panel-header">
       <h2>➕ Добавить слово или фразу</h2>
-      <span style="font-size: 12px; color: var(--text-muted);">Перевод и заметки можно не заполнять сразу — допишешь позже</span>
+      <span style="font-size: 12px; color: var(--text-muted);">Введи слово на английском — транскрипция и перевод подгрузятся автоматически</span>
     </div>
     <div class="add-grid">
       <div class="input-box">
         <label>Слово или фраза (EN) *</label>
-        <input type="text" id="newEn" placeholder="Например: seafood" onkeydown="if(event.key==='Enter') addWord()">
+        <div class="en-input-row">
+          <input type="text" id="newEn" placeholder="Например: seafood" oninput="scheduleAutoFill()" onblur="autoFillWordData(false)" onkeydown="if(event.key==='Enter'){ event.preventDefault(); autoFillWordData(true); }">
+          <button type="button" class="btn-fetch" id="fetchBtn" onclick="autoFillWordData(true)" title="Подгрузить транскрипцию и перевод">⚡ Подгрузить</button>
+        </div>
       </div>
       <div class="input-box">
-        <label>Транскрипция (по желанию)</label>
-        <input type="text" id="newTr" placeholder="Например: [си́фуд]" onkeydown="if(event.key==='Enter') addWord()">
+        <label>Транскрипция (авто + можно править)</label>
+        <input type="text" id="newTr" placeholder="[си́фуд]" onkeydown="if(event.key==='Enter') addWord()">
       </div>
       <div class="input-box">
-        <label>Перевод (можно оставить пустым)</label>
-        <input type="text" id="newRu" placeholder="Например: морепродукты" onkeydown="if(event.key==='Enter') addWord()">
+        <label>Перевод (авто + можно править)</label>
+        <input type="text" id="newRu" placeholder="морепродукты" onkeydown="if(event.key==='Enter') addWord()">
       </div>
     </div>
     <div class="input-box">
@@ -177,6 +189,8 @@
   let dictionary = [];
   let currentFilter = 'all';
   let editingId = null;
+  let autoFillTimer = null;
+  let lastFetchedWord = '';
 
   window.onload = () => {
     loadDictionary();
@@ -194,6 +208,164 @@
 
   function saveDictionary() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(dictionary));
+  }
+
+  function scheduleAutoFill() {
+    clearTimeout(autoFillTimer);
+    const val = document.getElementById('newEn').value.trim();
+    if (!val) {
+      lastFetchedWord = '';
+      return;
+    }
+    autoFillTimer = setTimeout(() => {
+      autoFillWordData(false);
+    }, 650);
+  }
+
+  // Преобразование IPA в понятную русскую транскрипцию звучания
+  function ipaToRussian(ipaRaw) {
+    if (!ipaRaw) return '';
+    let s = ipaRaw.replace(/^\/+|\/+$/g, '').replace(/^\[+|\]+$/g, '').trim();
+
+    // Убираем знаки ударения, оставляя базовое звучание
+    s = s.replace(/[ˈˌ]/g, '');
+
+    const rules = [
+      [/tʃ/g, 'ч'],
+      [/dʒ/g, 'дж'],
+      [/eɪ/g, 'эй'],
+      [/aɪ/g, 'ай'],
+      [/ɔɪ/g, 'ой'],
+      [/aʊ/g, 'ау'],
+      [/əʊ|oʊ/g, 'оу'],
+      [/ɪə/g, 'иэ'],
+      [/eə|ɛə/g, 'эа'],
+      [/ʊə/g, 'уэ'],
+      [/iː/g, 'ии'],
+      [/uː/g, 'уу'],
+      [/ɑː/g, 'аа'],
+      [/ɔː/g, 'оо'],
+      [/ɜː|ɝ/g, 'ёё'],
+      [/ʃ/g, 'ш'],
+      [/ʒ/g, 'ж'],
+      [/θ/g, 'с'],
+      [/ð/g, 'з'],
+      [/ŋ/g, 'нг'],
+      [/æ/g, 'э'],
+      [/ʌ/g, 'а'],
+      [/ɒ/g, 'о'],
+      [/ə/g, 'э'],
+      [/ɪ/g, 'и'],
+      [/ʊ/g, 'у'],
+      [/ɛ|e/g, 'э'],
+      [/j/g, 'й'],
+      [/w/g, 'у'],
+      [/r|ɹ/g, 'р'],
+      [/l/g, 'л'],
+      [/m/g, 'м'],
+      [/n/g, 'н'],
+      [/p/g, 'п'],
+      [/b/g, 'б'],
+      [/t/g, 'т'],
+      [/d/g, 'д'],
+      [/k/g, 'к'],
+      [/g|ɡ/g, 'г'],
+      [/f/g, 'ф'],
+      [/v/g, 'в'],
+      [/s/g, 'с'],
+      [/z/g, 'з'],
+      [/h/g, 'х'],
+      [/ː/g, '']
+    ];
+
+    for (const [pattern, replacement] of rules) {
+      s = s.replace(pattern, replacement);
+    }
+
+    return `[${s}]`;
+  }
+
+  async function autoFillWordData(forceOverwrite = false) {
+    const enInput = document.getElementById('newEn');
+    const trInput = document.getElementById('newTr');
+    const ruInput = document.getElementById('newRu');
+    const status = document.getElementById('addStatus');
+    const fetchBtn = document.getElementById('fetchBtn');
+
+    const word = enInput.value.trim();
+    if (!word) return;
+    if (!forceOverwrite && word.toLowerCase() === lastFetchedWord) return;
+
+    lastFetchedWord = word.toLowerCase();
+    fetchBtn.disabled = true;
+    status.style.color = 'var(--teal)';
+    status.innerText = `⏳ Загружаю транскрипцию и перевод для «${word}»...`;
+
+    try {
+      // 1. Запрос транскрипции (берем первое слово для IPA или все слова фразы)
+      const wordsList = word.split(/\s+/).filter(Boolean);
+      const trPromises = wordsList.map(async (w) => {
+        const cleanW = w.replace(/[^a-zA-Z'-]/g, '');
+        if (!cleanW) return '';
+        try {
+          const res = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(cleanW.toLowerCase())}`);
+          if (!res.ok) return '';
+          const data = await res.json();
+          const entry = data[0];
+          let phonetic = entry.phonetic || '';
+          if (!phonetic && Array.isArray(entry.phonetics)) {
+            const found = entry.phonetics.find(p => p.text);
+            if (found) phonetic = found.text;
+          }
+          return ipaToRussian(phonetic).replace(/^\[|\]$/g, '');
+        } catch {
+          return '';
+        }
+      });
+
+      // 2. Запрос перевода на русский
+      const translatePromise = fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(word)}&langpair=en|ru`)
+        .then(r => r.ok ? r.json() : null)
+        .catch(() => null);
+
+      const [trParts, transData] = await Promise.all([
+        Promise.all(trPromises),
+        translatePromise
+      ]);
+
+      const joinedTr = trParts.filter(Boolean).join(' ');
+      if (joinedTr && (forceOverwrite || !trInput.value.trim())) {
+        trInput.value = `[${joinedTr}]`;
+      }
+
+      if (transData && transData.responseData && transData.responseData.translatedText) {
+        let translated = transData.responseData.translatedText.trim();
+        // Очищаем, если API вернул исходное слово без перевода
+        if (translated.toLowerCase() !== word.toLowerCase() && (forceOverwrite || !ruInput.value.trim())) {
+          ruInput.value = translated.toLowerCase();
+        }
+      }
+
+      status.style.color = 'var(--success)';
+      status.innerText = `✓ Данные для «${word}» подгружены (можно отредактировать перед сохранением)`;
+      setTimeout(() => {
+        if (status.innerText.includes(word)) status.innerText = '';
+      }, 3500);
+    } catch (e) {
+      status.style.color = 'var(--text-muted)';
+      status.innerText = 'Не удалось загрузить автоматически — заполни поля вручную.';
+    } finally {
+      fetchBtn.disabled = false;
+    }
+  }
+
+  function speakWord(text) {
+    if (!('speechSynthesis' in window) || !text) return;
+    window.speechSynthesis.cancel();
+    const ut = new SpeechSynthesisUtterance(text);
+    ut.lang = 'en-US';
+    ut.rate = 0.95;
+    window.speechSynthesis.speak(ut);
   }
 
   function addWord() {
@@ -228,10 +400,12 @@
     trInput.value = '';
     ruInput.value = '';
     noteInput.value = '';
+    lastFetchedWord = '';
     enInput.focus();
 
     const status = document.getElementById('addStatus');
-    status.innerText = `✓ Слово «${en}» добавлено`;
+    status.style.color = 'var(--success)';
+    status.innerText = `✓ Слово «${en}» сохранено в словарь`;
     setTimeout(() => { status.innerText = ''; }, 2500);
 
     renderDictionary();
@@ -368,9 +542,12 @@
           ? `<div class="word-note">📝 ${highlightMatch(item.note, query)}</div>`
           : '';
 
+        const safeEnForSpeech = item.en.replace(/'/g, "\\'");
+
         card.innerHTML = `
           <div class="word-top">
             <div class="word-main">
+              <button class="btn-icon" onclick="speakWord('${safeEnForSpeech}')" title="Прослушать произношение">🔊</button>
               <span class="word-en">${highlightMatch(item.en, query)}</span>
               ${trHtml}
               ${ruHtml}
