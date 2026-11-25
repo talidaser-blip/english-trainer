@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Мой словарь | English Trainer</title>
+  <style>
+    :root {
+      --bg: #0b1e28;
+      --card-bg: #133340;
+      --card-inner: #0e2733;
+      --border: #1e4557;
+      --accent: #f97316;
+      --teal: #14b8a6;
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --success: #2dd4bf;
+      --danger: #f87171;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
+    body { background-color: var(--bg); color: var(--text); padding: 20px; display: flex; justify-content: center; }
+    .container { width: 100%; max-width: 960px; display: flex; flex-direction: column; gap: 20px; }
+
+    .panel { background: var(--card-bg); border: 1px solid var(--border); border-radius: 14px; padding: 20px; }
+    .panel-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 16px; border-bottom: 1px solid var(--border); padding-bottom: 12px; }
+    h2 { font-size: 20px; color: var(--accent); }
+
+    .nav-group { display: flex; gap: 10px; flex-wrap: wrap; }
+    .nav-btn {
+      background: #1e4557; color: #f1f5f9; border: 1px solid var(--teal); text-decoration: none;
+      padding: 8px 14px; border-radius: 8px; font-size: 14px; font-weight: 600; transition: 0.2s;
+    }
+    .nav-btn:hover { background: var(--teal); color: #0b1e28; }
+    .nav-btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .nav-btn.primary:hover { opacity: 0.9; background: var(--accent); color: #fff; }
+
+    /* Форма добавления слова */
+    .add-grid { display: grid; grid-template-columns: 1.2fr 1fr 1.2fr; gap: 12px; margin-bottom: 12px; }
+    @media (max-width: 720px) { .add-grid { grid-template-columns: 1fr; } }
+
+    .input-box { display: flex; flex-direction: column; gap: 5px; }
+    .input-box label { font-size: 12px; color: var(--text-muted); }
+    input, textarea {
+      background: var(--card-inner); border: 1px solid var(--border); color: #fff;
+      padding: 10px 12px; border-radius: 8px; font-size: 15px; outline: none; width: 100%;
+    }
+    input:focus, textarea:focus { border-color: var(--teal); }
+    textarea { resize: vertical; min-height: 42px; }
+
+    .add-footer { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 10px; }
+    .btn-add {
+      background: var(--teal); color: #0b1e28; border: none; padding: 10px 20px;
+      border-radius: 8px; font-size: 15px; font-weight: 700; cursor: pointer; transition: 0.2s;
+    }
+    .btn-add:hover { background: var(--success); }
+
+    /* Поиск и фильтры */
+    .search-bar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 14px; }
+    .search-input-wrap { flex: 1; min-width: 240px; position: relative; }
+    .search-input-wrap input { padding-left: 36px; border-color: var(--teal); font-size: 16px; }
+    .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-muted); pointer-events: none; }
+    .btn-clear-search {
+      position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+      background: transparent; border: none; color: var(--text-muted); cursor: pointer; font-size: 16px; display: none;
+    }
+
+    .filters { display: flex; gap: 8px; flex-wrap: wrap; }
+    .filter-chip {
+      background: var(--card-inner); border: 1px solid var(--border); color: var(--text-muted);
+      padding: 6px 12px; border-radius: 20px; font-size: 13px; cursor: pointer; transition: 0.2s;
+    }
+    .filter-chip.active { background: #114b53; border-color: var(--success); color: #fff; font-weight: 600; }
+
+    /* Список слов */
+    .words-list { display: flex; flex-direction: column; gap: 10px; }
+    .word-card {
+      background: var(--card-inner); border: 1px solid var(--border); border-radius: 10px;
+      padding: 14px; display: flex; flex-direction: column; gap: 8px; transition: 0.2s;
+    }
+    .word-card:hover { border-color: #2c5e75; }
+    .word-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; flex-wrap: wrap; }
+    .word-main { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+    .word-en { font-size: 18px; font-weight: 700; color: var(--success); }
+    .word-tr { font-size: 15px; color: #cbd5e1; font-style: italic; }
+    .word-ru { font-size: 16px; color: #fff; }
+    .word-ru.empty { color: var(--text-muted); font-size: 13px; border: 1px dashed var(--border); padding: 2px 8px; border-radius: 6px; cursor: pointer; }
+    .word-note { font-size: 13px; color: var(--text-muted); background: rgba(255,255,255,0.03); padding: 6px 10px; border-radius: 6px; }
+
+    .word-actions { display: flex; gap: 6px; }
+    .btn-icon {
+      background: #1a3b4a; border: 1px solid var(--border); color: var(--text-muted);
+      border-radius: 6px; padding: 5px 9px; font-size: 12px; cursor: pointer; transition: 0.2s;
+    }
+    .btn-icon:hover { border-color: var(--teal); color: #fff; }
+    .btn-icon.del:hover { border-color: var(--danger); color: var(--danger); }
+
+    /* Режим редактирования карточки */
+    .edit-box { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-top: 6px; }
+    @media (max-width: 720px) { .edit-box { grid-template-columns: 1fr; } }
+    .edit-actions { display: flex; gap: 8px; margin-top: 8px; }
+    .btn-save-edit { background: var(--success); color: #0b1e28; border: none; padding: 6px 14px; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 13px; }
+    .btn-cancel-edit { background: transparent; color: var(--text-muted); border: 1px solid var(--border); padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 13px; }
+
+    .empty-state { text-align: center; padding: 30px; color: var(--text-muted); font-size: 15px; }
+    mark { background: rgba(249, 115, 22, 0.35); color: #fff; padding: 0 2px; border-radius: 3px; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <!-- Шапка -->
+  <div class="panel">
+    <div class="panel-header" style="margin-bottom: 0; border-bottom: none; padding-bottom: 0;">
+      <h2>📖 Мой пластичный словарь</h2>
+      <div class="nav-group">
+        <a href="./dashboard.html" class="nav-btn">👤 Личный кабинет</a>
+        <a href="./index.html" class="nav-btn primary">➔ Открыть Тренажёр</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Добавление нового слова -->
+  <div class="panel">
+    <div class="panel-header">
+      <h2>➕ Добавить слово или фразу</h2>
+      <span style="font-size: 12px; color: var(--text-muted);">Перевод и заметки можно не заполнять сразу — допишешь позже</span>
+    </div>
+    <div class="add-grid">
+      <div class="input-box">
+        <label>Слово или фраза (EN) *</label>
+        <input type="text" id="newEn" placeholder="Например: seafood" onkeydown="if(event.key==='Enter') addWord()">
+      </div>
+      <div class="input-box">
+        <label>Транскрипция (по желанию)</label>
+        <input type="text" id="newTr" placeholder="Например: [си́фуд]" onkeydown="if(event.key==='Enter') addWord()">
+      </div>
+      <div class="input-box">
+        <label>Перевод (можно оставить пустым)</label>
+        <input type="text" id="newRu" placeholder="Например: морепродукты" onkeydown="if(event.key==='Enter') addWord()">
+      </div>
+    </div>
+    <div class="input-box">
+      <label>Дополнительные заметки, примеры, урок (по желанию)</label>
+      <textarea id="newNote" rows="1" placeholder="Например: Урок 3. Неисчисляемое, артикль a не ставится"></textarea>
+    </div>
+    <div class="add-footer">
+      <span id="addStatus" style="font-size: 13px; color: var(--success);"></span>
+      <button class="btn-add" onclick="addWord()">Сохранить в словарь</button>
+    </div>
+  </div>
+
+  <!-- Поиск и список -->
+  <div class="panel">
+    <div class="panel-header">
+      <h2>База слов (<span id="totalWordsCount">0</span>)</h2>
+      <div class="filters">
+        <button class="filter-chip active" id="flt-all" onclick="setFilter('all')">Все</button>
+        <button class="filter-chip" id="flt-no-ru" onclick="setFilter('no-ru')">Без перевода (<span id="noRuCount">0</span>)</button>
+        <button class="filter-chip" id="flt-notes" onclick="setFilter('notes')">С заметками</button>
+      </div>
+    </div>
+
+    <div class="search-bar">
+      <div class="search-input-wrap">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="searchInput" placeholder="Введи любую букву или часть слова на EN или RU..." oninput="renderDictionary()">
+        <button class="btn-clear-search" id="clearSearchBtn" onclick="clearSearch()">✕</button>
+      </div>
+    </div>
+
+    <div class="words-list" id="wordsContainer"></div>
+  </div>
+</div>
+
+<script>
+  const STORAGE_KEY = 'english_trainer_custom_dict_v1';
+  let dictionary = [];
+  let currentFilter = 'all';
+  let editingId = null;
+
+  window.onload = () => {
+    loadDictionary();
+    renderDictionary();
+  };
+
+  function loadDictionary() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      dictionary = raw ? JSON.parse(raw) : [];
+    } catch (e) {
+      dictionary = [];
+    }
+  }
+
+  function saveDictionary() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(dictionary));
+  }
+
+  function addWord() {
+    const enInput = document.getElementById('newEn');
+    const trInput = document.getElementById('newTr');
+    const ruInput = document.getElementById('newRu');
+    const noteInput = document.getElementById('newNote');
+
+    const en = enInput.value.trim();
+    const tr = trInput.value.trim();
+    const ru = ruInput.value.trim();
+    const note = noteInput.value.trim();
+
+    if (!en) {
+      enInput.focus();
+      return;
+    }
+
+    const newItem = {
+      id: Date.now().toString(),
+      en,
+      tr,
+      ru,
+      note,
+      createdAt: new Date().toLocaleDateString('ru-RU')
+    };
+
+    dictionary.unshift(newItem);
+    saveDictionary();
+
+    enInput.value = '';
+    trInput.value = '';
+    ruInput.value = '';
+    noteInput.value = '';
+    enInput.focus();
+
+    const status = document.getElementById('addStatus');
+    status.innerText = `✓ Слово «${en}» добавлено`;
+    setTimeout(() => { status.innerText = ''; }, 2500);
+
+    renderDictionary();
+  }
+
+  function setFilter(filterName) {
+    currentFilter = filterName;
+    document.querySelectorAll('.filter-chip').forEach(btn => btn.classList.remove('active'));
+    document.getElementById(`flt-${filterName}`).classList.add('active');
+    renderDictionary();
+  }
+
+  function clearSearch() {
+    document.getElementById('searchInput').value = '';
+    renderDictionary();
+  }
+
+  function startEdit(id) {
+    editingId = id;
+    renderDictionary();
+  }
+
+  function cancelEdit() {
+    editingId = null;
+    renderDictionary();
+  }
+
+  function saveEdit(id) {
+    const idx = dictionary.findIndex(w => w.id === id);
+    if (idx === -1) return;
+
+    const en = document.getElementById(`edit-en-${id}`).value.trim();
+    if (!en) return;
+
+    dictionary[idx].en = en;
+    dictionary[idx].tr = document.getElementById(`edit-tr-${id}`).value.trim();
+    dictionary[idx].ru = document.getElementById(`edit-ru-${id}`).value.trim();
+    dictionary[idx].note = document.getElementById(`edit-note-${id}`).value.trim();
+
+    saveDictionary();
+    editingId = null;
+    renderDictionary();
+  }
+
+  function deleteWord(id) {
+    const item = dictionary.find(w => w.id === id);
+    if (!item) return;
+    if (!confirm(`Удалить «${item.en}» из словаря?`)) return;
+    dictionary = dictionary.filter(w => w.id !== id);
+    saveDictionary();
+    renderDictionary();
+  }
+
+  function highlightMatch(text, query) {
+    if (!text) return '';
+    if (!query) return escapeHtml(text);
+    const safeText = escapeHtml(text);
+    const safeQuery = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const regex = new RegExp(`(${safeQuery})`, 'gi');
+    return safeText.replace(regex, '<mark>$1</mark>');
+  }
+
+  function escapeHtml(str) {
+    return str
+      .replace(/&/g, '&')
+      .replace(/</g, '<')
+      .replace(/>/g, '>')
+      .replace(/"/g, '"');
+  }
+
+  function renderDictionary() {
+    const query = document.getElementById('searchInput').value.trim().toLowerCase();
+    document.getElementById('clearSearchBtn').style.display = query ? 'block' : 'none';
+
+    document.getElementById('totalWordsCount').innerText = dictionary.length;
+    document.getElementById('noRuCount').innerText = dictionary.filter(w => !w.ru).length;
+
+    const filtered = dictionary.filter(item => {
+      if (currentFilter === 'no-ru' && item.ru) return false;
+      if (currentFilter === 'notes' && !item.note) return false;
+
+      if (!query) return true;
+      return (
+        (item.en && item.en.toLowerCase().includes(query)) ||
+        (item.ru && item.ru.toLowerCase().includes(query)) ||
+        (item.tr && item.tr.toLowerCase().includes(query)) ||
+        (item.note && item.note.toLowerCase().includes(query))
+      );
+    });
+
+    const container = document.getElementById('wordsContainer');
+    container.innerHTML = '';
+
+    if (filtered.length === 0) {
+      container.innerHTML = `<div class="empty-state">${dictionary.length === 0 ? 'Словарь пока пуст. Добавь первое слово выше!' : 'По твоему запросу ничего не найдено.'}</div>`;
+      return;
+    }
+
+    filtered.forEach(item => {
+      const card = document.createElement('div');
+      card.className = 'word-card';
+
+      if (editingId === item.id) {
+        card.innerHTML = `
+          <div class="edit-box">
+            <div class="input-box">
+              <label>Слово (EN)</label>
+              <input type="text" id="edit-en-${item.id}" value="${escapeHtml(item.en)}">
+            </div>
+            <div class="input-box">
+              <label>Транскрипция</label>
+              <input type="text" id="edit-tr-${item.id}" value="${escapeHtml(item.tr || '')}">
+            </div>
+            <div class="input-box">
+              <label>Перевод (RU)</label>
+              <input type="text" id="edit-ru-${item.id}" value="${escapeHtml(item.ru || '')}">
+            </div>
+          </div>
+          <div class="input-box" style="margin-top: 6px;">
+            <label>Заметки / примеры</label>
+            <textarea id="edit-note-${item.id}" rows="2">${escapeHtml(item.note || '')}</textarea>
+          </div>
+          <div class="edit-actions">
+            <button class="btn-save-edit" onclick="saveEdit('${item.id}')">✓ Сохранить</button>
+            <button class="btn-cancel-edit" onclick="cancelEdit()">Отмена</button>
+          </div>
+        `;
+      } else {
+        const trHtml = item.tr ? `<span class="word-tr">${highlightMatch(item.tr, query)}</span>` : '';
+        const ruHtml = item.ru
+          ? `<span class="word-ru">— ${highlightMatch(item.ru, query)}</span>`
+          : `<span class="word-ru empty" onclick="startEdit('${item.id}')" title="Нажми, чтобы дописать перевод">+ дописать перевод</span>`;
+        const noteHtml = item.note
+          ? `<div class="word-note">📝 ${highlightMatch(item.note, query)}</div>`
+          : '';
+
+        card.innerHTML = `
+          <div class="word-top">
+            <div class="word-main">
+              <span class="word-en">${highlightMatch(item.en, query)}</span>
+              ${trHtml}
+              ${ruHtml}
+            </div>
+            <div class="word-actions">
+              <button class="btn-icon" onclick="startEdit('${item.id}')" title="Редактировать или дописать">✎ Изменить</button>
+              <button class="btn-icon del" onclick="deleteWord('${item.id}')" title="Удалить слово">🗑</button>
+            </div>
+          </div>
+          ${noteHtml}
+        `;
+      }
+
+      container.appendChild(card);
+    });
+  }
+</script>
+
+</body>
+</html>
