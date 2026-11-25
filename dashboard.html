@@ -52,13 +52,25 @@
     .lesson-status { font-size: 12px; color: var(--text-muted); }
     .lesson-bal { font-size: 13px; font-weight: 600; }
     
+    .card-actions {
+      display: flex;
+      gap: 6px;
+      margin-top: auto;
+    }
     .btn-goto-lesson {
+      flex: 1;
       background: #1e4557; color: #f1f5f9; border: 1px solid var(--teal);
-      border-radius: 6px; padding: 6px 10px; text-decoration: none; font-size: 12px;
-      font-weight: 600; text-align: center; display: block; margin-top: auto;
+      border-radius: 6px; padding: 6px 8px; text-decoration: none; font-size: 12px;
+      font-weight: 600; text-align: center; cursor: pointer;
       transition: all 0.2s;
     }
     .btn-goto-lesson:hover { background: var(--teal); color: #0b1e28; }
+    .btn-force-done {
+      background: rgba(45, 212, 191, 0.15); color: var(--success); border: 1px solid var(--success);
+      border-radius: 6px; padding: 6px 9px; font-size: 12px; font-weight: 700;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .btn-force-done:hover { background: var(--success); color: #0b1e28; }
 
     .nav-btn {
       background: var(--accent); color: #fff; text-decoration: none;
@@ -85,6 +97,7 @@
       <div class="badge" style="color: var(--accent); border-color: var(--accent);">Осталось пройти: <span id="lessonsLeft">50</span></div>
       <div class="badge" onclick="editBaseDays()" style="cursor: pointer;" title="Нажмите, чтобы задать или изменить количество дней">🔥 Дней занятий: <span id="totalDaysCount">0</span> ✎</div>
     </div>
+  </div>
 
   <!-- Персональная анкета -->
   <div class="panel">
@@ -175,6 +188,54 @@
     window.location.href = `./index.html?lesson=${lessonNum}`;
   }
 
+  function forceCompleteLesson(lessonNum) {
+    if (!confirm(`Отметить Урок ${lessonNum} как полностью завершённый?`)) return;
+
+    const key = `english_trainer_l${lessonNum}_v1`;
+    const localRaw = localStorage.getItem(key);
+    const localData = localRaw ? JSON.parse(localRaw) : {};
+    const cloudData = cloudLessons[lessonNum] || {};
+
+    const currentBalance = typeof localData.balance === 'number'
+      ? localData.balance
+      : (typeof cloudData.balance === 'number' ? cloudData.balance : 0);
+
+    // Сохраняем локально как пройденный (Блок 6, ступень 2)
+    const updatedLocal = {
+      ...localData,
+      block: 6,
+      blockIndices: { ...(localData.blockIndices || {}), 6: 2 },
+      balance: currentBalance
+    };
+    localStorage.setItem(key, JSON.stringify(updatedLocal));
+
+    // Обновляем данные в памяти текущей страницы
+    cloudLessons[lessonNum] = {
+      ...cloudData,
+      block: 6,
+      index: 2,
+      balance: currentBalance
+    };
+
+    // Отправляем в Google Таблицу, чтобы прогресс закрепился в облаке
+    if (GOOGLE_SCRIPT_URL) {
+      fetch(GOOGLE_SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'save_english_progress',
+          lesson: lessonNum,
+          block: 6,
+          index: 2,
+          balance: currentBalance
+        })
+      }).catch(err => console.warn('Офлайн режим сохранения:', err));
+    }
+
+    renderLessonsGrid();
+  }
+
   function renderLessonsGrid() {
     const container = document.getElementById('lessonsContainer');
     container.innerHTML = '';
@@ -183,9 +244,17 @@
     for (let i = 1; i <= 50; i++) {
       const localRaw = localStorage.getItem(`english_trainer_l${i}_v1`);
       const localData = localRaw ? JSON.parse(localRaw) : null;
-      const lesson = cloudLessons[i] || localData || { block: 1, balance: 0, updated: '' };
+      const cloudData = cloudLessons[i] || null;
 
-      const isCompleted = (lesson.block >= 6);
+      // Берём максимальный достигнутый блок между локальной памятью и облаком
+      const localBlock = localData ? (localData.block || 1) : 1;
+      const cloudBlock = cloudData ? (cloudData.block || 1) : 1;
+      const effectiveBlock = Math.max(localBlock, cloudBlock);
+
+      const lesson = cloudData || localData || { block: 1, balance: 0, updated: '' };
+      const balanceVal = (localData && typeof localData.balance === 'number') ? localData.balance : (lesson.balance || 0);
+
+      const isCompleted = (effectiveBlock >= 6);
       if (isCompleted) doneCount++;
 
       if (lesson.updated) {
@@ -199,11 +268,14 @@
       card.className = `lesson-card ${isCompleted ? 'done' : ''}`;
       card.innerHTML = `
         <div class="lesson-title">Урок ${i}</div>
-        <div class="lesson-status">${isCompleted ? '✓ Завершён' : `Блок ${lesson.block || 1} из 6`}</div>
-        <div class="lesson-bal" style="color: ${lesson.balance >= 0 ? 'var(--success)' : 'var(--danger)'}">
-          ${lesson.balance || 0} ₽
+        <div class="lesson-status">${isCompleted ? '✓ Завершён' : `Блок ${effectiveBlock} из 6`}</div>
+        <div class="lesson-bal" style="color: ${balanceVal >= 0 ? 'var(--success)' : 'var(--danger)'}">
+          ${balanceVal} ₽
         </div>
-        <button class="btn-goto-lesson" onclick="openSpecificLesson(${i})">К уроку ${i} ➔</button>
+        <div class="card-actions">
+          <button class="btn-goto-lesson" onclick="openSpecificLesson(${i})">К уроку ${i} ➔</button>
+          ${!isCompleted ? `<button class="btn-force-done" onclick="forceCompleteLesson(${i})" title="Завершить урок принудительно">✓</button>` : ''}
+        </div>
       `;
       container.appendChild(card);
     }
